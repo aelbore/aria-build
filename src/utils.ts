@@ -32,6 +32,9 @@ export function copyReadmeFile(filePath?: string) {
 
 export function copyPackageFile(filePath?: string) {
   const pkg = getPackageJson(filePath)
+  if (!pkg.typings) {
+    pkg.typings = pkg.name + '.d.ts'
+  }
   delete pkg.scripts
   delete pkg.devDependencies
   return writeFile(path.join(DEFAULT_VALUES.DIST_FOLDER, 'package.json'), JSON.stringify(pkg, null, 2))
