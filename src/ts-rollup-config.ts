@@ -57,7 +57,10 @@ export interface TSRollupConfig {
   output?: {
     sourcemap?: boolean,
     file?: string,
-    format?: string
+    format?: string,
+    name?: string,
+    exports?: string,
+    global?: any
   };
   plugins?: any[];
   tsconfig?: {
@@ -87,6 +90,8 @@ export function createTSRollupConfig(options: TSRollupConfig) {
     outputOptions: {
         sourcemap: false,
         format: 'es',
+        exports: 'named',
+        global: {},
         file: path.join(DEFAULT_VALUES.DIST_FOLDER, getPackageName() + '.js', ),
       ...(output || {})
     }
