@@ -1,4 +1,4 @@
-import { build, copyReadmeFile, copyPackageFile, bundle, renameDtsFile } from '../src'
+import { bundle } from '../src'
 import { clean } from 'aria-fs'
 
 (async function() {
