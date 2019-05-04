@@ -8,7 +8,9 @@ function onwarn(warning) {
   console.log("Rollup warning: ", warning.message);
 }
 
-function createTSConfig({ input, tsconfig }) { 
+function createTSConfig(options: { input?: string, file?: string, tsconfig?: any } = {}) { 
+  const { input, file, tsconfig } = options
+
   const transformers = ((tsconfig && tsconfig.transformers) 
     ? tsconfig.transformers: []) 
 
@@ -42,7 +44,7 @@ function createTSConfig({ input, tsconfig }) {
       include: [ input ],
     },
     check: false,
-    cacheRoot: path.join(path.resolve(), 'node_modules/.tmp/.rts2_cache'), 
+    cacheRoot: path.join(path.resolve(), 'node_modules/.tmp', path.basename(file)), 
     /// compilerOptions.declation = true
     /// create dts files
     /// useTsconfigDeclarationDir === false and compilerOptions.declation = true
@@ -60,7 +62,7 @@ export interface TSRollupConfig {
     format?: string,
     name?: string,
     exports?: string,
-    global?: any
+    globals?: any
   };
   plugins?: any[];
   tsconfig?: {
@@ -71,6 +73,11 @@ export interface TSRollupConfig {
 
 export function createTSRollupConfig(options: TSRollupConfig) {
   const { input, output, external, tsconfig, plugins } = options
+  
+  const file = (output && output.file) 
+    ? output.file
+    : path.join(DEFAULT_VALUES.DIST_FOLDER, getPackageName() + '.js')
+
   return {
     inputOptions: {
       input,
@@ -81,18 +88,18 @@ export function createTSRollupConfig(options: TSRollupConfig) {
       treeshake: true,
       plugins: [
         ...(plugins || []),
-        typescript2(createTSConfig({ input, tsconfig })),
+        typescript2(createTSConfig({ input, file, tsconfig })),
         commonjs(),
         nodeResolve()
       ],
-      onwarn: onwarn
+      onwarn
     },
     outputOptions: {
-        sourcemap: false,
-        format: 'es',
-        exports: 'named',
-        global: {},
-        file: path.join(DEFAULT_VALUES.DIST_FOLDER, getPackageName() + '.js', ),
+      sourcemap: false,
+      format: 'es',
+      exports: 'named',
+      globals: {},
+      file,
       ...(output || {})
     }
   }
