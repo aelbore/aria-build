@@ -3,12 +3,12 @@ import * as path from 'path'
 import { commonjs, nodeResolve, typescript2 } from './libs'
 import { getPackageName, DEFAULT_VALUES } from './utils'
 
-function onwarn(warning) {
+export function onwarn(warning) {
   if (warning.code === 'THIS_IS_UNDEFINED') { return; }
   console.log("Rollup warning: ", warning.message);
 }
 
-function createTSConfig(options: { input?: string, file?: string, tsconfig?: any } = {}) { 
+export function createTSConfig(options: { input?: string, file?: string, tsconfig?: any } = {}) { 
   const { input, file, tsconfig } = options
 
   const transformers = ((tsconfig && tsconfig.transformers) 
@@ -16,6 +16,10 @@ function createTSConfig(options: { input?: string, file?: string, tsconfig?: any
 
   const compilerOptions = ((tsconfig && tsconfig.compilerOptions) 
     ? tsconfig.compilerOptions: {})
+
+  const outputFile = file ? path.basename(file): '.rts2_cache'
+
+  const include = input ? { include: [ input ] }: {}
 
   return {
     transformers: [ 
@@ -41,10 +45,10 @@ function createTSConfig(options: { input?: string, file?: string, tsconfig?: any
         ],
         ...compilerOptions
       },
-      include: [ input ],
+      ...include,
     },
     check: false,
-    cacheRoot: path.join(path.resolve(), 'node_modules/.tmp', path.basename(file)), 
+    cacheRoot: path.join(path.resolve(), 'node_modules/.tmp', outputFile), 
     /// compilerOptions.declation = true
     /// create dts files
     /// useTsconfigDeclarationDir === false and compilerOptions.declation = true
