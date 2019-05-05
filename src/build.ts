@@ -17,4 +17,4 @@ export async function bundle(options: TSRollupConfig | Array<TSRollupConfig>) {
   await build(options)
   await Promise.all([ copyPackageFile(), copyReadmeFile(), renameDtsEntryFile(options) ])
   await moveDtsFiles()
-}
+} 
