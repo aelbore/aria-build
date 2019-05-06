@@ -1,5 +1,4 @@
-import { bundle } from '../src'
-import { clean } from 'aria-fs'
+import { bundle, clean } from '../src'
 
 (async function() {
   const pkg = require('../package.json')
