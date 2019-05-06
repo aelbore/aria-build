@@ -7,3 +7,4 @@ const rename = util.promisify(fs.rename)
 const exist = util.promisify(fs.exists)
 
 export { copyFile, writeFile, rename, exist }
+export { globFiles, mkdirp, clean, copyFiles, symlinkDir, unlinkDir } from 'aria-fs'

@@ -91,10 +91,10 @@ export function createTSRollupConfig(options: TSRollupConfig) {
       ],
       treeshake: true,
       plugins: [
-        ...(plugins || []),
         typescript2(createTSConfig({ input, file, tsconfig })),
         commonjs(),
-        nodeResolve()
+        nodeResolve(),
+        ...(plugins || [])
       ],
       onwarn
     },
