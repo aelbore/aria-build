@@ -4,7 +4,6 @@
   "description": "Build any web components",
   "main": "aria-build.js",
   "scripts": {
-    "postinstall": "npm run build",
     "build": "ts-node tools/build.ts"
   },
   "repository": {
