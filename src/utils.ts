@@ -39,7 +39,7 @@ export const DEFAULT_VALUES = Object.freeze({
   DIST_FOLDER: 'dist',
   SOURCE_FOLDER: 'src',
   ROLLUP_EXTERNALS: [
-    'path', 'fs', 'util'
+    'path', 'fs', 'util', 'crypto', 'events', 'http', 'net', 'url'
   ]
 })
 
