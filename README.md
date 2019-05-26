@@ -1,3 +1,6 @@
+[![npm version](https://badge.fury.io/js/aria-build.svg)](https://www.npmjs.com/package/aria-build)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 # aria-build
 Build any web components
 
