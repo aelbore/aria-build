@@ -8,8 +8,8 @@ export function onwarn(warning) {
   console.log("Rollup warning: ", warning.message);
 }
 
-export function createTSConfig(options: { input?: string, file?: string, tsconfig?: any } = {}) { 
-  const { input, file, tsconfig } = options
+export function createTSConfig(options: { input?: string, file?: string, tsconfig?: any, pluginOptions?: any } = {}) { 
+  const { input, file, tsconfig, pluginOptions } = options
 
   const transformers = ((tsconfig && tsconfig.transformers) 
     ? tsconfig.transformers: []) 
@@ -48,12 +48,14 @@ export function createTSConfig(options: { input?: string, file?: string, tsconfi
       ...include,
     },
     check: false,
+    objectHashIgnoreUnknownHack: true,
     cacheRoot: path.join(path.resolve(), 'node_modules/.tmp', outputFile), 
     /// compilerOptions.declation = true
     /// create dts files
     /// useTsconfigDeclarationDir === false and compilerOptions.declation = true
     /// create dts files
-    useTsconfigDeclarationDir: (compilerOptions ? !compilerOptions.declaration: true)
+    useTsconfigDeclarationDir: (compilerOptions ? !compilerOptions.declaration: true),
+    ...(pluginOptions || {})
   }
 }
 
