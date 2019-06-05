@@ -1,7 +1,7 @@
 import * as path from 'path'
 
 import { commonjs, nodeResolve, typescript2 } from './libs'
-import { getPackageName, DEFAULT_VALUES } from './utils'
+import { getPackageName, DEFAULT_VALUES, rootDir } from './utils'
 
 export function onwarn(warning) {
   if (warning.code === 'THIS_IS_UNDEFINED') { return; }
@@ -49,7 +49,7 @@ export function createTSConfig(options: { input?: string, file?: string, tsconfi
     },
     check: false,
     objectHashIgnoreUnknownHack: true,
-    cacheRoot: path.join(path.resolve(), 'node_modules/.tmp', outputFile), 
+    cacheRoot: path.join(rootDir, 'node_modules/.tmp', outputFile), 
     /// compilerOptions.declation = true
     /// create dts files
     /// useTsconfigDeclarationDir === false and compilerOptions.declation = true
@@ -81,19 +81,25 @@ export function createTSRollupConfig(options: TSRollupConfig) {
   const { input, output, external, tsconfig, plugins } = options
   
   const file = (output && output.file) 
-    ? output.file
+    ? path.join(rootDir, output.file)
     : path.join(DEFAULT_VALUES.DIST_FOLDER, getPackageName() + '.js')
+
+  const entry = path.join(rootDir, input)
 
   return {
     inputOptions: {
-      input,
+      input: entry,
       external: [
         ...DEFAULT_VALUES.ROLLUP_EXTERNALS,
         ...(external || [])
       ],
       treeshake: true,
       plugins: [
-        typescript2(createTSConfig({ input, file, tsconfig })),
+        typescript2(createTSConfig({ 
+          input: entry, 
+          file, 
+          tsconfig 
+        })),
         commonjs(),
         nodeResolve(),
         ...(plugins || [])
@@ -105,8 +111,8 @@ export function createTSRollupConfig(options: TSRollupConfig) {
       format: 'es',
       exports: 'named',
       globals: {},
-      file,
-      ...(output || {})
+      ...(output || {}),
+      file
     }
   }
 }

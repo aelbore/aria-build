@@ -28,6 +28,10 @@ async function createDtsEntryFile(filePath?: string) {
   )
 }
 
+export const rootDir = process.env.APP_ROOT_PATH 
+  ? process.env.APP_ROOT_PATH
+  : path.resolve()
+
 export interface PackageFile {
   filePath?: string;
   main?: string;
@@ -36,16 +40,16 @@ export interface PackageFile {
 }
 
 export const DEFAULT_VALUES = Object.freeze({
-  DIST_FOLDER: 'dist',
-  SOURCE_FOLDER: 'src',
+  DIST_FOLDER: path.join(rootDir, 'dist'),
+  SOURCE_FOLDER: path.join(rootDir, 'src'),
   ROLLUP_EXTERNALS: [
     'path', 'fs', 'util', 'crypto', 'events', 'http', 'net', 'url'
   ]
 })
 
 export function getPackageJson(filePath?: string) {
-  filePath = filePath ? path.resolve(filePath)
-    : path.resolve('package.json')
+  filePath = filePath ? path.join(rootDir, filePath)
+    : path.join(rootDir, 'package.json')
   return require(filePath)
 }
 
@@ -56,19 +60,19 @@ export function getPackageName(filePath?: string) {
 
 export function copyReadmeFile(filePath?: string) {
   const fileName = 'README.md'
-  filePath = filePath ? path.resolve(filePath): path.resolve(fileName)
+  filePath = filePath ? path.join(rootDir, filePath): path.join(rootDir, fileName)
   return copyFile(filePath, path.join(DEFAULT_VALUES.DIST_FOLDER, fileName))
 }
 
 export async function moveDtsFiles(options: { files?: string[], folder?: string } = {}) {
   const files = (!options.files) 
-    ? await globFiles(path.resolve(path.join(DEFAULT_VALUES.DIST_FOLDER, '**/*.d.ts'))) 
+    ? await globFiles(path.join(DEFAULT_VALUES.DIST_FOLDER, '**/*.d.ts'))
     : options.files
-  const destFolder = path.resolve(path.join(DEFAULT_VALUES.DIST_FOLDER, DEFAULT_VALUES.SOURCE_FOLDER))
+  const destFolder = path.join(DEFAULT_VALUES.DIST_FOLDER, 'src')
   if (files.length > 1) {
     mkdirp(destFolder)
     await Promise.all(files.map(file => {
-      const destFile = path.resolve(path.join(destFolder, path.basename(file)))
+      const destFile = path.join(destFolder, path.basename(file))
       return rename(file, destFile)
     }))
     await createDtsEntryFile()
@@ -77,8 +81,8 @@ export async function moveDtsFiles(options: { files?: string[], folder?: string 
 
 export async function renameDtsFile(options: { input: string, filePath?: string }) {
   const pkgName = getPackageName(options.filePath)
-  const dtsInputFileName = path.basename(options.input, 'ts') + 'd.ts'
-  const inputFullPath = path.resolve(path.join(DEFAULT_VALUES.DIST_FOLDER, dtsInputFileName))
+  const dtsInputFileName = path.basename(path.join(rootDir, options.input), 'ts') + 'd.ts'
+  const inputFullPath = path.join(DEFAULT_VALUES.DIST_FOLDER, dtsInputFileName)
   const destFullPath = path.join(path.dirname(inputFullPath), pkgName + '.d.ts')
   const isFileExist = await exist(destFullPath)
   if (!isFileExist) {
