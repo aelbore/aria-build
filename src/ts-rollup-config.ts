@@ -1,14 +1,19 @@
 import * as path from 'path'
 
 import { commonjs, nodeResolve, typescript2 } from './libs'
-import { getPackageName, DEFAULT_VALUES, rootDir } from './utils'
+import { getPackageName, DEFAULT_VALUES, baseDir } from './utils'
 
 export function onwarn(warning) {
   if (warning.code === 'THIS_IS_UNDEFINED') { return; }
   console.log("Rollup warning: ", warning.message);
 }
 
-export function createTSConfig(options: { input?: string, file?: string, tsconfig?: any, pluginOptions?: any } = {}) { 
+export function createTSConfig(options: { 
+  input?: string, 
+  file?: string, 
+  tsconfig?: any, 
+  pluginOptions?: any 
+} = {}) { 
   const { input, file, tsconfig, pluginOptions } = options
 
   const transformers = ((tsconfig && tsconfig.transformers) 
@@ -49,7 +54,7 @@ export function createTSConfig(options: { input?: string, file?: string, tsconfi
     },
     check: false,
     objectHashIgnoreUnknownHack: true,
-    cacheRoot: path.join(rootDir, 'node_modules/.tmp', outputFile), 
+    cacheRoot: path.join(baseDir(), 'node_modules/.tmp', outputFile), 
     /// compilerOptions.declation = true
     /// create dts files
     /// useTsconfigDeclarationDir === false and compilerOptions.declation = true
@@ -81,10 +86,10 @@ export function createTSRollupConfig(options: TSRollupConfig) {
   const { input, output, external, tsconfig, plugins } = options
   
   const file = (output && output.file) 
-    ? path.join(rootDir, output.file)
+    ? path.join(baseDir(), output.file)
     : path.join(DEFAULT_VALUES.DIST_FOLDER, getPackageName() + '.js')
 
-  const entry = path.join(rootDir, input)
+  const entry = path.join(baseDir(), input)
 
   return {
     inputOptions: {
