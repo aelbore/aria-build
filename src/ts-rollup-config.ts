@@ -51,6 +51,7 @@ export function createTSConfig(options: {
         ...compilerOptions
       },
       ...include,
+      ...((tsconfig && tsconfig.exclude) ? { exclude: tsconfig.exclude }: {})
     },
     check: false,
     objectHashIgnoreUnknownHack: true,
@@ -78,7 +79,8 @@ export interface TSRollupConfig {
   plugins?: any[];
   tsconfig?: {
     compilerOptions?: any,
-    transformers?: any[]
+    transformers?: any[],
+    exclude?: string[]
   }
 }
 
