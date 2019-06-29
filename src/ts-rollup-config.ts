@@ -76,7 +76,7 @@ export interface TSRollupConfig {
     exports?: string,
     globals?: any
   };
-  plugins?: any[];
+  plugins?: any[] | { before?: any[], after?: any[] };
   tsconfig?: {
     compilerOptions?: any,
     transformers?: any[],
@@ -93,6 +93,14 @@ export function createTSRollupConfig(options: TSRollupConfig) {
 
   const entry = path.join(baseDir(), input)
 
+  const beforePlugins = Array.isArray(plugins)
+    ? []
+    : (plugins && plugins.before ? plugins.before: [])
+
+  const afterPlugins = Array.isArray(plugins) 
+    ? (plugins || [])
+    : (plugins && plugins.after ? plugins.after: [])
+
   return {
     inputOptions: {
       input: entry,
@@ -102,6 +110,7 @@ export function createTSRollupConfig(options: TSRollupConfig) {
       ],
       treeshake: true,
       plugins: [
+        ...beforePlugins,
         typescript2(createTSConfig({ 
           input: entry, 
           file, 
@@ -109,7 +118,7 @@ export function createTSRollupConfig(options: TSRollupConfig) {
         })),
         commonjs(),
         nodeResolve(),
-        ...(plugins || [])
+        ...afterPlugins,
       ],
       onwarn
     },
