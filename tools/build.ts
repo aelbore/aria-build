@@ -1,4 +1,4 @@
-import { bundle, clean } from '../src'
+import { bundle, clean, copyFiles, TSRollupConfig } from '../src'
 
 (async function() {
   const pkg = require('../package.json')
@@ -7,7 +7,7 @@ import { bundle, clean } from '../src'
     ...Object.keys(pkg.dependencies)
   ]
   
-  const options = [
+  const options: TSRollupConfig[] = [
     {
       input: './src/index.ts',
       external,
