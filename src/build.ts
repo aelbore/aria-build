@@ -10,8 +10,8 @@ export async function rollupBuild({ inputOptions, outputOptions }) {
 
 export async function build(options: TSRollupConfig | Array<TSRollupConfig>) {
   const configs = Array.isArray(options) ? options: [ options ]
-  return settle(configs.map(config => {
-    return rollupBuild(createTSRollupConfig(config))
+  return settle(configs.map(async config => {
+    await rollupBuild(createTSRollupConfig(config))
   }))
 }
 
