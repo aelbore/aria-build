@@ -1,4 +1,4 @@
-import * as path from 'path'
+import { dirname, resolve, basename, join } from 'path'
 
 import { TSRollupConfig } from './ts-rollup-config'
 import { copyFile, writeFile, rename, exist } from './fs'
@@ -15,7 +15,7 @@ function pkgProps(options: any, pkgName: string) {
 
 async function createDtsEntryFile(filePath?: string) {
   const name = getPackageName(filePath)
-  const indexDts = path.resolve(path.join(DEFAULT_VALUES.DIST_FOLDER, DEFAULT_VALUES.SOURCE_FOLDER, 'index.d.ts'))
+  const indexDts = resolve(join(DEFAULT_VALUES.DIST_FOLDER, DEFAULT_VALUES.SOURCE_FOLDER, 'index.d.ts'))
 
   let content = `export * from './src/${name}'`
   if (await exist(indexDts)) {
@@ -23,7 +23,7 @@ async function createDtsEntryFile(filePath?: string) {
   }
  
   await writeFile(
-    path.resolve(path.join(DEFAULT_VALUES.DIST_FOLDER, name + '.d.ts')), 
+    resolve(join(DEFAULT_VALUES.DIST_FOLDER, name + '.d.ts')), 
     content
   )
 }
@@ -38,19 +38,19 @@ export interface PackageFile {
 export function baseDir() {
   return process.env.APP_ROOT_PATH 
     ? process.env.APP_ROOT_PATH
-    : path.resolve()
+    : resolve()
 }
 
 export const DEFAULT_VALUES = Object.freeze({
-  DIST_FOLDER: path.join(baseDir(), 'dist'),
-  SOURCE_FOLDER: path.join(baseDir(), 'src'),
+  DIST_FOLDER: join(baseDir(), 'dist'),
+  SOURCE_FOLDER: join(baseDir(), 'src'),
   ROLLUP_EXTERNALS: [
     'path', 'fs', 'util', 'crypto', 'events', 'http', 'net', 'url'
   ]
 })
 
 export function getPackageJson(filePath?: string) {
-  filePath = filePath ? filePath: path.join(baseDir(), 'package.json')
+  filePath = filePath ? filePath: join(baseDir(), 'package.json')
   return require(filePath)
 }
 
@@ -61,13 +61,12 @@ export function getPackageName(filePath?: string) {
 
 export function copyReadmeFile(filePath?: string) {
   const fileName = 'README.md'
-  filePath = filePath ? filePath: path.join(baseDir(), fileName)
-  return copyFile(filePath, path.join(DEFAULT_VALUES.DIST_FOLDER, fileName))
+  filePath = filePath ? filePath: join(baseDir(), fileName)
+  return copyFile(filePath, join(DEFAULT_VALUES.DIST_FOLDER, fileName))
 }
 
 export async function moveDtsFiles(options: { files?: string[], folder?: string } = {}) {
-  const { join, basename } = path
-  const files = (!options.files) 
+   const files = (!options.files) 
     ? await globFiles(join(DEFAULT_VALUES.DIST_FOLDER, '**/*.d.ts'))
     : options.files
   const destFolder = join(DEFAULT_VALUES.DIST_FOLDER, 'src')
@@ -82,7 +81,6 @@ export async function moveDtsFiles(options: { files?: string[], folder?: string 
 }
 
 export async function renameDtsFile(options: { input: string, filePath?: string }) {
-  const { basename, join, dirname } = path
   const pkgName = getPackageName(options.filePath)
   const dtsInputFileName = basename(join(baseDir(), options.input), 'ts') + 'd.ts'
   const inputFullPath = join(DEFAULT_VALUES.DIST_FOLDER, dtsInputFileName)
@@ -110,5 +108,5 @@ export async function copyPackageFile(options: PackageFile = {}) {
   const pkg = { ...pkgTemp, ...pkgProps(options, pkgTemp.name) }
   delete pkg.scripts
   delete pkg.devDependencies
-  await writeFile(path.join(DEFAULT_VALUES.DIST_FOLDER, 'package.json'), JSON.stringify(pkg, null, 2))
+  await writeFile(join(DEFAULT_VALUES.DIST_FOLDER, 'package.json'), JSON.stringify(pkg, null, 2))
 }
