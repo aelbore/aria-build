@@ -26,4 +26,4 @@ require('ts-node').register({
   }
 })
 
-require('../src/cli').run()
+require('../src').run()
