@@ -14,6 +14,8 @@ export interface BuildOptions {
   format?: string;
   external?: string;
   plugins?: any[];
+  name?: string;
+  globals?: string;
   clean?: string;
 }
 
@@ -28,6 +30,7 @@ export async function run() {
 
   const getInputFile = memoize(getEntryFile)
   const getExternalDeps = memoize(getExternal)
+  const getUmdGlobals = memoize(getGlobals)
 
   program
     .version(pkg.version)
@@ -35,6 +38,8 @@ export async function run() {
     .option('-f, --format', 'build specified formats', 'es,cjs')
     .option('--external', 'Specify external dependencies')
     .option('--clean', 'Clean the dist folder default', 'dist') 
+    .option('--globals', `Specify globals dependencies`)
+    .option('--name', 'Specify name exposed in UMD builds')
     .command('build [...entries]')
     .action(handler)
     .parse(process.argv)
@@ -50,6 +55,18 @@ export async function run() {
         return (cache[index] = fn.apply(this, args));
       }
     }
+  }
+
+  function getGlobals(globals: string = '') {
+    const results = globals.split(',')
+    const values = {}
+
+    results.forEach(result => {
+      const value = result.split('=')
+      values[value[0]] = value[1]
+    })
+
+    return values
   }
 
   function getExternal({ external, dependencies }) {
@@ -119,6 +136,26 @@ export async function run() {
     return configOptions
   }
 
+  function buildUmd({ pkgName, dependencies, external, globals, name }: BuildFormatOptions): TSRollupConfig {
+    const input = getInputFile(pkgName)
+    const file = `./${DEFAULT_OUT_DIR}/bundles/${pkgName}.js`
+
+    const configOptions: TSRollupConfig = {
+      input,
+      external: getExternalDeps({ external, dependencies }),
+      output: { 
+        file, 
+        format: 'umd',
+        globals: {
+          ...getUmdGlobals(globals)
+        },
+        name 
+      }
+    }
+
+    return configOptions
+  }
+
   async function getRollupPlugins() {
     const ROLLUP_CONFIG_PATH = resolve('aria.config.ts')
     if (fs.existsSync(ROLLUP_CONFIG_PATH)) {
@@ -143,6 +180,7 @@ export async function run() {
       switch(format) {
         case 'es': return buildES(args)
         case 'cjs': return buildCommonJS(args)
+        case 'umd': return buildUmd(args)
       }
     }))
 
