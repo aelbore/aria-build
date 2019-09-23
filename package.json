@@ -1,8 +1,11 @@
 {
   "name": "aria-build",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Build any web components",
   "main": "aria-build.js",
+  "bin": {
+    "aria": "./bin/aria.js"
+  },
   "scripts": {
     "build": "./bin/aria.js build -d"
   },
