@@ -24,8 +24,7 @@ export interface BuildFormatOptions extends BuildOptions {
   dependencies?: string[]
 }
 
-export async function run() {
-  const pkg = require('../package.json')
+export async function run(version: string) {
   const program = require('sade')('aria')
 
   const getInputFile = memoize(getEntryFile)
@@ -33,7 +32,7 @@ export async function run() {
   const getUmdGlobals = memoize(getGlobals)
 
   program
-    .version(pkg.version)
+    .version(version)
     .option('-d, --declaration', 'Generates corresponding .d.ts file', false)
     .option('-f, --format', 'build specified formats', 'es,cjs')
     .option('--external', 'Specify external dependencies')
@@ -170,7 +169,9 @@ export async function run() {
   async function handler(str: any, options?: BuildOptions) {
     const pkgJson = getPackageJson(), 
       pkgName = pkgJson.name,
-      dependencies = Object.keys(pkgJson.dependencies)
+      dependencies = pkgJson.dependencies 
+        ? Object.keys(pkgJson.dependencies)
+        : []
 
     options.plugins = await getRollupPlugins()
 
