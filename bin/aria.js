@@ -26,4 +26,6 @@ require('ts-node').register({
   }
 })
 
-require('../src').run()
+const pkg = require('../package.json')
+
+require('../src').run(pkg.version)
