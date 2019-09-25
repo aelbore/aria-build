@@ -183,8 +183,6 @@ export async function run(version: string) {
 
     options.plugins = await getRollupPlugins()
 
-    console.log(options.sourcemap)
-
     if (options.clean) {
       await clean(options.clean)
     }
