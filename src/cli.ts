@@ -1,11 +1,12 @@
 import * as fs from 'fs'
 
-import { resolve, join } from 'path'
+import { resolve, join, dirname } from 'path'
 
 import { TSRollupConfig } from './ts-rollup-config'
 import { getPackageJson } from './utils'
 import { bundle } from './build'
 import { clean } from './fs'
+import { mkdirp } from 'aria-fs'
 
 const DEFAULT_OUT_DIR = 'dist'
 
@@ -17,6 +18,7 @@ export interface BuildOptions {
   name?: string;
   globals?: string;
   clean?: string;
+  sourcemap?: boolean;
 }
 
 export interface BuildFormatOptions extends BuildOptions {
@@ -38,6 +40,7 @@ export async function run(version: string) {
     .option('--external', 'Specify external dependencies')
     .option('--clean', 'Clean the dist folder default', 'dist') 
     .option('--globals', `Specify globals dependencies`)
+    .option('--sourcemap', 'Generate source map', false)
     .option('--name', 'Specify name exposed in UMD builds')
     .command('build [...entries]')
     .action(handler)
@@ -97,7 +100,7 @@ export async function run(version: string) {
     throw new Error('Entry file is not exist.')
   }
 
-  function buildES({ pkgName, dependencies, declaration, external, plugins }: BuildFormatOptions): TSRollupConfig {
+  function buildES({ pkgName, dependencies, declaration, external, plugins, sourcemap }: BuildFormatOptions): TSRollupConfig {
     const input = getInputFile(pkgName)
     const file = `./${DEFAULT_OUT_DIR}/${pkgName}.es.js`
 
@@ -107,7 +110,8 @@ export async function run(version: string) {
       external: getExternalDeps({ external, dependencies }),
       output: { 
         file, 
-        format: 'es' 
+        format: 'es',
+        sourcemap
       },
       tsconfig: {
         compilerOptions: {
@@ -119,7 +123,7 @@ export async function run(version: string) {
     return configOptions
   }
 
-  function buildCommonJS({ pkgName, dependencies, external }: BuildFormatOptions): TSRollupConfig {
+  function buildCommonJS({ pkgName, dependencies, external, sourcemap }: BuildFormatOptions): TSRollupConfig {
     const input = getInputFile(pkgName)
     const file = `./${DEFAULT_OUT_DIR}/${pkgName}.js`
 
@@ -128,16 +132,19 @@ export async function run(version: string) {
       external: getExternalDeps({ external, dependencies }),
       output: { 
         file, 
-        format: 'cjs' 
+        format: 'cjs',
+        sourcemap
       }
     }
 
     return configOptions
   }
 
-  function buildUmd({ pkgName, dependencies, external, globals, name }: BuildFormatOptions): TSRollupConfig {
+  function buildUmd({ pkgName, dependencies, external, globals, name, sourcemap }: BuildFormatOptions): TSRollupConfig {
     const input = getInputFile(pkgName)
-    const file = `./${DEFAULT_OUT_DIR}/bundles/${pkgName}.js`
+    const file = `./${DEFAULT_OUT_DIR}/bundles/${pkgName}.umd.js`
+
+    mkdirp(dirname(file))
 
     const configOptions: TSRollupConfig = {
       input,
@@ -148,7 +155,8 @@ export async function run(version: string) {
         globals: {
           ...getUmdGlobals(globals)
         },
-        name 
+        name,
+        sourcemap
       }
     }
 
@@ -175,6 +183,12 @@ export async function run(version: string) {
 
     options.plugins = await getRollupPlugins()
 
+    console.log(options.sourcemap)
+
+    if (options.clean) {
+      await clean(options.clean)
+    }
+
     const formats = options.format.split(',')
     const configOptions = await Promise.all(formats.map(format => {
       const args = { pkgName, dependencies, ...options }
@@ -185,9 +199,6 @@ export async function run(version: string) {
       }
     }))
 
-    if (options.clean) {
-      await clean(options.clean)
-    }
     await bundle(configOptions)
   }
 
