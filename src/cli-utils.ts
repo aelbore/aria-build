@@ -2,20 +2,7 @@ import * as fs from 'fs'
 
 import { resolve, join } from 'path'
 
-export function memoize(fn: any){
-  let cache = {};
-  return (...args) => {
-    let index = JSON.stringify(args);
-    if (index in cache) {
-      return cache[index];
-    }
-    else {
-      return (cache[index] = fn.apply(this, args));
-    }
-  }
-}
-
-export function getGlobals(globals: string = '') {
+function getGlobals(globals: string = '') {
   const results = globals.split(',')
   const values = {}
 
@@ -27,7 +14,7 @@ export function getGlobals(globals: string = '') {
   return values
 }
 
-export function getExternal({ external, dependencies }) {
+function getExternal({ external, dependencies }) {
   return [
     ...(external 
           ? external.split(',')
@@ -36,7 +23,7 @@ export function getExternal({ external, dependencies }) {
   ]
 }
 
-export function getEntryFile(pkgName: string) {
+function getEntryFile(pkgName: string) {
   const rootDir = resolve()
   const tsPkgPath = join(rootDir, 'src', `${pkgName}.ts`),
     jsPkgPath = tsPkgPath.replace('.ts', '.js'),
@@ -55,3 +42,31 @@ export function getEntryFile(pkgName: string) {
 
   throw new Error('Entry file is not exist.')
 }
+
+export function memoize(fn: any){
+  let cache = {};
+  return (...args) => {
+    let index = JSON.stringify(args);
+    if (index in cache) {
+      return cache[index];
+    }
+    else {
+      return (cache[index] = fn.apply(this, args));
+    }
+  }
+}
+
+export async function getRollupPlugins() {
+  const ROLLUP_CONFIG_PATH = resolve('aria.config.ts')
+  if (fs.existsSync(ROLLUP_CONFIG_PATH)) {
+    const rollupConfig = require(ROLLUP_CONFIG_PATH)
+    if (rollupConfig.default.plugins) {
+      return rollupConfig.default.plugins
+    }
+  }
+  return null
+}
+
+export const getInputFile = memoize(getEntryFile)
+export const getExternalDeps = memoize(getExternal)
+export const getUmdGlobals = memoize(getGlobals)
