@@ -10,7 +10,8 @@
     "postinstall": "sh ./postinstall.sh",
     "build": "node ./bin/aria-build.js -d",
     "bundle": "ts-node tools/bundle.ts",
-    "build.packages": "ts-node tools/packages.ts"
+    "build.packages": "ts-node tools/packages.ts",
+    "reset.packages": "sh ./reset-packages.sh"
   },
   "repository": {
     "type": "git",
@@ -33,7 +34,7 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
-    "aria-fs": "0.0.6",
+    "aria-fs": "0.0.7",
     "rollup": "^1.27.8",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-minify-html-literals": "^1.2.2",
