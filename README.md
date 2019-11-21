@@ -2,16 +2,39 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 # aria-build
-Build any web components
+Build
 
 Installation
 ------------
-
   ```
     npm install --save-dev aria-build
   ```
 
-### Setup
+### CLI Options
+```
+  Usage
+    $ aria-build [options]
+
+  For more info, run any command with the `--help` flag
+    $ aria-build --help
+
+  Options
+    -d, --declaration    Generates corresponding .d.ts file  (default false)
+    -f, --format         build specified formats  (default es,cjs)
+    -i, --entry          Entry module(s)
+    -o, --output         Directory to place build files into  (default dist)
+    -c, --config         config file of aria-build. i.e aria.config.ts
+    --external           Specify external dependencies
+    --clean              Clean the dist folder default  (default dist)
+    --globals            Specify globals dependencies
+    --sourcemap          Generate source map  (default false)
+    --name               Specify name exposed in UMD builds
+    --compress           Compress or minify the output  (default false)
+    -v, --version        Displays current version
+    -h, --help           Displays this message
+```
+
+### API Setup
 ```javascript
 import { bundle, TSRollupConfig, clean } from 'aria-build'
 
