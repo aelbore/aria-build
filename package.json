@@ -1,6 +1,6 @@
 {
   "name": "aria-build",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Build any web components",
   "main": "aria-build.js",
   "bin": {
@@ -27,18 +27,18 @@
     "typescript": "^3.5.3"
   },
   "devDependencies": {
-    "typescript": "^3.6.3"
+    "typescript": "^3.7.2"
   },
   "dependencies": {
     "aria-fs": "0.0.4",
-    "rollup": "^1.22.0",
+    "rollup": "^1.27.3",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-minify-html-literals": "^1.2.2",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-strict-alias": "^1.0.0",
     "rollup-plugin-terser": "^5.1.2",
-    "rollup-plugin-typescript2": "^0.24.3",
+    "rollup-plugin-typescript2": "^0.25.2",
     "sade": "^1.6.1",
-    "ts-node": "^8.4.1"
+    "ts-node": "^8.5.2"
   }
 }
