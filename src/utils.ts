@@ -36,9 +36,7 @@ export interface PackageFile {
 }
 
 export function baseDir() {
-  return process.env.APP_ROOT_PATH 
-    ? process.env.APP_ROOT_PATH
-    : resolve()
+  return process.env.APP_ROOT_PATH ?? resolve()
 }
 
 export const DEFAULT_VALUES = Object.freeze({
@@ -50,7 +48,7 @@ export const DEFAULT_VALUES = Object.freeze({
 })
 
 export function getPackageJson(filePath?: string) {
-  filePath = filePath ? filePath: join(baseDir(), 'package.json')
+  filePath = filePath ?? join(baseDir(), 'package.json')
   return require(filePath)
 }
 
@@ -61,7 +59,7 @@ export function getPackageName(filePath?: string) {
 
 export function copyReadmeFile(filePath?: string) {
   const fileName = 'README.md'
-  filePath = filePath ? filePath: join(baseDir(), fileName)
+  filePath = filePath ?? join(baseDir(), fileName)
   return copyFile(filePath, join(DEFAULT_VALUES.DIST_FOLDER, fileName))
 }
 

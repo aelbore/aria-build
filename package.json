@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/aelbore/aria-build#readme",
   "peerDependencies": {
-    "typescript": "^3.5.3"
+    "typescript": "^3.7.2"
   },
   "devDependencies": {
     "typescript": "^3.7.2"
