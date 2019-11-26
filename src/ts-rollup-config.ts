@@ -16,14 +16,9 @@ export function createTSConfig(options: {
 } = {}) { 
   const { input, file, tsconfig, pluginOptions } = options
 
-  const transformers = ((tsconfig && tsconfig.transformers) 
-    ? tsconfig.transformers: []) 
-
-  const compilerOptions = ((tsconfig && tsconfig.compilerOptions) 
-    ? tsconfig.compilerOptions: {})
-
+  const transformers = tsconfig?.transformers ?? []
+  const compilerOptions = tsconfig?.compilerOptions ?? {}
   const outputFile = file ? path.basename(file): '.rts2_cache'
-
   const include = input ? { include: [ input ] }: {}
 
   return {
@@ -95,11 +90,11 @@ export function createTSRollupConfig(options: TSRollupConfig) {
 
   const beforePlugins = Array.isArray(plugins)
     ? []
-    : (plugins && plugins.before ? plugins.before: [])
+    : (plugins?.before ?? [])
 
   const afterPlugins = Array.isArray(plugins) 
     ? (plugins || [])
-    : (plugins && plugins.after ? plugins.after: [])
+    : (plugins?.after ?? [])
 
   return {
     inputOptions: {
