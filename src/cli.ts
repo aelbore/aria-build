@@ -8,7 +8,7 @@ import { buildES } from './cli-build-es'
 import { buildUmd } from './cli-build-umd'
 
 export async function run(version: string) {
-  const program = require('sade')('aria')
+  const program = require('sade')('aria-build', true)
 
   program
     .version(version)
@@ -20,11 +20,10 @@ export async function run(version: string) {
     .option('--sourcemap', 'Generate source map', false)
     .option('--name', 'Specify name exposed in UMD builds')
     .option('--compress', 'Compress or minify the output')
-    .command('build [...entries]')
     .action(handler)
     .parse(process.argv)
 
-  async function handler(str: any, options?: BuildOptions) {
+  async function handler(options?: BuildOptions) {
     const pkgJson = getPackageJson(), 
       pkgName = pkgJson.name,
       dependencies = pkgJson.dependencies 

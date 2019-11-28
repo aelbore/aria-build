@@ -19,6 +19,9 @@ const compilerOptions = (fs.existsSync(TS_CONFIG_PATH)
   {}
 )
 
+delete compilerOptions.exclude
+delete compilerOptions.include
+
 require('ts-node').register({
   compilerOptions: {
     ...compilerOptions,
