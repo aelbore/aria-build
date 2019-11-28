@@ -1,13 +1,13 @@
 {
   "name": "aria-build",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Build any web components",
   "main": "aria-build.js",
   "bin": {
-    "aria": "./bin/aria.js"
+    "aria-build": "./bin/aria-build.js"
   },
   "scripts": {
-    "build": "./bin/aria.js build -d"
+    "build": "node ./bin/aria-build.js -d"
   },
   "repository": {
     "type": "git",
@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "aria-fs": "0.0.4",
-    "rollup": "^1.27.3",
+    "rollup": "^1.27.5",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-minify-html-literals": "^1.2.2",
     "rollup-plugin-node-resolve": "^5.2.0",

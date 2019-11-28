@@ -46,7 +46,7 @@ export function createTSConfig(options: {
         ...compilerOptions
       },
       ...include,
-      ...((tsconfig && tsconfig.exclude) ? { exclude: tsconfig.exclude }: {})
+      ...(tsconfig?.exclude ? { exclude: tsconfig.exclude }: {})
     },
     check: false,
     objectHashIgnoreUnknownHack: true,
@@ -55,7 +55,7 @@ export function createTSConfig(options: {
     /// create dts files
     /// useTsconfigDeclarationDir === false and compilerOptions.declation = true
     /// create dts files
-    useTsconfigDeclarationDir: (compilerOptions ? !compilerOptions.declaration: true),
+    useTsconfigDeclarationDir: !compilerOptions?.declaration ?? true,    
     ...(pluginOptions || {})
   }
 }
