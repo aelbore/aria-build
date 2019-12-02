@@ -1,6 +1,6 @@
 {
   "name": "aria-build",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Build any web components",
   "main": "aria-build.js",
   "bin": {
@@ -32,7 +32,7 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
-    "aria-fs": "0.0.5",
+    "aria-fs": "0.0.6",
     "rollup": "^1.27.8",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-minify-html-literals": "^1.2.2",
