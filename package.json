@@ -7,7 +7,9 @@
     "aria-build": "./bin/aria-build.js"
   },
   "scripts": {
-    "build": "node ./bin/aria-build.js -d"
+    "postinstall": "sh ./postinstall.sh",
+    "build": "node ./bin/aria-build.js -d",
+    "build.packages": "ts-node tools/packages.ts"
   },
   "repository": {
     "type": "git",
@@ -31,7 +33,7 @@
   },
   "dependencies": {
     "aria-fs": "0.0.5",
-    "rollup": "^1.27.5",
+    "rollup": "^1.27.8",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-minify-html-literals": "^1.2.2",
     "rollup-plugin-node-resolve": "^5.2.0",

@@ -1,5 +1,6 @@
 import * as path from 'path'
 import { copy, readFile, replace, writeFile } from './src'
+import { link } from './tools/link-plugin'
 
 const replaceContent = async (filename: string) => {
   if (path.extname(filename).includes('.js')) {
@@ -17,7 +18,14 @@ export default {
     after: [
       copy({
         targets: [
-          { src: 'bin/*', dest: 'dist/bin', replace: replaceContent } 
+          { src: 'bin/*', dest: 'dist/bin', replace: replaceContent }
+        ]
+      }),
+      link({
+        targets: [
+          { package: 'aria-fs' },
+          { package: 'aria-mocha' },
+          { package: 'lit-element-transpiler' }
         ]
       })
     ]
