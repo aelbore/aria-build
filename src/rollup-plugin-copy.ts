@@ -79,7 +79,7 @@ export function replace(string: string, needle: string, replacement: string | Fu
 
 export async function copyAssets(options?: RollupPluginCopyOptions) {
   const { targets } = options
-  return Promise.all(targets.map(async target => {
+  await Promise.all(targets.map(async target => {
     const files = await globFiles(target.src)
     await Promise.all(files.map(async file => {
       let destFile = resolve(join(target.dest, basename(file)))

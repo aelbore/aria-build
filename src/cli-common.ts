@@ -1,6 +1,7 @@
 export const DEFAULT_OUT_DIR = 'dist'
 
 export interface BuildOptions {
+	entry?: string;
 	declaration?: boolean;
 	format?: string;
 	external?: string;

@@ -1,0 +1,9 @@
+[submodule "packages/aria-fs"]
+	path = packages/aria-fs
+	url = https://github.com/aelbore/aria-fs.git
+[submodule "packages/aria-mocha"]
+	path = packages/aria-mocha
+	url = https://github.com/aelbore/aria-mocha.git
+[submodule "packages/lit-element-transpiler"]
+	path = packages/lit-element-transpiler
+	url = https://github.com/aelbore/lit-element-transpiler.git

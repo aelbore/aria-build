@@ -1,11 +1,12 @@
-import { getPackageJson } from './utils'
-import { bundle } from './build'
+import { getPackageJson, copyPackageFile, copyReadmeFile, moveDtsFiles, renameDtsEntryFile } from './utils'
+import { build } from './build'
 import { clean } from './fs'
 import { BuildOptions } from './cli-common' 
 import { getRollupPlugins } from './cli-utils'
 import { buildCommonJS } from './cli-build-cjs'
 import { buildES } from './cli-build-es'
 import { buildUmd } from './cli-build-umd'
+import { settle } from './settle'
 
 export async function run(version: string) {
   const program = require('sade')('aria-build', true)
@@ -14,6 +15,7 @@ export async function run(version: string) {
     .version(version)
     .option('-d, --declaration', 'Generates corresponding .d.ts file', false)
     .option('-f, --format', 'build specified formats', 'es,cjs')
+    .option('-i, --entry', 'Entry module(s)')
     .option('--external', 'Specify external dependencies')
     .option('--clean', 'Clean the dist folder default', 'dist') 
     .option('--globals', `Specify globals dependencies`)
@@ -24,6 +26,8 @@ export async function run(version: string) {
     .parse(process.argv)
 
   async function handler(options?: BuildOptions) {
+    const entry = options.entry;
+
     const pkgJson = getPackageJson(), 
       pkgName = pkgJson.name,
       dependencies = pkgJson.dependencies 
@@ -46,7 +50,9 @@ export async function run(version: string) {
       }
     }))
 
-    await bundle(configOptions)
+    await build(configOptions)
+    await settle([ copyPackageFile({ entry }), copyReadmeFile(), renameDtsEntryFile(configOptions, entry) ])
+    await moveDtsFiles({ entry })
   }
 
 }
