@@ -3,6 +3,7 @@ import { dirname, resolve, basename, join } from 'path'
 import { TSRollupConfig } from './ts-rollup-config'
 import { copyFile, writeFile, rename, exist } from './fs'
 import { globFiles, mkdirp } from 'aria-fs'
+import { DEFAULT_OUT_DIR } from './cli-common'
 
 function pkgProps(options: any, pkgName: string) {
   const { main, module, typings, format } = options
@@ -14,6 +15,22 @@ function pkgProps(options: any, pkgName: string) {
             : `${pkgName}.es.js`),
     typings: typings || `${pkgName}.d.ts`
   }
+}
+
+export const DEFAULT_VALUES = Object.freeze({
+  DIST_FOLDER: join(baseDir(), DEFAULT_OUT_DIR),
+  SOURCE_FOLDER: join(baseDir(), 'src'),
+  ROLLUP_EXTERNALS: [ 'path', 'fs', 'util', 'crypto', 'events', 'http', 'net', 'url']
+})
+
+export interface PackageFile {
+  filePath?: string;
+  main?: string;
+  module?: string;
+  typings?: string;
+  entry?: string;
+  output?: string;
+  format?: string;
 }
 
 export function getInputEntryFile(input: string) {
@@ -31,31 +48,12 @@ export async function createDtsEntry(options?: { filePath?: string, output?: str
     content = `export * from './src/index'`
   }
  
-  await writeFile(
-    resolve(join(outDir, name + '.d.ts')), 
-    content
-  )
-}
-
-export interface PackageFile {
-  filePath?: string;
-  main?: string;
-  module?: string;
-  typings?: string;
-  entry?: string;
-  output?: string;
-  format?: string;
+  await writeFile(resolve(join(outDir, name + '.d.ts')), content)
 }
 
 export function baseDir() {
   return process.env.APP_ROOT_PATH ?? resolve()
 }
-
-export const DEFAULT_VALUES = Object.freeze({
-  DIST_FOLDER: join(baseDir(), 'dist'),
-  SOURCE_FOLDER: join(baseDir(), 'src'),
-  ROLLUP_EXTERNALS: [ 'path', 'fs', 'util', 'crypto', 'events', 'http', 'net', 'url']
-})
 
 export function getPackageJson(filePath?: string) {
   filePath = filePath ?? join(baseDir(), 'package.json')

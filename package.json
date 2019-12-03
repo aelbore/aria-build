@@ -1,6 +1,6 @@
 {
   "name": "aria-build",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Build any web components",
   "main": "aria-build.js",
   "bin": {
@@ -31,8 +31,6 @@
     "typescript": "^3.7.2"
   },
   "devDependencies": {
-    "lit-element": "^2.2.1",
-    "rollup-plugin-inline-lit-element": "0.0.4",
     "typescript": "^3.7.2"
   },
   "dependencies": {

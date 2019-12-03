@@ -7,16 +7,8 @@ const entryFile = (format?: string, entry?: string) => {
   return (format?.split(',').length === 1) ? `${entry}.js`: `${entry}.es.js`
 }
 
-export function buildES({ pkgName, 
-  entry, 
-  output, 
-  dependencies, 
-  declaration, 
-  external, 
-  plugins, 
-  format,
-  sourcemap 
-}: BuildFormatOptions): TSRollupConfig {
+export function buildES(options?: BuildFormatOptions): TSRollupConfig {
+    const { pkgName, entry, output, dependencies, declaration, external, plugins, format, sourcemap } = options
     const outDir = output.replace('./', '');
 
     const input = entry ?? getInputFile(pkgName)
