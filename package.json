@@ -1,6 +1,6 @@
 {
   "name": "aria-build",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Build any web components",
   "main": "aria-build.js",
   "bin": {
@@ -9,6 +9,7 @@
   "scripts": {
     "postinstall": "sh ./postinstall.sh",
     "build": "node ./bin/aria-build.js -d",
+    "hello": "node ./bin/aria-build.js -f es -i ./examples/hello-world.js -c ./tools/hello-world.config.ts",
     "bundle": "ts-node tools/bundle.ts",
     "build.packages": "ts-node tools/packages.ts"
   },
