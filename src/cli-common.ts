@@ -10,6 +10,8 @@ export interface BuildOptions {
 	globals?: string;
 	clean?: string;
 	sourcemap?: boolean;
+	config?: string;
+	output?: string;
 }
   
 export interface BuildFormatOptions extends BuildOptions {

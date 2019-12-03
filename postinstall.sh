@@ -17,6 +17,6 @@ npm run build
 
 npm run build.packages
 
-npm run test --prefix ./packages/aria-fs/
-npm run test --prefix ./packages/aria-mocha/
-npm run test --prefix ./packages/lit-element-transpiler/
+npm test --prefix ./packages/aria-fs/
+npm test --prefix ./packages/aria-mocha/
+npm test --prefix ./packages/lit-element-transpiler/

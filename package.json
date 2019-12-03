@@ -9,6 +9,7 @@
   "scripts": {
     "postinstall": "sh ./postinstall.sh",
     "build": "node ./bin/aria-build.js -d",
+    "bundle": "ts-node tools/bundle.ts",
     "build.packages": "ts-node tools/packages.ts"
   },
   "repository": {
