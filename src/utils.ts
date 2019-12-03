@@ -5,10 +5,13 @@ import { copyFile, writeFile, rename, exist } from './fs'
 import { globFiles, mkdirp } from 'aria-fs'
 
 function pkgProps(options: any, pkgName: string) {
-  const { main, module, typings } = options
+  const { main, module, typings, format } = options
   return {
     main: main || `${pkgName}.js`,
-    module: module || `${pkgName}.es.js`,
+    module: module 
+      || ((format?.split(',').length === 1) 
+            ? `${pkgName}.js`
+            : `${pkgName}.es.js`),
     typings: typings || `${pkgName}.d.ts`
   }
 }
@@ -41,6 +44,7 @@ export interface PackageFile {
   typings?: string;
   entry?: string;
   output?: string;
+  format?: string;
 }
 
 export function baseDir() {
