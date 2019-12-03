@@ -1,4 +1,5 @@
 import { clean } from './fs'
+import { settle } from './settle'
 
 export function cleaner(targets?: string | string[]) {
   return {
@@ -8,7 +9,7 @@ export function cleaner(targets?: string | string[]) {
         ? []
         : Array.isArray(targets) ? targets: [ targets ]  
 
-      await Promise.all(folders.map(async target => {
+      await settle(folders.map(async target => {
         await clean(target)
       }))
     }
