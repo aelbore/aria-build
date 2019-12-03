@@ -1,7 +1,11 @@
-import { basename } from 'path'
 import { BuildFormatOptions } from './cli-common'
 import { TSRollupConfig } from './ts-rollup-config'
 import { getInputFile, getExternalDeps } from './cli-utils'
+import { getInputEntryFile } from './utils';
+
+const entryFile = (format?: string, entry?: string) => {
+  return (format?.split(',').length === 1) ? `${entry}.js`: `${entry}.es.js`
+}
 
 export function buildES({ pkgName, 
   entry, 
@@ -10,14 +14,15 @@ export function buildES({ pkgName,
   declaration, 
   external, 
   plugins, 
+  format,
   sourcemap 
 }: BuildFormatOptions): TSRollupConfig {
     const outDir = output.replace('./', '');
 
     const input = entry ?? getInputFile(pkgName)
     const file = entry
-      ?  `./${outDir}/${basename(entry, '.ts')}.es.js`
-      :  `./${outDir}/${pkgName}.es.js`
+      ? entryFile(format, `./${outDir}/${getInputEntryFile(entry)}`)
+      : entryFile(format, `./${outDir}/${pkgName}`)
 
     const configOptions: TSRollupConfig = {
       input,

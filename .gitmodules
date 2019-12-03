@@ -10,3 +10,6 @@
 [submodule "packages/rollup-plugin-inline-lit-element"]
 	path = packages/rollup-plugin-inline-lit-element
 	url = https://github.com/aelbore/rollup-plugin-inline-lit-element.git
+[submodule "packages/inline-styles-lit-element"]
+	path = packages/inline-styles-lit-element
+	url = https://github.com/aelbore/inline-styles-lit-element.git
