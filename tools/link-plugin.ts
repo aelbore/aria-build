@@ -1,7 +1,8 @@
 import * as path from 'path'
-import { symlinkDir, exist } from "../src";
+import { symlinkDir, exist } from '../src';
 
 export interface LinkOptions {
+  outDir?: string,
   targets?: {
     package?: string,
     dest?: string
@@ -9,12 +10,13 @@ export interface LinkOptions {
 }
 
 export async function linkToPackages(options?: LinkOptions) {
-  const { targets } = options;
+  const { targets, outDir } = options;
+  const inputDir = outDir ??  './dist';
   await Promise.all(targets.map(async target => {
     const dest = path.resolve(`./packages/${target.package}/node_modules/aria-build`)
     const isDirExist = await exist(path.dirname(dest))
     if (isDirExist) {       
-      await symlinkDir('./dist', dest)
+      await symlinkDir(inputDir, dest)
     }        
   }))
 }

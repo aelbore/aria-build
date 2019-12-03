@@ -12,13 +12,14 @@ import { symlinkDir } from 'aria-fs'
     execSync(`npm run build --prefix ./packages/${pkg}`)
   }))
 
-  await symlinkDir(
-    './packages/aria-mocha/dist', 
-    './packages/aria-fs/node_modules/aria-mocha'
-  )
-  await symlinkDir(
-    './packages/aria-mocha/dist', 
-    './packages/lit-element-transpiler/node_modules/aria-mocha'
-  )
-    
+  await Promise.all([
+    await symlinkDir(
+      './packages/aria-mocha/dist', 
+      './packages/aria-fs/node_modules/aria-mocha'
+    ),
+    await symlinkDir(
+      './packages/aria-mocha/dist', 
+      './packages/lit-element-transpiler/node_modules/aria-mocha'
+    )
+  ])    
 })()

@@ -56,8 +56,8 @@ export function memoize(fn: any){
   }
 }
 
-export async function getRollupPlugins() {
-  const ROLLUP_CONFIG_PATH = resolve('aria.config.ts')
+export async function getRollupPlugins(config?: string) {
+  const ROLLUP_CONFIG_PATH = resolve(config ?? 'aria.config.ts')
   if (fs.existsSync(ROLLUP_CONFIG_PATH)) {
     const rollupConfig = require(ROLLUP_CONFIG_PATH)
     if (rollupConfig.default.plugins) {
