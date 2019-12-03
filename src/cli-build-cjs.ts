@@ -1,24 +1,16 @@
-import { basename } from 'path'
 import { BuildFormatOptions } from './cli-common'
 import { TSRollupConfig } from './ts-rollup-config'
 import { getInputFile, getExternalDeps } from './cli-utils'
+import { getInputEntryFile } from './utils'
 
-export function buildCommonJS({ pkgName, 
-  dependencies, 
-  format, 
-  entry,
-  plugins, 
-  declaration, 
-  external, 
-  sourcemap,
-  output
-}: BuildFormatOptions): TSRollupConfig {
-  const outDir = output.replace('./', '');
+export function buildCommonJS(options?: BuildFormatOptions): TSRollupConfig {
+  const { pkgName, dependencies, format, entry, plugins, declaration, external, sourcemap, output } = options
+  const outDir = output?.replace('./', '');
 
   const input = entry ?? getInputFile(pkgName)
   const file = entry
-    ?  `./${outDir}/${basename(entry, '.ts')}.js`
-    :  `./${outDir}/${pkgName}.js`
+    ? `./${outDir}/${getInputEntryFile(entry)}.js`
+    : `./${outDir}/${pkgName}.js`
 
   const tsconfig = {
     compilerOptions: { declaration }

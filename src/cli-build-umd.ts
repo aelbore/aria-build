@@ -4,15 +4,8 @@ import { getInputFile, getExternalDeps, getUmdGlobals } from './cli-utils'
 import { mkdirp } from './fs'
 import { dirname } from 'path'
 
-export function buildUmd({ 
-  pkgName, 
-  dependencies, 
-  output, 
-  external, 
-  globals, 
-  name, 
-  sourcemap 
-}: BuildFormatOptions): TSRollupConfig {
+export function buildUmd(options?: BuildFormatOptions): TSRollupConfig {
+  const { pkgName, dependencies, output, external, globals, name, sourcemap } = options
   const outDir = output.replace('./', '');
 
   const input = getInputFile(pkgName)
