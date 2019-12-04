@@ -1,20 +1,5 @@
-import { copy } from './src'
-import { link } from './tools/link-plugin'
-import { replaceContent } from './tools/common'
+import { plugins } from './tools/plugins'
 
 export default {
-  plugins: [
-    copy({
-      targets: [
-        { src: 'bin/*', dest: 'dist/bin', replace: replaceContent }
-      ]
-    }),
-    link({
-      targets: [
-        { package: 'aria-fs' },
-        { package: 'aria-mocha' },
-        { package: 'lit-element-transpiler' }
-      ]
-    })
-  ]
+  plugins
 }

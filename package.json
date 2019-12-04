@@ -1,6 +1,6 @@
 {
   "name": "aria-build",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "Build any web components",
   "main": "aria-build.js",
   "bin": {
@@ -11,7 +11,8 @@
     "build": "node ./bin/aria-build.js -d",
     "hello": "node ./bin/aria-build.js -f es -i ./examples/hello-world.js -c ./tools/hello-world.config.ts",
     "bundle": "ts-node tools/bundle.ts",
-    "build.packages": "ts-node tools/packages.ts"
+    "build.packages": "ts-node tools/packages.ts",
+    "reset.packages": "sh ./reset-packages.sh"
   },
   "repository": {
     "type": "git",
@@ -34,14 +35,14 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
-    "aria-fs": "0.0.6",
+    "aria-fs": "0.0.7",
     "rollup": "^1.27.8",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-minify-html-literals": "^1.2.2",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-strict-alias": "^1.0.0",
     "rollup-plugin-terser": "^5.1.2",
-    "rollup-plugin-typescript2": "^0.25.2",
+    "rollup-plugin-typescript2": "^0.25.3",
     "sade": "^1.6.1",
     "ts-node": "^8.5.4"
   }
