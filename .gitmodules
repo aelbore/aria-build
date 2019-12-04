@@ -7,3 +7,6 @@
 [submodule "packages/lit-element-transpiler"]
 	path = packages/lit-element-transpiler
 	url = https://github.com/aelbore/lit-element-transpiler.git
+[submodule "packages/rollup-plugin-inline-lit-element"]
+	path = packages/rollup-plugin-inline-lit-element
+	url = https://github.com/aelbore/rollup-plugin-inline-lit-element.git

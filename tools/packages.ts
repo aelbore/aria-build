@@ -5,7 +5,8 @@ import { symlinkDir } from 'aria-fs'
   const packages = [
     "aria-fs",
     "aria-mocha",
-    "lit-element-transpiler"
+    "lit-element-transpiler",
+    "rollup-plugin-inline-lit-element"
   ]
 
   await Promise.all(packages.map(pkg => {
