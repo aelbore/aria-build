@@ -13,6 +13,10 @@ cd packages/lit-element-transpiler
 npm install
 
 cd ../../
+cd packages/rollup-plugin-inline-lit-element
+npm install
+
+cd ../../
 npm run build
 
 npm run build.packages
