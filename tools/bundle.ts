@@ -1,27 +1,11 @@
-import { TSRollupConfig, clean, bundle, copy} from '../src'
-import { link } from './link-plugin'
-import { replaceContent } from './common'
+import { TSRollupConfig, clean, bundle } from '../src'
+import { plugins } from './plugins'
 
 (async function() {
   const pkg = require('../package.json')
 
   const external = [
     ...Object.keys(pkg.dependencies)
-  ]
-
-  const plugins = [
-    copy({
-      targets: [
-        { src: 'bin/*', dest: 'dist/bin', replace: replaceContent }
-      ]
-    }),
-    link({
-      targets: [
-        { package: 'aria-fs' },
-        { package: 'aria-mocha' },
-        { package: 'lit-element-transpiler' }
-      ]
-    })
   ]
 
   const configOptions: TSRollupConfig[] = [

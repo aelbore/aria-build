@@ -1,6 +1,6 @@
 {
   "name": "aria-build",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "Build any web components",
   "main": "aria-build.js",
   "bin": {
@@ -9,7 +9,6 @@
   "scripts": {
     "postinstall": "sh ./postinstall.sh",
     "build": "node ./bin/aria-build.js -d",
-    "hello": "node ./bin/aria-build.js -f es -i ./examples/hello-world.js -c ./tools/hello-world.config.ts",
     "bundle": "ts-node tools/bundle.ts",
     "build.packages": "ts-node tools/packages.ts"
   },
@@ -41,7 +40,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-strict-alias": "^1.0.0",
     "rollup-plugin-terser": "^5.1.2",
-    "rollup-plugin-typescript2": "^0.25.2",
+    "rollup-plugin-typescript2": "^0.25.3",
     "sade": "^1.6.1",
     "ts-node": "^8.5.4"
   }

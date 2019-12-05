@@ -1,5 +1,5 @@
-import { dirname, sep, resolve, basename, join } from 'path'
-import { copyFile, mkdirp, globFiles, exist, stats } from './fs'
+import { dirname, sep, resolve, basename, join, extname } from 'path'
+import { copyFile, mkdirp, globFiles, exist, stats, readFile, writeFile } from './fs'
 
 async function getSrcRootDir(src: string) {
   let srcRootDir = dirname(src)
@@ -28,6 +28,22 @@ export interface RollupPluginCopyOptions {
     recursive?: boolean,
     replace?: (filename: string) => Promise<void>
   }[]
+}
+
+export async function replaceContent(options?: { 
+  filename?: string, 
+  strToFind?: string, 
+  strToReplace?: string 
+}) {
+  const { filename, strToFind, strToReplace } = options
+  if (extname(filename).includes('.js')) {
+    let content = await readFile(filename, 'utf8')
+    if (content.includes(strToFind)) {
+      content = replace(content, strToFind, strToReplace)
+      await writeFile(filename, content)
+    }
+  }
+  return Promise.resolve()
 }
 
 export function replace(string: string, needle: string, replacement: string | Function, options = {}) {
@@ -102,3 +118,4 @@ export function copy({ hook = 'buildEnd', targets = [] }: RollupPluginCopyOption
     [hook]: () => copyAssets({ targets })
   }
 }
+
