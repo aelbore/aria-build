@@ -1,5 +1,4 @@
-import * as path from 'path'
-
+import { basename, join } from 'path'
 import { commonjs, nodeResolve, typescript2 } from './libs'
 import { getPackageName, DEFAULT_VALUES, baseDir } from './utils'
 
@@ -18,7 +17,7 @@ export function createTSConfig(options: {
 
   const transformers = tsconfig?.transformers ?? []
   const compilerOptions = tsconfig?.compilerOptions ?? {}
-  const outputFile = file ? path.basename(file): '.rts2_cache'
+  const outputFile = file ? basename(file): '.rts2_cache'
   const include = input ? { include: [ input ] }: {}
 
   return {
@@ -50,7 +49,7 @@ export function createTSConfig(options: {
     },
     check: false,
     objectHashIgnoreUnknownHack: true,
-    cacheRoot: path.join(baseDir(), 'node_modules/.tmp', outputFile), 
+    cacheRoot: join(baseDir(), 'node_modules/.tmp', outputFile), 
     /// compilerOptions.declation = true
     /// create dts files
     /// useTsconfigDeclarationDir === false and compilerOptions.declation = true
@@ -82,11 +81,11 @@ export interface TSRollupConfig {
 export function createTSRollupConfig(options: TSRollupConfig) {
   const { input, output, external, tsconfig, plugins } = options
   
-  const file = (output && output.file) 
-    ? path.join(baseDir(), output.file)
-    : path.join(DEFAULT_VALUES.DIST_FOLDER, getPackageName() + '.js')
+  const file = output?.file 
+    ? join(baseDir(), output.file)
+    : join(DEFAULT_VALUES.DIST_FOLDER, getPackageName() + '.js')
 
-  const entry = path.join(baseDir(), input)
+  const entry = join(baseDir(), input)
 
   const beforePlugins = Array.isArray(plugins)
     ? []

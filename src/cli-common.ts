@@ -12,6 +12,7 @@ export interface BuildOptions {
 	sourcemap?: boolean;
 	config?: string;
 	output?: string;
+	compress?: boolean;
 }
   
 export interface BuildFormatOptions extends BuildOptions {

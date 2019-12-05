@@ -7,11 +7,13 @@
     "aria-build": "./bin/aria-build.js"
   },
   "scripts": {
+    "fs": "aria-fs",
     "postinstall": "sh ./postinstall.sh",
     "build": "node ./bin/aria-build.js -d",
     "bundle": "ts-node tools/bundle.ts",
     "build.packages": "ts-node tools/packages.ts",
-    "reset.packages": "sh ./reset-packages.sh"
+    "reset.packages": "sh ./reset-packages.sh",
+    "test": "aria-mocha"
   },
   "repository": {
     "type": "git",
@@ -31,6 +33,8 @@
     "typescript": "^3.7.2"
   },
   "devDependencies": {
+    "@types/mocha": "^5.2.7",
+    "aria-mocha": "^0.0.6",
     "typescript": "^3.7.2"
   },
   "dependencies": {

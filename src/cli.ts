@@ -23,7 +23,7 @@ export async function run(version: string) {
     .option('--globals', `Specify globals dependencies`)
     .option('--sourcemap', 'Generate source map', false)
     .option('--name', 'Specify name exposed in UMD builds')
-    .option('--compress', 'Compress or minify the output')
+    .option('--compress', 'Compress or minify the output', false)
     .action(handler)
     .parse(process.argv)
 
@@ -54,7 +54,7 @@ export async function run(version: string) {
 
     await build(configOptions)
     await settle([ copyPackageFile(options), copyReadMeFile(options), renameDtsEntryFile(configOptions, entry) ])
-    await moveDtsFiles(options)
+    await moveDtsFiles(options)    
   }
 
 }
