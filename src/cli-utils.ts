@@ -1,6 +1,7 @@
 import * as fs from 'fs'
 
 import { resolve, join } from 'path'
+import { terser } from './libs'
 
 function getGlobals(globals: string = '') {
   const results = globals.split(',')
@@ -43,6 +44,16 @@ function getEntryFile(pkgName: string) {
   throw new Error('Entry file is not exist.')
 }
 
+function addTerserPlugins(plugins: any[], compress: boolean) {
+  if (compress) {
+    plugins.push(terser({
+      output: {
+        comments: false
+      }
+    }))
+  }
+}
+
 export function memoize(fn: any){
   let cache = {};
   return (...args) => {
@@ -67,6 +78,11 @@ export async function getRollupPlugins(config?: string) {
   return null
 }
 
+export function entryFile(format?: string, entry?: string, module?: string) {
+  return (format?.split(',').length === 1) ? `${entry}.js`: `${entry}.${module ?? 'es'}.js`
+}
+
 export const getInputFile = memoize(getEntryFile)
 export const getExternalDeps = memoize(getExternal)
 export const getUmdGlobals = memoize(getGlobals)
+export const addTerserPlugin = memoize(addTerserPlugins)

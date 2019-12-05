@@ -14,4 +14,3 @@ cd packages/rollup-plugin-inline-lit-element
 git reset --hard
 
 git submodule update
-git submodule update --remote
