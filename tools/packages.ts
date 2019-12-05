@@ -1,5 +1,5 @@
 import { execSync } from 'child_process'
-import { symlinkDir } from 'aria-fs'
+import { symlinkDir } from '../src'
 
 (async function() {
   const packages = [
