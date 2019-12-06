@@ -24,3 +24,5 @@ npm run build.packages
 npm test --prefix ./packages/aria-fs/
 npm test --prefix ./packages/aria-mocha/
 npm test --prefix ./packages/lit-element-transpiler/
+
+npm test
