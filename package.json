@@ -10,10 +10,11 @@
     "fs": "aria-fs",
     "postinstall": "sh ./postinstall.sh",
     "build": "node ./bin/aria-build.js -d",
-    "hello": "node ./bin/aria-build.js -f es -i ./examples/hello-world.js",
+    "hello": "node ./bin/aria-build.js -f es -i ./examples/hello-world.js -c ./tools/aria.config.ts --compress --sourcemap",
     "bundle": "ts-node tools/bundle.ts",
     "build.packages": "ts-node tools/packages.ts",
     "reset.packages": "sh ./reset-packages.sh",
+    "serve": "ts-node ./tools/server",
     "test": "aria-mocha"
   },
   "repository": {
@@ -34,13 +35,15 @@
     "typescript": "^3.7.2"
   },
   "devDependencies": {
-    "lit-element": "^2.2.1",
-    "rollup-plugin-inline-lit-element": "0.0.5",
+    "@types/express": "^4.17.2",
     "@types/mocha": "^5.2.7",
     "@types/mock-fs": "^4.10.0",
     "@types/node": "^12.12.14",
     "aria-mocha": "^0.0.6",
+    "express": "^4.17.1",
+    "lit-element": "^2.2.1",
     "mock-fs": "^4.10.4",
+    "rollup-plugin-inline-lit-element": "0.0.5",
     "typescript": "^3.7.2"
   },
   "dependencies": {
