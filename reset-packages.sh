@@ -12,5 +12,3 @@ git reset --hard
 cd ../../
 cd packages/rollup-plugin-inline-lit-element
 git reset --hard
-
-git submodule update
