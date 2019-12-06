@@ -38,10 +38,11 @@ export function getInputEntryFile(input: string) {
 }
 
 export async function createDtsEntry(options?: { filePath?: string, output?: string }) {
-  const outDir = options?.output ?? DEFAULT_VALUES.DIST_FOLDER;
+  const pkg = await getPackageJsonFile(options?.filePath)
 
-  const name = getPackageName(options?.filePath)
-  const indexDts = resolve(join(outDir, DEFAULT_VALUES.SOURCE_FOLDER, 'index.d.ts'))
+  const name = pkg.name
+  const outDir = options?.output ?? DEFAULT_VALUES.DIST_FOLDER;
+  const indexDts = join(outDir, 'src', 'index.d.ts')
 
   let content = `export * from './src/${name}'`
   if (await exist(indexDts)) {
@@ -85,11 +86,7 @@ export async function moveDtsFiles(options: {
   output?: string 
 } = {}) {
   const outDir = options?.output ?? DEFAULT_VALUES.DIST_FOLDER;
-
-  const files = (!options.files) 
-    ? await globFiles(join(outDir, '**/*.d.ts'))
-    : options.files
-
+  const files = options?.files ?? await globFiles(join(outDir, '**/*.d.ts'))
   const destFolder = join(outDir, 'src')
 
   if (files.length > 1) {
