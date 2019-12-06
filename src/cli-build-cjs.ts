@@ -5,7 +5,7 @@ import { getInputEntryFile } from './utils'
 
 export function buildCommonJS(options?: BuildFormatOptions): TSRollupConfig {
   const { pkgName, dependencies, format, entry, plugins, declaration, external, sourcemap, output } = options
-  const outDir = output?.replace('./', '');
+  const outDir = output.replace('./', '');
 
   const input = entry ?? getInputFile(pkgName)
   const file = entry

@@ -1,7 +1,6 @@
 import { rollup } from './libs'
 import { TSRollupConfig, createTSRollupConfig } from './ts-rollup-config';
 import { copyPackageFile, copyReadmeFile, renameDtsEntryFile, moveDtsFiles } from './utils';
-
 import { settle } from './settle'
 
 export async function rollupBuild({ inputOptions, outputOptions }) {

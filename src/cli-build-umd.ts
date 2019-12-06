@@ -1,24 +1,27 @@
 import { BuildFormatOptions } from './cli-common'
 import { TSRollupConfig } from './ts-rollup-config'
-import { getInputFile, getExternalDeps, getUmdGlobals } from './cli-utils'
-import { mkdirp } from './fs'
-import { dirname } from 'path'
+import { getInputFile, getExternalDeps, getUmdGlobals, entryFile } from './cli-utils'
+import { getInputEntryFile } from './utils'
 
 export function buildUmd(options?: BuildFormatOptions): TSRollupConfig {
-  const { pkgName, dependencies, output, external, globals, name, sourcemap } = options
+  const { pkgName, dependencies, output, external, globals, plugins, name, sourcemap, entry, format } = options
   const outDir = output.replace('./', '');
 
-  const input = getInputFile(pkgName)
-  const file = `./${outDir}/bundles/${pkgName}.umd.js`
-
-  mkdirp(dirname(file))
+  const DEFAULT_FORMAT = 'umd'
+  const isSingleFormat = (format.split(',').length === 1);
+  
+  const input = entry ?? getInputFile(pkgName)
+  const file = entry
+    ? entryFile(format, `./${outDir}/${getInputEntryFile(entry)}`, DEFAULT_FORMAT)
+    : entryFile(format, `./${outDir}/${pkgName}`, DEFAULT_FORMAT)
 
   const configOptions: TSRollupConfig = {
     input,
+    ...(isSingleFormat ? { plugins }: {}),
     external: getExternalDeps({ external, dependencies }),
     output: { 
       file, 
-      format: 'umd',
+      format: DEFAULT_FORMAT,
       globals: {
         ...getUmdGlobals(globals)
       },

@@ -17,6 +17,30 @@ function pkgProps(options: any, pkgName: string) {
   }
 }
 
+async function renameDtsFile(options: { 
+  input: string, 
+  output?: { file?: string }, 
+  filePath?: string 
+}) {
+  const { filePath, output, input  } = options
+  const outDir = output.file ? dirname(output.file): DEFAULT_VALUES.DIST_FOLDER;
+
+  const pkgName = getPackageName(filePath)
+  const dtsInputFileName = getInputEntryFile(join(baseDir(), input)) + '.d.ts'
+  const inputFullPath = join(outDir, dtsInputFileName)
+  
+  const destFullPath = join(dirname(inputFullPath), 
+    (getInputEntryFile(input).includes(pkgName) || getInputEntryFile(input).includes('index'))
+      ? pkgName + '.d.ts'
+      : getInputEntryFile(input) + '.d.ts'
+  )
+
+  const isFileExist = await exist(destFullPath)
+  if (!isFileExist) {
+    await rename(inputFullPath, destFullPath)
+  }
+}
+
 export const DEFAULT_VALUES = Object.freeze({
   DIST_FOLDER: join(baseDir(), DEFAULT_OUT_DIR),
   SOURCE_FOLDER: join(baseDir(), 'src'),
@@ -37,20 +61,6 @@ export function getInputEntryFile(input: string) {
   return basename(input).replace('.ts', '').replace('.js', '');
 }
 
-export async function createDtsEntry(options?: { filePath?: string, output?: string }) {
-  const outDir = options?.output ?? DEFAULT_VALUES.DIST_FOLDER;
-
-  const name = getPackageName(options?.filePath)
-  const indexDts = resolve(join(outDir, DEFAULT_VALUES.SOURCE_FOLDER, 'index.d.ts'))
-
-  let content = `export * from './src/${name}'`
-  if (await exist(indexDts)) {
-    content = `export * from './src/index'`
-  }
- 
-  await writeFile(resolve(join(outDir, name + '.d.ts')), content)
-}
-
 export function baseDir() {
   return process.env.APP_ROOT_PATH ?? resolve()
 }
@@ -58,6 +68,10 @@ export function baseDir() {
 export function getPackageJson(filePath?: string) {
   filePath = filePath ?? join(baseDir(), 'package.json')
   return require(filePath)
+}
+
+export async function getPackageJsonFile(filePath?: string) {
+  return import(filePath ?? join(baseDir(), 'package.json'))
 }
 
 export function getPackageName(filePath?: string) {
@@ -69,7 +83,28 @@ export function copyReadmeFile(filePath?: string) {
   return copyReadMeFile({ filePath, output: DEFAULT_VALUES.DIST_FOLDER })
 }
 
-export function copyReadMeFile(options?: { filePath?: string, output?: string }) {
+export async function createDtsEntry(options?: { 
+  filePath?: string, 
+  output?: string 
+}) {
+  const pkg = await getPackageJsonFile(options?.filePath)
+
+  const name = pkg.name
+  const outDir = options?.output ?? DEFAULT_VALUES.DIST_FOLDER;
+  const indexDts = join(outDir, 'src', 'index.d.ts')
+
+  let content = `export * from './src/${name}'`
+  if (await exist(indexDts)) {
+    content = `export * from './src/index'`
+  }
+ 
+  await writeFile(resolve(join(outDir, name + '.d.ts')), content)
+}
+
+export function copyReadMeFile(options?: { 
+  filePath?: string, 
+  output?: string 
+}) {
   const fileName = 'README.md'
   return copyFile(options?.filePath ?? join(baseDir(), fileName), join(options?.output, fileName))
 }
@@ -81,11 +116,7 @@ export async function moveDtsFiles(options: {
   output?: string 
 } = {}) {
   const outDir = options?.output ?? DEFAULT_VALUES.DIST_FOLDER;
-
-  const files = (!options.files) 
-    ? await globFiles(join(outDir, '**/*.d.ts'))
-    : options.files
-
+  const files = options?.files ?? await globFiles(join(outDir, '**/*.d.ts'))
   const destFolder = join(outDir, 'src')
 
   if (files.length > 1) {
@@ -105,30 +136,6 @@ export async function moveDtsFiles(options: {
   }
 }
 
-export async function renameDtsFile(options: { 
-  input: string, 
-  output?: { file?: string }, 
-  filePath?: string 
-}) {
-  const { filePath, output, input  } = options
-  const outDir = output?.file ? dirname(output?.file): DEFAULT_VALUES.DIST_FOLDER;
-
-  const pkgName = getPackageName(filePath)
-  const dtsInputFileName = basename(join(baseDir(), input), 'ts') + 'd.ts'
-  const inputFullPath = join(outDir, dtsInputFileName)
-  
-  const destFullPath = join(dirname(inputFullPath), 
-    (getInputEntryFile(input).includes(pkgName) || getInputEntryFile(input).includes('index'))
-      ? pkgName + '.d.ts'
-      : getInputEntryFile(input) + '.d.ts'
-  )
-
-  const isFileExist = await exist(destFullPath)
-  if (!isFileExist) {
-    await rename(inputFullPath, destFullPath)
-  }
-}
-
 export async function renameDtsEntryFile(options: TSRollupConfig | Array<TSRollupConfig>, entry?: string) {
   const configs = Array.isArray(options) ? options: [ options ]
   const dtsOption = configs.find(option => {
@@ -143,7 +150,7 @@ export async function renameDtsEntryFile(options: TSRollupConfig | Array<TSRollu
 }
 
 export async function copyPackageFile(options?: PackageFile) {
-  const pkgTemp = getPackageJson(options?.filePath)
+  const pkgTemp = await getPackageJsonFile(options?.filePath)
   const name = options?.entry ? getInputEntryFile(options?.entry): pkgTemp.name
   const pkg = { ...pkgTemp, ...pkgProps(options ?? {}, name) }
   delete pkg.scripts
