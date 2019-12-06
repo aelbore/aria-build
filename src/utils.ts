@@ -60,6 +60,10 @@ export function getPackageJson(filePath?: string) {
   return require(filePath)
 }
 
+export async function getPackageJsonFile(filePath?: string) {
+  return import(filePath ?? join(baseDir(), 'package.json'))
+}
+
 export function getPackageName(filePath?: string) {
   const pkg = getPackageJson(filePath)
   return pkg.name
@@ -143,7 +147,7 @@ export async function renameDtsEntryFile(options: TSRollupConfig | Array<TSRollu
 }
 
 export async function copyPackageFile(options?: PackageFile) {
-  const pkgTemp = getPackageJson(options?.filePath)
+  const pkgTemp = await getPackageJsonFile(options?.filePath)
   const name = options?.entry ? getInputEntryFile(options?.entry): pkgTemp.name
   const pkg = { ...pkgTemp, ...pkgProps(options ?? {}, name) }
   delete pkg.scripts
