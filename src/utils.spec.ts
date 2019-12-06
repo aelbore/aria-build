@@ -9,9 +9,11 @@ import {
   copyReadMeFile, 
   copyPackageFile, 
   DEFAULT_VALUES, 
-  createDtsEntry 
+  createDtsEntry, 
+  renameDtsEntryFile
 } from './utils';
 import { readFile } from './fs';
+import { TSRollupConfig } from './ts-rollup-config';
 
 describe('utils', () => {
 
@@ -139,6 +141,79 @@ describe('utils', () => {
 
     const actualContent = await readFile(dtsFile, 'utf-8')
     assert.strictEqual(actualContent.trim(), content)
+  })
+
+  it('should [renameDtsEntryFile] rename index.d.ts to <package-name>.d.ts.', async () => {
+    /// this will execute only when the 
+    /// declaration is true
+    const options: TSRollupConfig = {
+      input: './src/index.ts',
+      output: {
+        file: './dist/aria-build.es.js',
+        format: 'es'
+      },
+      tsconfig: {
+        compilerOptions: {
+          declaration: true
+        }
+      }
+    }
+
+    mock({ 'dist/index.d.ts': '' })
+
+    await renameDtsEntryFile(options)
+
+    let isFileExist = await exist('./dist/aria-build.d.ts')
+    assert.strictEqual(isFileExist, true);
+
+    isFileExist = await exist('./dist/index.d.ts')
+    assert.strictEqual(isFileExist, false)
+  })
+
+  it('should [renameDtsEntryFile] NOT rename index.d.ts to <package-name>.d.ts.', async () => {
+    const options: TSRollupConfig = {
+      input: './src/index.ts',
+      output: {
+        file: './dist/hello-world.es.js',
+        format: 'es'
+      },
+      tsconfig: {
+        compilerOptions: {
+          declaration: false
+        }
+      }
+    }
+
+    mock({ 'dist/index.d.ts': '' })
+
+    await renameDtsEntryFile(options)
+
+    const isFileExist = await exist('./dist/index.d.ts')
+    assert.strictEqual(isFileExist, true)
+  })
+
+  it('should [renameDtsEntryFile] use --entry option as dts entry file.', async () => {
+    /// this will execute only when the 
+    /// declaration is true
+    const options: TSRollupConfig = {
+      input: './src/index.ts',
+      output: {
+        file: './dist/hello-world.es.js',
+        format: 'es'
+      },
+      tsconfig: {
+        compilerOptions: {
+          declaration: true
+        }
+      }
+    }
+
+    mock({ './dist/hello-world.d.ts': '' })
+
+    await renameDtsEntryFile(options, './src/hello-world.ts')
+
+    const isFileExist = await exist('./dist/hello-world.d.ts')
+    assert.strictEqual(isFileExist, true);
   })
 
 })  
