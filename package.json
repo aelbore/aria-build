@@ -33,8 +33,11 @@
     "typescript": "^3.7.2"
   },
   "devDependencies": {
+    "@types/mock-fs": "^4.10.0",
     "@types/mocha": "^5.2.7",
+    "@types/node": "^12.12.14",
     "aria-mocha": "^0.0.6",
+    "mock-fs": "^4.10.4",
     "typescript": "^3.7.2"
   },
   "dependencies": {

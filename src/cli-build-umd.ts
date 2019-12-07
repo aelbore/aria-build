@@ -1,8 +1,6 @@
 import { BuildFormatOptions } from './cli-common'
 import { TSRollupConfig } from './ts-rollup-config'
 import { getInputFile, getExternalDeps, getUmdGlobals, entryFile } from './cli-utils'
-import { mkdirp } from './fs'
-import { dirname } from 'path'
 import { getInputEntryFile } from './utils'
 
 export function buildUmd(options?: BuildFormatOptions): TSRollupConfig {
@@ -14,10 +12,8 @@ export function buildUmd(options?: BuildFormatOptions): TSRollupConfig {
   
   const input = entry ?? getInputFile(pkgName)
   const file = entry
-  ? entryFile(format, `./${outDir}/${getInputEntryFile(entry)}`, DEFAULT_FORMAT)
-  : entryFile(format, `./${outDir}/${pkgName}`, DEFAULT_FORMAT)
-
-  mkdirp(dirname(file))
+    ? entryFile(format, `./${outDir}/${getInputEntryFile(entry)}`, DEFAULT_FORMAT)
+    : entryFile(format, `./${outDir}/${pkgName}`, DEFAULT_FORMAT)
 
   const configOptions: TSRollupConfig = {
     input,
