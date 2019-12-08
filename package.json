@@ -1,6 +1,6 @@
 {
   "name": "aria-build",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "Build any web components",
   "main": "aria-build.js",
   "bin": {
@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "aria-fs": "0.0.7",
-    "rollup": "^1.27.8",
+    "rollup": "^1.27.9",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-minify-html-literals": "^1.2.2",
     "rollup-plugin-node-resolve": "^5.2.0",
