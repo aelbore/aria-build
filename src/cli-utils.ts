@@ -1,7 +1,7 @@
-import * as fs from 'fs'
-
 import { resolve, join } from 'path'
+import { existsSync } from 'fs'
 import { terser } from './libs'
+import { KeyValue, AriaConfigOptions } from './cli-common'
 
 function getGlobals(globals: string = '') {
   const results = globals.split(',')
@@ -13,6 +13,13 @@ function getGlobals(globals: string = '') {
   })
 
   return values
+}
+
+function createGlobals(globals: KeyValue) {
+  const keys = Object.keys(globals)
+  return keys.map(key => {
+    return `${key}=${globals[key]}`
+  })
 }
 
 function getExternal({ external, dependencies }) {
@@ -33,13 +40,13 @@ function getEntryFile(pkgName: string) {
   
   const removeRootDir = (filePath: string) => filePath.replace(rootDir, '.')
 
-  if (fs.existsSync(tsPkgPath)) return removeRootDir(tsPkgPath)
+  if (existsSync(tsPkgPath)) return removeRootDir(tsPkgPath)
 
-  if (fs.existsSync(jsPkgPath)) return removeRootDir(jsPkgPath)
+  if (existsSync(jsPkgPath)) return removeRootDir(jsPkgPath)
 
-  if (fs.existsSync(tsIndexPath)) return removeRootDir(tsIndexPath)
+  if (existsSync(tsIndexPath)) return removeRootDir(tsIndexPath)
 
-  if (fs.existsSync(jsIndexPath)) return removeRootDir(jsIndexPath)
+  if (existsSync(jsIndexPath)) return removeRootDir(jsIndexPath)
 
   throw new Error('Entry file is not exist.')
 }
@@ -52,6 +59,14 @@ function addTerserPlugins(plugins: any[], compress: boolean) {
       }
     }))
   }
+}
+
+export function mergeGlobals(configGlobals?: { globals?: KeyValue }, optionGlobals?: string) {
+  const localConfigGlobals = configGlobals?.globals 
+    ? createGlobals(configGlobals.globals): []
+  const localOptionGlobals = optionGlobals 
+     ? optionGlobals.split(','): []
+  return ([].concat(localConfigGlobals, localOptionGlobals)).join(',') 
 }
 
 export function memoize(fn: any){
@@ -67,13 +82,11 @@ export function memoize(fn: any){
   }
 }
 
-export async function getRollupPlugins(config?: string) {
+export async function getAriaConfig(config?: string) {
   const ROLLUP_CONFIG_PATH = resolve(config ?? 'aria.config.ts')
-  if (fs.existsSync(ROLLUP_CONFIG_PATH)) {
-    const rollupConfig = require(ROLLUP_CONFIG_PATH)
-    if (rollupConfig.default.plugins) {
-      return rollupConfig.default.plugins
-    }
+  if (existsSync(ROLLUP_CONFIG_PATH)) {
+    const ariaConfig: AriaConfigOptions = await import(ROLLUP_CONFIG_PATH).then(c => c.default)
+    return ariaConfig
   }
   return null
 }
@@ -86,3 +99,4 @@ export const getInputFile = memoize(getEntryFile)
 export const getExternalDeps = memoize(getExternal)
 export const getUmdGlobals = memoize(getGlobals)
 export const addTerserPlugin = memoize(addTerserPlugins)
+export const createGlobalsFromConfig = memoize(createGlobals)
