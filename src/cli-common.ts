@@ -14,6 +14,17 @@ export interface BuildOptions {
 	output?: string;
 	compress?: boolean;
 }
+
+export interface KeyValue {
+	[key: string]: string;
+}
+
+export interface AriaConfigOptions {
+	plugins?: any[];
+	output?: {
+		globals?: KeyValue
+	}
+}
   
 export interface BuildFormatOptions extends BuildOptions {
 	pkgName?: string, 

@@ -1,8 +1,8 @@
 import { build } from './build'
 import { clean } from './fs'
-import { getPackageJson, copyPackageFile, moveDtsFiles, renameDtsEntryFile, copyReadMeFile } from './utils'
+import { copyPackageFile, moveDtsFiles, renameDtsEntryFile, copyReadMeFile, getPackageJsonFile } from './utils'
 import { BuildOptions, DEFAULT_OUT_DIR } from './cli-common' 
-import { getRollupPlugins } from './cli-utils'
+import { getAriaConfig, mergeGlobals } from './cli-utils'
 import { buildCommonJS } from './cli-build-cjs'
 import { buildES } from './cli-build-es'
 import { buildUmd } from './cli-build-umd'
@@ -30,13 +30,15 @@ export async function run(version: string) {
   async function handler(options?: BuildOptions) {
     const { entry, output, config } = options;
 
-    const pkgJson = getPackageJson(), 
+    const pkgJson = await getPackageJsonFile(), 
       pkgName = pkgJson.name,
       dependencies = pkgJson.dependencies 
         ? Object.keys(pkgJson.dependencies)
         : []
 
-    options.plugins = await getRollupPlugins(config)
+    const ariaConfig = await getAriaConfig(config)
+    options.plugins = ariaConfig?.plugins ?? []
+    options.globals = mergeGlobals(ariaConfig?.output?.globals, options.globals)
 
     if (options.clean) {
       await clean(output ?? options.clean)

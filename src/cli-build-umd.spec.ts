@@ -107,4 +107,20 @@ describe('buildUmd config', () => {
     assert.strictEqual(configOptions.output.file, './public/hello-world.js')
   })
 
+  it('should have globals from --globals option', () => {
+    const expectedGlobals = {
+      "litElement": "lit-element",
+      "litHtml": "lit-html" 
+    }
+    params.globals = "litElement=lit-element,litHtml=lit-html"
+
+    const configOptions = buildUmd({ ...params })
+    const globals = configOptions.output.globals
+
+    assert.strictEqual(Object.keys(globals).length, 2)
+    Object.keys(globals).forEach(key => {
+      assert.ok(expectedGlobals[key])
+    })
+  })
+
 })
