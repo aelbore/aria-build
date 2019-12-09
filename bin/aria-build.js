@@ -8,9 +8,7 @@ const TS_CONFIG_PATH = path.resolve('tsconfig.json')
 const tsconfigDefaults = {
   "target": "es2018",
   "module": "commonjs",
-  "lib" :[
-    "dom", "es2015", "es2017"
-  ],
+  "lib" :[ "dom", "es2015", "es2017" ],
   "allowJs": true
 }
 
@@ -23,6 +21,7 @@ delete compilerOptions.exclude
 delete compilerOptions.include
 
 require('ts-node').register({
+  typeCheck: false,
   compilerOptions: {
     ...compilerOptions,
     ...tsconfigDefaults
@@ -30,5 +29,4 @@ require('ts-node').register({
 })
 
 const pkg = require('../package.json')
-
 require('../src').run(pkg.version)

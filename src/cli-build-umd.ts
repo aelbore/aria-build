@@ -17,7 +17,7 @@ export function buildUmd(options?: BuildFormatOptions): TSRollupConfig {
 
   const configOptions: TSRollupConfig = {
     input,
-    ...(isSingleFormat ? { plugins }: {}),
+    plugins,
     external: getExternalDeps({ external, dependencies }),
     output: { 
       file, 

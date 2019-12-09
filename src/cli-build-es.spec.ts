@@ -95,15 +95,6 @@ describe('buildES config', () => {
     )
   })
 
-  it('should add the terser plugin when compress option is true', () => {
-    params.compress = true;
-    const configOptions = buildES(params)
-
-    const plugins = Array.isArray(configOptions.plugins) ? configOptions.plugins: [];
-    assert.strictEqual(plugins.length, 1)
-    assert.strictEqual(plugins[0].name, 'terser')
-  })
-
   it('should not add the terser plugin when the compress option is false', () => {
     const configOptions = buildES(params)
 

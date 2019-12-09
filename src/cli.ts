@@ -1,12 +1,5 @@
-import { build } from './build'
-import { clean } from './fs'
-import { copyPackageFile, moveDtsFiles, renameDtsEntryFile, copyReadMeFile, getPackageJsonFile } from './utils'
-import { BuildOptions, DEFAULT_OUT_DIR } from './cli-common' 
-import { getAriaConfig, mergeGlobals } from './cli-utils'
-import { buildCommonJS } from './cli-build-cjs'
-import { buildES } from './cli-build-es'
-import { buildUmd } from './cli-build-umd'
-import { settle } from './settle'
+import { DEFAULT_OUT_DIR } from './cli-common'
+import { handler } from './cli-handler'
 
 export async function run(version: string) {
   const program = require('sade')('aria-build', true)
@@ -19,44 +12,11 @@ export async function run(version: string) {
     .option('-o, --output', 'Directory to place build files into', DEFAULT_OUT_DIR)
     .option('-c, --config', 'config file of aria-build. i.e aria.config.ts')
     .option('--external', 'Specify external dependencies')
-    .option('--clean', 'Clean the dist folder default', DEFAULT_OUT_DIR) 
+    .option('--clean', 'Clean the dist folder default', DEFAULT_OUT_DIR)
     .option('--globals', `Specify globals dependencies`)
     .option('--sourcemap', 'Generate source map', false)
     .option('--name', 'Specify name exposed in UMD builds')
     .option('--compress', 'Compress or minify the output', false)
     .action(handler)
     .parse(process.argv)
-
-  async function handler(options?: BuildOptions) {
-    const { entry, output, config } = options;
-
-    const pkgJson = await getPackageJsonFile(), 
-      pkgName = pkgJson.name,
-      dependencies = pkgJson.dependencies 
-        ? Object.keys(pkgJson.dependencies)
-        : []
-
-    const ariaConfig = await getAriaConfig(config)
-    options.plugins = ariaConfig?.plugins ?? []
-    options.globals = mergeGlobals(ariaConfig?.output?.globals, options.globals)
-
-    if (options.clean) {
-      await clean(output ?? options.clean)
-    }
-
-    const formats = options.format.split(',')
-    const configOptions = await Promise.all(formats.map(format => {
-      const args = { pkgName, dependencies, ...options }
-      switch(format) {
-        case 'es': return buildES(args)
-        case 'cjs': return buildCommonJS(args)
-        case 'umd': return buildUmd(args)
-      }
-    }))
-
-    await build(configOptions)
-    await settle([ copyPackageFile(options), copyReadMeFile(options), renameDtsEntryFile(configOptions, entry) ])
-    await moveDtsFiles(options)    
-  }
-
 }
