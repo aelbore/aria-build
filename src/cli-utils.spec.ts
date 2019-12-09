@@ -42,27 +42,32 @@ describe('CLI utils', () => {
   })
 
   it('should merge [mergeGlobals] option.globals and config.globals.', () => {
+    const expectedGlobals = {
+      "litElement": "lit-element",
+      "litHtml": "lit-html",
+      "@angular/core": "ng.core"
+    }
+
     const ariaConfig: AriaConfigOptions = {
       output: {
         globals: {
-          "litElement": "lit-element",
-          "litHtml": "lit-html" 
+          ...expectedGlobals
         }
       }
     }
 
     const localMergeGlobals = mergeGlobals(
         ariaConfig?.output?.globals,
-        "litElement=lit-element,litHtml=lit-html"
+        "litElement=lit-element,@angular/core=ng.core"
       )
 
     const result = { 
       ...getUmdGlobals(localMergeGlobals)
     }
 
-    assert.strictEqual(Object.keys(result).length, 2)
+    assert.strictEqual(Object.keys(result).length, 3)
     Object.keys(result).forEach(key => {
-      assert.ok(result[key], ariaConfig.output.globals[key])
+      assert.ok(result[key], expectedGlobals[key])
     })
   })
 

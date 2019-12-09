@@ -61,11 +61,9 @@ function addTerserPlugins(plugins: any[], compress: boolean) {
   }
 }
 
-export function mergeGlobals(configGlobals?: { globals?: KeyValue }, optionGlobals?: string) {
-  const localConfigGlobals = configGlobals?.globals 
-    ? createGlobals(configGlobals.globals): []
-  const localOptionGlobals = optionGlobals 
-     ? optionGlobals.split(','): []
+export function mergeGlobals(globals?: KeyValue, optionGlobals?: string) {
+  const localConfigGlobals = globals ? createGlobals(globals): []
+  const localOptionGlobals = optionGlobals ? optionGlobals.split(','): []
   return ([].concat(localConfigGlobals, localOptionGlobals)).join(',') 
 }
 
