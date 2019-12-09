@@ -75,14 +75,6 @@ describe('buildUmd config', () => {
     assert.strictEqual(configOptions.hasOwnProperty('plugins'), true)
   })
 
-  it('should have no plugins when format has more than 1.', () => {
-    const entry =  './src/hello-world.ts'
-    const configOptions = buildUmd({ ...params, entry })
-
-    assert.ok(configOptions)
-    assert.strictEqual(configOptions.hasOwnProperty('plugins'), false)
-  })
-
   it('should have external and get it to package.json dependencies by default.', () => {
     const configOptions = buildUmd(params)
 

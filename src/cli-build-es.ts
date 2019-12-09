@@ -1,6 +1,6 @@
 import { BuildFormatOptions } from './cli-common'
 import { TSRollupConfig } from './ts-rollup-config'
-import { getInputFile, getExternalDeps, addTerserPlugin, entryFile } from './cli-utils'
+import { getInputFile, getExternalDeps, entryFile } from './cli-utils'
 import { getInputEntryFile } from './utils';
 
 export function buildES(options?: BuildFormatOptions): TSRollupConfig {
@@ -11,8 +11,6 @@ export function buildES(options?: BuildFormatOptions): TSRollupConfig {
     const file = entry
       ? entryFile(format, `./${outDir}/${getInputEntryFile(entry)}`)
       : entryFile(format, `./${outDir}/${pkgName}`)
-
-    addTerserPlugin(plugins, compress)
 
     const configOptions: TSRollupConfig = {
       input,
