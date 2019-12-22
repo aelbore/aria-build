@@ -1,6 +1,6 @@
 {
   "name": "aria-build",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "Build any web components",
   "main": "aria-build.js",
   "bin": {
@@ -30,26 +30,25 @@
   },
   "homepage": "https://github.com/aelbore/aria-build#readme",
   "peerDependencies": {
-    "typescript": "^3.7.2"
+    "typescript": ">= ^3.7.0 < ^3.7.4"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.7",
     "@types/mock-fs": "^4.10.0",
-    "@types/node": "^12.12.14",
+    "@types/node": "^12.12.21",
     "aria-mocha": "^0.0.6",
     "mock-fs": "^4.10.4",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.4"
   },
   "dependencies": {
+    "@rollup/plugin-node-resolve": "^6.0.0",
+    "@rollup/plugin-commonjs": "^11.0.0",
     "aria-fs": "0.0.7",
-    "rollup": "^1.27.9",
-    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup": "^1.27.13",
     "rollup-plugin-minify-html-literals": "^1.2.2",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-strict-alias": "^1.0.0",
-    "rollup-plugin-terser": "^5.1.2",
+    "rollup-plugin-terser": "^5.1.3",
     "rollup-plugin-typescript2": "^0.25.3",
-    "sade": "^1.6.1",
+    "sade": "^1.7.0",
     "ts-node": "^8.5.4"
   }
 }

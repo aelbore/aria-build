@@ -1,12 +1,11 @@
-import { BuildOptions } from './cli-common';
-import { getPackageJsonFile, copyPackageFile, copyReadMeFile, renameDtsEntryFile, moveDtsFiles } from './utils';
-import { getAriaConfig, mergeGlobals, addTerserPlugin } from './cli-utils';
-import { clean } from './fs';
-import { buildES } from './cli-build-es';
-import { buildCommonJS } from './cli-build-cjs';
-import { buildUmd } from './cli-build-umd';
-import { build } from './build';
-import { settle } from './settle';
+import { BuildOptions } from './cli-common'
+import { getPackageJsonFile, copyPackageFile, copyReadMeFile, renameDtsEntryFile, moveDtsFiles } from './utils'
+import { getAriaConfig, mergeGlobals, addTerserPlugin } from './cli-utils'
+import { clean } from './fs'
+import { buildES } from './cli-build-es'
+import { buildCommonJS } from './cli-build-cjs'
+import { buildUmd } from './cli-build-umd'
+import { build } from './build'
 
 export async function handler(options?: BuildOptions) {
   const { entry, output, config } = options;
@@ -38,6 +37,6 @@ export async function handler(options?: BuildOptions) {
   }))
 
   await build(configOptions)
-  await settle([ copyPackageFile(options), copyReadMeFile(options), renameDtsEntryFile(configOptions, entry) ])
+  await Promise.all([ copyPackageFile(options), copyReadMeFile(options), renameDtsEntryFile(configOptions, entry) ])
   await moveDtsFiles(options)    
 }
