@@ -8,15 +8,15 @@ export async function rollupGenerate({ inputOptions, outputOptions }) {
 	return result.output
 }
 
+export async function rollupBuild({ inputOptions, outputOptions }) {
+  return rollup(inputOptions).then(bundle => bundle.write(outputOptions));
+}
+
 export async function buildOutput(options: TSRollupConfig | Array<TSRollupConfig>) {
   const configs = Array.isArray(options) ? options: [ options ]
   return Promise.all(configs.map(config => {
     return rollupGenerate(createTSRollupConfig(config))
   }))
-}
-
-export async function rollupBuild({ inputOptions, outputOptions }) {
-  return rollup(inputOptions).then(bundle => bundle.write(outputOptions));
 }
 
 export async function build(options: TSRollupConfig | Array<TSRollupConfig>) {
