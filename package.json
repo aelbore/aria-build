@@ -44,7 +44,7 @@
   "dependencies": {
     "@rollup/plugin-node-resolve": "^6.0.0",
     "@rollup/plugin-commonjs": "^11.0.0",
-    "aria-fs": "0.0.8",
+    "aria-fs": "0.0.9",
     "rollup": "^1.27.13",
     "rollup-plugin-minify-html-literals": "^1.2.2",
     "rollup-plugin-terser": "^5.1.3",
