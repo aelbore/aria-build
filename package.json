@@ -1,6 +1,6 @@
 {
   "name": "aria-build",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "Build any web components",
   "main": "aria-build.js",
   "bin": {
