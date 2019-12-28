@@ -1,7 +1,7 @@
 import * as assert from 'assert'
 import * as mock from 'mock-fs'
-import { TSRollupConfig } from './ts-rollup-config.js'
 import { resolve } from 'path'
+import { TSRollupConfig } from './ts-rollup-config.js'
 import { bundle } from './build'
 import { globFiles, exist } from './fs'
 

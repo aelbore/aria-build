@@ -8,12 +8,12 @@
   },
   "scripts": {
     "fs": "aria-fs",
-    "postinstall": "sh ./postinstall.sh",
     "build": "node ./bin/aria-build.js -d",
     "bundle": "ts-node tools/bundle.ts",
     "build.packages": "ts-node tools/packages.ts",
     "reset.packages": "sh ./reset-packages.sh",
-    "test": "aria-mocha --check-coverage --threshold statements=90,functions=90,branches=85,lines=90"
+    "test": "aria-mocha --check-coverage --threshold statements=90,functions=90,branches=85,lines=90",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
     "type": "git",
@@ -37,13 +37,14 @@
     "@types/mock-fs": "^4.10.0",
     "@types/node": "^13.1.1",
     "aria-mocha": "^0.0.6",
+    "coveralls": "^3.0.9",
     "mock-fs": "^4.10.4",
     "typescript": "^3.7.4"
   },
   "dependencies": {
     "@rollup/plugin-node-resolve": "^6.0.0",
     "@rollup/plugin-commonjs": "^11.0.0",
-    "aria-fs": "0.0.7",
+    "aria-fs": "0.0.8",
     "rollup": "^1.27.13",
     "rollup-plugin-minify-html-literals": "^1.2.2",
     "rollup-plugin-terser": "^5.1.3",
