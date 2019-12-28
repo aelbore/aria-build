@@ -1,0 +1,13 @@
+sudo: required
+dist: trusty
+language: node_js
+node_js: '11.6'
+branches:
+  only:
+  - master
+install: 
+  - npm install
+script:
+  - npm run build && npm test
+after_success:
+  - npm run coveralls
