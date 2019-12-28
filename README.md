@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/aelbore/aria-build/badge.svg?branch=master&service=github)](https://coveralls.io/github/aelbore/aria-build?branch=master)
+[![Build Status](https://travis-ci.org/aelbore/aria-build.svg?branch=master)](https://travis-ci.org/aelbore/aria-build)
 [![npm version](https://badge.fury.io/js/aria-build.svg)](https://www.npmjs.com/package/aria-build)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
