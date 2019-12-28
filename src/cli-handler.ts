@@ -37,6 +37,10 @@ export async function handler(options?: BuildOptions) {
   }))
 
   await build(configOptions)
-  await Promise.all([ copyPackageFile(options), copyReadMeFile(options), renameDtsEntryFile(configOptions, entry) ])
+  await Promise.all([ 
+    copyPackageFile({ ...pkgJson, entry }), 
+    copyReadMeFile(options), 
+    renameDtsEntryFile(configOptions, entry) 
+  ])
   await moveDtsFiles(options)    
 }
