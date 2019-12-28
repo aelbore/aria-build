@@ -2,7 +2,7 @@ import * as assert from 'assert'
 import * as mock from 'mock-fs'
 import * as path from 'path'
 import { AriaConfigOptions } from './cli-common'
-import { createGlobalsFromConfig, getUmdGlobals, mergeGlobals, getAriaConfig } from './cli-utils'
+import { createGlobalsFromConfig, getUmdGlobals, mergeGlobals, getAriaConfig, getEntryFile, getExternalDeps } from './cli-utils'
 import { mkdirp, writeFile } from './fs'
 import { clean } from 'aria-fs'
 
@@ -10,7 +10,6 @@ describe('CLI utils', () => {
 
   afterEach(async () => {
     mock.restore()
-    await clean('build')
   })
 
   it('should [createGlobalsFromConfig]', () => {
@@ -87,6 +86,7 @@ describe('CLI utils', () => {
     })
 
     const ariaConfig = await getAriaConfig()
+
     assert.ok(ariaConfig)
     assert.ok(ariaConfig.output)
     assert.ok(ariaConfig.output.globals)
@@ -102,13 +102,95 @@ describe('CLI utils', () => {
         plugins: []
       }
     `
+    
     mkdirp(path.dirname(CUSTOM_CONFIG_PATH))
     await writeFile(CUSTOM_CONFIG_PATH, content)
 
     const ariaConfig = await getAriaConfig(CUSTOM_CONFIG_PATH)
+    await clean('build')
+
     assert.ok(ariaConfig)
     assert.strictEqual(Array.isArray(ariaConfig.plugins), true)
     assert.strictEqual(ariaConfig.hasOwnProperty('globals'), false)
   })
+
+  it('should [getEntryFile] when index.ts is exist.', () => {
+    mock({
+      'src/index.ts': ''
+    })
+
+    const input = getEntryFile('aria-build');
+    assert.strictEqual(input, './src/index.ts')
+  })
+
+  it('should [getEntryFile] when index.js is exist.', () => {
+    mock({
+      'src/index.js': ''
+    })
+
+    const input = getEntryFile('aria-build');
+    assert.strictEqual(input, './src/index.js')
+  })
   
+  it('should [getEntryFile] when <package-name>.ts is exist.', () => {
+    mock({
+      'src/aria-build.ts': ''
+    })
+
+    const input = getEntryFile('aria-build');
+    assert.strictEqual(input, './src/aria-build.ts')
+  })
+
+  it('should [getEntryFile] when <package-name>.js is exist.', () => {
+    mock({
+      'src/aria-build.js': ''
+    })
+
+    const input = getEntryFile('aria-build');
+    assert.strictEqual(input, './src/aria-build.js')
+  })
+
+  it('should [getEntryFile] throw an error when no entry file exist.', () => {
+    mock({
+      'src/file.ts': ''
+    })
+
+    try {
+      getEntryFile('aria-build');
+    } catch(error) {
+      assert.throws(() => {
+        throw new Error(error)
+      }, 'Entry file is not exist.')
+    }
+  })
+
+  it('should [getExternalDeps] when external has values.', () => {
+    const external = 'rollup,aria-fs'
+    const results = getExternalDeps({ external, dependencies: [] })
+
+    assert.ok(results)
+    assert.strictEqual(Array.isArray(results), true)
+    results.forEach(result => {
+      assert.ok(external.split(',').find(value => value === result))
+    })
+  })
+
+  it('should [getExternalDeps] when external has NO values.', () => {
+    const results = getExternalDeps({})
+
+    assert.ok(results)
+    assert.strictEqual(Array.isArray(results), true)
+  })
+
+  it('should [getExternalDeps] when dependencies has values.', () => {
+    const dependencies = [ 'rollup', 'aria-fs' ]
+    const results = getExternalDeps({ dependencies })
+
+    assert.ok(results)
+    assert.strictEqual(Array.isArray(results), true)
+    results.forEach(result => {
+      assert.ok(dependencies.find(value => value === result))
+    })
+  })
+
 })

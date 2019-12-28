@@ -1,10 +1,10 @@
 
 import * as pkgJson from '../package.json'
 import * as assert from 'assert'
-import * as mock from 'mock-fs';
+import * as mock from 'mock-fs'
 import { normalize } from 'path'
-import { BuildFormatOptions } from './cli-common';
-import { buildCommonJS } from './cli-build-cjs';
+import { BuildFormatOptions } from './cli-common'
+import { buildCommonJS } from './cli-build-cjs'
 
 describe('buildCommonJS config', () => {
   let dependencies: string[], params: BuildFormatOptions;
@@ -38,7 +38,9 @@ describe('buildCommonJS config', () => {
   it('should use package name as input, when entry is null.', () => {
     const entry = 'src/aria-build.ts'
 
-    mock({ [entry]: '' })
+    mock({ 
+      [entry]: '' 
+    })
     
     delete params.entry
     const configOptions = buildCommonJS(params)
@@ -57,7 +59,9 @@ describe('buildCommonJS config', () => {
   })
 
   it('should use the package name as output file, when entry is null', () => {
-    mock({ 'dist/aria-build.ts': '' })
+    mock({ 
+      'src/aria-build.ts': '' 
+    })
 
     delete params.entry
 
@@ -121,4 +125,4 @@ describe('buildCommonJS config', () => {
 
     assert.strictEqual(configOptions.output.file, './public/hello-world.js')
   })
-})
+}) 

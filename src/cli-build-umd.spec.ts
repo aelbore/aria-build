@@ -57,12 +57,17 @@ describe('buildUmd config', () => {
   })
 
   it('should use the package name as output file, when entry is null', () => {
-    mock({ 'dist/aria-build.ts': '' })
+    mock({ 
+      'src/aria-build.ts': '' 
+    })
 
     delete params.entry
 
     const configOptions = buildUmd(params)
-    assert.strictEqual(normalize(configOptions.output.file), normalize('./dist/aria-build.umd.js'))                           
+    assert.strictEqual(
+      normalize(configOptions.output.file), 
+      normalize('./dist/aria-build.umd.js')
+    )                           
   })
 
   it('should have plugins when format is only umd.', () => {

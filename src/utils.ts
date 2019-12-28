@@ -1,8 +1,8 @@
 import { dirname, resolve, basename, join } from 'path'
+import { globFiles, mkdirp } from 'aria-fs'
 
 import { TSRollupConfig } from './ts-rollup-config'
 import { copyFile, writeFile, rename, exist } from './fs'
-import { globFiles, mkdirp } from 'aria-fs'
 import { DEFAULT_OUT_DIR } from './cli-common'
 
 function pkgProps(options: any, pkgName: string) {
@@ -71,7 +71,8 @@ export function getPackageJson(filePath?: string) {
 }
 
 export async function getPackageJsonFile(filePath?: string) {
-  return import(filePath ?? join(baseDir(), 'package.json'))
+  const pkg = await import(filePath ?? join(baseDir(), 'package.json'))
+  return pkg.default ?? pkg
 }
 
 export function getPackageName(filePath?: string) {
@@ -97,8 +98,9 @@ export async function createDtsEntry(options?: {
   if (await exist(indexDts)) {
     content = `export * from './src/index'`
   }
- 
-  await writeFile(resolve(join(outDir, name + '.d.ts')), content)
+  
+  const fileName = resolve(join(outDir, name + '.d.ts'))
+  await writeFile(fileName, content)
 }
 
 export function copyReadMeFile(options?: { 
@@ -106,7 +108,9 @@ export function copyReadMeFile(options?: {
   output?: string 
 }) {
   const fileName = 'README.md'
-  return copyFile(options?.filePath ?? join(baseDir(), fileName), join(options?.output, fileName))
+  const src = options?.filePath ?? join(baseDir(), fileName);
+  const dst = join(options?.output, fileName)
+  return copyFile(src, dst)
 }
 
 export async function moveDtsFiles(options: { 
@@ -150,7 +154,7 @@ export async function renameDtsEntryFile(options: TSRollupConfig | Array<TSRollu
 }
 
 export async function copyPackageFile(options?: PackageFile) {
-  const pkgTemp = await getPackageJsonFile(options?.filePath)
+  const pkgTemp = options?.main ? options: await getPackageJsonFile(options?.filePath)
   const name = options?.entry ? getInputEntryFile(options?.entry): pkgTemp.name
   const pkg = { ...pkgTemp, ...pkgProps(options ?? {}, name) }
   delete pkg.scripts

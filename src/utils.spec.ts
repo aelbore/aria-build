@@ -1,7 +1,7 @@
 import * as assert from 'assert'
-import * as mock from 'mock-fs';
+import * as mock from 'mock-fs'
 import * as path from 'path'
-import { exist } from './fs';
+import { exist } from './fs'
 import { 
   getPackageJsonFile, 
   getPackageName, 
@@ -11,14 +11,20 @@ import {
   DEFAULT_VALUES, 
   createDtsEntry, 
   renameDtsEntryFile
-} from './utils';
-import { readFile } from './fs';
-import { TSRollupConfig } from './ts-rollup-config';
+} from './utils'
+import { readFile } from './fs'
+import { TSRollupConfig } from './ts-rollup-config'
 
 describe('utils', () => {
+  let cache: NodeModule;
+
+  beforeEach(() => {
+    cache = require.cache[path.resolve('package.json')]
+  })
 
   afterEach(() => {
     mock.restore()
+    require.cache[path.resolve('package.json')] = cache
   })
 
   it('should read the package.json file', async () => { 
@@ -55,17 +61,29 @@ describe('utils', () => {
   })
 
   it('should copy package.json to destination. [copyPackageFile]', async () => {
-    let dest = 'dist'
-
-    const isFileExist = (dest: string) => {
-      return exist(path.join(dest, 'package.json'))
-    }
+    delete require.cache[path.resolve('package.json')]
+    
+    const dest = 'dist'
 
     mock({ 
-      [dest]: {} 
+      [dest]: {},
+      'package.json': `
+        {
+          "name": "aria-fs"
+        }
+      `
     })
+
     await copyPackageFile()
-    assert.strictEqual(await isFileExist(dest), true)
+
+    const filePath = path.resolve('./dist/package.json')
+    const isExist = await exist(filePath)
+  
+    const content = await readFile(filePath, 'utf-8');
+    const pkg = JSON.parse(content)
+
+    assert.strictEqual(isExist, true)
+    assert.strictEqual(pkg.name, 'aria-fs')
   })
 
   it('should [createDtsEntry], when has [filePath] as package.json path.', async () => {

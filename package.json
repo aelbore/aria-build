@@ -1,6 +1,6 @@
 {
   "name": "aria-build",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "Build any web components",
   "main": "aria-build.js",
   "bin": {
@@ -13,7 +13,7 @@
     "bundle": "ts-node tools/bundle.ts",
     "build.packages": "ts-node tools/packages.ts",
     "reset.packages": "sh ./reset-packages.sh",
-    "test": "aria-mocha"
+    "test": "aria-mocha --check-coverage --threshold statements=90,functions=90,branches=85,lines=90"
   },
   "repository": {
     "type": "git",
@@ -35,7 +35,7 @@
   "devDependencies": {
     "@types/mocha": "^5.2.7",
     "@types/mock-fs": "^4.10.0",
-    "@types/node": "^12.12.21",
+    "@types/node": "^13.1.1",
     "aria-mocha": "^0.0.6",
     "mock-fs": "^4.10.4",
     "typescript": "^3.7.4"

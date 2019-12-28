@@ -22,21 +22,29 @@ function createGlobals(globals: KeyValue) {
   })
 }
 
-function getExternal({ external, dependencies }) {
-  return [
-    ...(external 
-          ? external.split(',')
-          : dependencies
-        )
+function getExternal(options?: { external: string, dependencies: string[] }) {
+  return [ 
+    ...(options?.external ? options.external.split(','): []), 
+    ...(options?.dependencies ?? [])
   ]
 }
 
-function getEntryFile(pkgName: string) {
+function addTerserPlugins(plugins: any[], compress: boolean) {
+  if (compress) {
+    plugins.push(terser({
+      output: {
+        comments: false
+      }
+    }))
+  }
+}
+
+export function getEntryFile(pkgName: string) {
   const rootDir = resolve()
-  const tsPkgPath = join(rootDir, 'src', `${pkgName}.ts`),
-    jsPkgPath = tsPkgPath.replace('.ts', '.js'),
-    tsIndexPath = join(rootDir, 'src', 'index.ts'),
-    jsIndexPath = tsIndexPath.replace('.ts', '.js')
+  const tsPkgPath = join(rootDir, 'src', `${pkgName}.ts`)
+  const jsPkgPath = tsPkgPath.replace('.ts', '.js')
+  const tsIndexPath = join(rootDir, 'src', 'index.ts')
+  const jsIndexPath = tsIndexPath.replace('.ts', '.js')
   
   const removeRootDir = (filePath: string) => filePath.replace(rootDir, '.')
 
@@ -49,16 +57,6 @@ function getEntryFile(pkgName: string) {
   if (existsSync(jsIndexPath)) return removeRootDir(jsIndexPath)
 
   throw new Error('Entry file is not exist.')
-}
-
-function addTerserPlugins(plugins: any[], compress: boolean) {
-  if (compress) {
-    plugins.push(terser({
-      output: {
-        comments: false
-      }
-    }))
-  }
 }
 
 export function mergeGlobals(globals?: KeyValue, optionGlobals?: string) {
@@ -93,7 +91,6 @@ export function entryFile(format?: string, entry?: string, module?: string) {
   return (format?.split(',').length === 1) ? `${entry}.js`: `${entry}.${module ?? 'es'}.js`
 }
 
-export const getInputFile = memoize(getEntryFile)
 export const getExternalDeps = memoize(getExternal)
 export const getUmdGlobals = memoize(getGlobals)
 export const addTerserPlugin = memoize(addTerserPlugins)
