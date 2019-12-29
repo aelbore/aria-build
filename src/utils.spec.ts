@@ -48,6 +48,17 @@ describe('utils', () => {
     assert.strictEqual(isFileExist, true)
   })
 
+  it('should copy the readme file. [copyReadmeFile] with filePath.', async () => {
+    mock({
+      'tmp/README.md': '',
+      'dist': {}
+    })
+    await copyReadmeFile('./tmp/README.md')
+
+    const isFileExist = await exist('./dist/README.md')
+    assert.strictEqual(isFileExist, true)
+  })
+
   it('should copy the readme file. [copyReadMeFile]', async () => {
     const output = 'public', file = 'README.md'
     mock({
@@ -84,6 +95,35 @@ describe('utils', () => {
 
     assert.strictEqual(isExist, true)
     assert.strictEqual(pkg.name, 'aria-fs')
+  })
+
+  it('should copy package.json to destination. [copyPackageFile] with options.', async () => {
+    delete require.cache[path.resolve('package.json')]
+    
+    const dest = 'dist'
+
+    mock({ 
+      [dest]: {},
+      'package.json': `
+        {
+          "name": "aria-fs"
+        }
+      `
+    })
+
+    await copyPackageFile({ format: 'es' })
+
+    const filePath = path.resolve('./dist/package.json')
+    const isExist = await exist(filePath)
+  
+    const content = await readFile(filePath, 'utf-8');
+    const pkg = JSON.parse(content)
+
+    assert.strictEqual(isExist, true)
+    assert.strictEqual(pkg.name, 'aria-fs')
+    assert.strictEqual(pkg.main, 'aria-fs.js')
+    assert.strictEqual(pkg.module, 'aria-fs.js')
+    assert.strictEqual(pkg.typings, 'aria-fs.d.ts')
   })
 
   it('should [createDtsEntry], when has [filePath] as package.json path.', async () => {
@@ -256,5 +296,4 @@ describe('utils', () => {
     const isFileExist = await exist('./dist/hello-world.d.ts')
     assert.strictEqual(isFileExist, true);
   })
-
 })  
