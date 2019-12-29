@@ -3,10 +3,15 @@ import * as mock from 'mock-fs'
 import { resolve } from 'path'
 import { TSRollupConfig } from './ts-rollup-config.js'
 import { bundle } from './build'
-import { globFiles, exist } from './fs'
+import { globFiles, exist, readFile } from './fs'
 
 describe('build', () => {
   let cache: NodeModule
+  let content: string
+  
+  before(async () => {
+    content = await readFile('./fixtures/mkdirp.ts', 'utf-8')
+  })
 
   beforeEach(() => {
     cache = require.cache[resolve('package.json')]
@@ -34,22 +39,7 @@ describe('build', () => {
 
     mock({
       'dist': {},
-      'src/file.ts': `
-        import * as fs from 'fs'
-        import * as path from 'path'
-
-        function mkdirp(directory: string): void {
-          const dirPath = path.resolve(directory).replace(/\/$/, '').split(path.sep);
-          for (let i = 1; i <= dirPath.length; i++) {
-            const segment = dirPath.slice(0, i).join(path.sep);
-            if (!fs.existsSync(segment) && segment.length > 0) {
-              fs.mkdirSync(segment);
-            }
-          }
-        }
-
-        export { mkdirp }
-      `,
+      'src/file.ts': content,
       'README.md': '',
       'package.json': `
         {
@@ -74,5 +64,4 @@ describe('build', () => {
       assertFiles('./dist/README.md')
     ])
   })
-
 })
