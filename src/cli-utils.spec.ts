@@ -120,7 +120,10 @@ describe('CLI utils', () => {
     })
 
     const input = getEntryFile('aria-build');
-    assert.strictEqual(input, './src/index.ts')
+    assert.strictEqual(
+      path.normalize(input), 
+      path.normalize('./src/index.ts')
+    )
   })
 
   it('should [getEntryFile] when index.js is exist.', () => {
@@ -129,7 +132,10 @@ describe('CLI utils', () => {
     })
 
     const input = getEntryFile('aria-build');
-    assert.strictEqual(input, './src/index.js')
+    assert.strictEqual(
+      path.normalize(input), 
+      path.normalize('./src/index.js')
+    )
   })
   
   it('should [getEntryFile] when <package-name>.ts is exist.', () => {
@@ -138,7 +144,10 @@ describe('CLI utils', () => {
     })
 
     const input = getEntryFile('aria-build');
-    assert.strictEqual(input, './src/aria-build.ts')
+    assert.strictEqual(
+      path.normalize(input), 
+      path.normalize('./src/aria-build.ts')
+    )
   })
 
   it('should [getEntryFile] when <package-name>.js is exist.', () => {
@@ -147,7 +156,10 @@ describe('CLI utils', () => {
     })
 
     const input = getEntryFile('aria-build');
-    assert.strictEqual(input, './src/aria-build.js')
+    assert.strictEqual(
+      path.normalize(input), 
+      path.normalize('./src/aria-build.js')
+    )
   })
 
   it('should [getEntryFile] throw an error when no entry file exist.', () => {
