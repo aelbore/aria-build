@@ -1,6 +1,7 @@
-import * as assert from 'assert'
 import * as mock from 'mock-fs'
 import * as path from 'path'
+
+import { expect } from 'aria-mocha'
 import { AriaConfigOptions } from './cli-common'
 import { createGlobalsFromConfig, getUmdGlobals, mergeGlobals, getAriaConfig, getEntryFile, getExternalDeps } from './cli-utils'
 import { mkdirp, writeFile } from './fs'
@@ -24,7 +25,7 @@ describe('CLI utils', () => {
     }
 
     const globals = createGlobalsFromConfig(ariaConfig?.output?.globals)
-    assert.strictEqual(globals.join(','), expected)
+    expect(globals.join(',')).equal(expected)
   })
 
   it('should [getUmdGlobals]', () => {
@@ -36,7 +37,7 @@ describe('CLI utils', () => {
     const result = getUmdGlobals("litElement=lit-element,litHtml=lit-html")
     
     Object.keys(result).forEach(key => {
-      assert.ok(expected[key])
+      expect(expected[key]).toBeDefined()
     })
   })
 
@@ -64,9 +65,9 @@ describe('CLI utils', () => {
       ...getUmdGlobals(localMergeGlobals)
     }
 
-    assert.strictEqual(Object.keys(result).length, 3)
+    expect(Object.keys(result).length).equal(3)
     Object.keys(result).forEach(key => {
-      assert.ok(result[key], expectedGlobals[key])
+      expect(result[key]).equal(expectedGlobals[key])
     })
   })
 
@@ -87,11 +88,11 @@ describe('CLI utils', () => {
 
     const ariaConfig = await getAriaConfig()
 
-    assert.ok(ariaConfig)
-    assert.ok(ariaConfig.output)
-    assert.ok(ariaConfig.output.globals)
-    assert.strictEqual(Object.keys(ariaConfig.output.globals).length, 2)
-    assert.strictEqual(Array.isArray(ariaConfig.plugins), true)
+    expect(ariaConfig).toBeDefined()
+    expect(ariaConfig.output).toBeDefined()
+    expect(ariaConfig.output.globals).toBeDefined()
+    expect(Object.keys(ariaConfig.output.globals).length).equal(2)
+    expect(Array.isArray(ariaConfig.plugins)).toBeTrue()
   })  
 
   it('should [getAriaConfig] from custom config', async () => {
@@ -109,9 +110,9 @@ describe('CLI utils', () => {
     const ariaConfig = await getAriaConfig(CUSTOM_CONFIG_PATH)
     await clean('build')
 
-    assert.ok(ariaConfig)
-    assert.strictEqual(Array.isArray(ariaConfig.plugins), true)
-    assert.strictEqual(ariaConfig.hasOwnProperty('globals'), false)
+    expect(ariaConfig).toBeDefined()
+    expect(Array.isArray(ariaConfig.plugins)).toBeTrue()
+    expect(ariaConfig.hasOwnProperty('globals')).toBeFalse()
   })
 
   it('should [getEntryFile] when index.ts is exist.', () => {
@@ -120,10 +121,7 @@ describe('CLI utils', () => {
     })
 
     const input = getEntryFile('aria-build');
-    assert.strictEqual(
-      path.normalize(input), 
-      path.normalize('./src/index.ts')
-    )
+    expect(path.normalize(input)).equal(path.normalize('./src/index.ts'))
   })
 
   it('should [getEntryFile] when index.js is exist.', () => {
@@ -132,10 +130,7 @@ describe('CLI utils', () => {
     })
 
     const input = getEntryFile('aria-build');
-    assert.strictEqual(
-      path.normalize(input), 
-      path.normalize('./src/index.js')
-    )
+    expect(path.normalize(input)).equal(path.normalize('./src/index.js'))
   })
   
   it('should [getEntryFile] when <package-name>.ts is exist.', () => {
@@ -144,10 +139,7 @@ describe('CLI utils', () => {
     })
 
     const input = getEntryFile('aria-build');
-    assert.strictEqual(
-      path.normalize(input), 
-      path.normalize('./src/aria-build.ts')
-    )
+    expect(path.normalize(input)).equal(path.normalize('./src/aria-build.ts'))
   })
 
   it('should [getEntryFile] when <package-name>.js is exist.', () => {
@@ -156,10 +148,7 @@ describe('CLI utils', () => {
     })
 
     const input = getEntryFile('aria-build');
-    assert.strictEqual(
-      path.normalize(input), 
-      path.normalize('./src/aria-build.js')
-    )
+    expect(path.normalize(input)).equal(path.normalize('./src/aria-build.js'))
   })
 
   it('should [getEntryFile] throw an error when no entry file exist.', () => {
@@ -167,41 +156,35 @@ describe('CLI utils', () => {
       'src/file.ts': ''
     })
 
-    try {
-      getEntryFile('aria-build');
-    } catch(error) {
-      assert.throws(() => {
-        throw new Error(error)
-      }, 'Entry file is not exist.')
-    }
+    expect(() => getEntryFile('aria-build')).toThrow('Entry file is not exist.')
   })
 
   it('should [getExternalDeps] when external has values.', () => {
     const external = 'rollup,aria-fs'
     const results = getExternalDeps({ external, dependencies: [] })
 
-    assert.ok(results)
-    assert.strictEqual(Array.isArray(results), true)
+    expect(results).toBeDefined()
+    expect(Array.isArray(results)).toBeTrue()
     results.forEach(result => {
-      assert.ok(external.split(',').find(value => value === result))
+      expect(external.split(',').find(value => value === result)).toBeDefined()
     })
   })
 
   it('should [getExternalDeps] when external has NO values.', () => {
     const results = getExternalDeps({})
 
-    assert.ok(results)
-    assert.strictEqual(Array.isArray(results), true)
+    expect(results).toBeDefined()
+    expect(Array.isArray(results)).toBeTrue()
   })
 
   it('should [getExternalDeps] when dependencies has values.', () => {
     const dependencies = [ 'rollup', 'aria-fs' ]
     const results = getExternalDeps({ dependencies })
 
-    assert.ok(results)
-    assert.strictEqual(Array.isArray(results), true)
+    expect(results).toBeDefined()
+    expect(Array.isArray(results)).toBeTrue()
     results.forEach(result => {
-      assert.ok(dependencies.find(value => value === result))
+      expect(dependencies.find(value => value === result)).toBeDefined()
     })
   })
 
