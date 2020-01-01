@@ -1,7 +1,8 @@
 
 import * as pkgJson from '../package.json'
-import * as assert from 'assert'
-import * as mock from 'mock-fs';
+import * as mock from 'mock-fs'
+
+import { expect } from 'aria-mocha'
 import { normalize } from 'path'
 import { BuildFormatOptions } from './cli-common';
 import { buildUmd } from './cli-build-umd';
@@ -31,8 +32,8 @@ describe('buildUmd config', () => {
     const entry =  './src/hello-world.ts'
     const configOptions = buildUmd({ ...params, entry })
 
-    assert.ok(configOptions)
-    assert.strictEqual(configOptions.input, entry)
+    expect(configOptions).toBeDefined()
+    expect(configOptions.input).equal(entry)
   })
 
   it('should use package name as input, when entry is null.', () => {
@@ -43,8 +44,8 @@ describe('buildUmd config', () => {
     delete params.entry
     const configOptions = buildUmd(params)
 
-    assert.ok(configOptions)
-    assert.strictEqual(normalize(configOptions.input), normalize(entry))
+    expect(configOptions).toBeDefined()
+    expect(normalize(configOptions.input)).equal(normalize(entry))
   })
 
   it('should use the entry option as output file', () => {
@@ -53,7 +54,8 @@ describe('buildUmd config', () => {
 
     const configOptions = buildUmd({ ...params, entry })
 
-    assert.strictEqual(normalize(configOptions.output.file), normalize('./dist/hello-world.umd.js'))
+    expect(normalize(configOptions.output.file))
+      .equal(normalize('./dist/hello-world.umd.js'))
   })
 
   it('should use the package name as output file, when entry is null', () => {
@@ -64,10 +66,8 @@ describe('buildUmd config', () => {
     delete params.entry
 
     const configOptions = buildUmd(params)
-    assert.strictEqual(
-      normalize(configOptions.output.file), 
-      normalize('./dist/aria-build.umd.js')
-    )                           
+    expect(normalize(configOptions.output.file))
+      .equal(normalize('./dist/aria-build.umd.js'))                           
   })
 
   it('should have plugins when format is only umd.', () => {
@@ -76,32 +76,32 @@ describe('buildUmd config', () => {
     params.format = 'umd'
     const configOptions = buildUmd({ ...params, entry })
 
-    assert.ok(configOptions)
-    assert.strictEqual(configOptions.hasOwnProperty('plugins'), true)
+    expect(configOptions).toBeDefined()
+    expect(configOptions.hasOwnProperty('plugins')).toBeTrue()
   })
 
   it('should have external and get it to package.json dependencies by default.', () => {
     const configOptions = buildUmd(params)
 
-    assert.ok(configOptions)
-    assert.ok(configOptions.external)
-    assert.strictEqual(configOptions.external.length, dependencies.length);
+    expect(configOptions).toBeDefined()
+    expect(configOptions.external).toBeDefined()
+    expect(configOptions.external.length).equal(dependencies.length);
     configOptions.external.forEach(e => {
       const findOne = dependencies.find(d => d === e);
-      assert.ok(findOne)
+      expect(findOne).toBeDefined()
     })
   })
 
   it('should change the output directory when --output has value.', () => {
     let configOptions = buildUmd({ ...params, output: 'public', entry: './src/hello-world.ts' })
 
-    assert.ok(configOptions)
-    assert.strictEqual(configOptions.output.file, './public/hello-world.umd.js')
+    expect(configOptions).toBeDefined()
+    expect(configOptions.output.file).equal('./public/hello-world.umd.js')
 
     params.format = 'umd'
     configOptions = buildUmd({ ...params, output: 'public', entry: './src/hello-world.ts' })
 
-    assert.strictEqual(configOptions.output.file, './public/hello-world.js')
+    expect(configOptions.output.file).equal('./public/hello-world.js')
   })
 
   it('should have globals from --globals option', () => {
@@ -114,9 +114,9 @@ describe('buildUmd config', () => {
     const configOptions = buildUmd({ ...params })
     const globals = configOptions.output.globals
 
-    assert.strictEqual(Object.keys(globals).length, 2)
+    expect(Object.keys(globals).length).equal(2)
     Object.keys(globals).forEach(key => {
-      assert.ok(expectedGlobals[key])
+      expect(expectedGlobals[key]).toBeDefined()
     })
   })
 

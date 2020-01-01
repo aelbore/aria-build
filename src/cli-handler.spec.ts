@@ -1,6 +1,7 @@
 
-import * as assert from 'assert'
 import * as mock from 'mock-fs'
+
+import { expect } from 'aria-mocha'
 import { resolve } from 'path'
 import { BuildOptions, DEFAULT_OUT_DIR } from './cli-common'
 import { handler } from './cli-handler'
@@ -12,7 +13,7 @@ describe('CLI [handler]', () => {
   let content: string
 
   const assertFiles = async (filePath: string) => {
-    assert.strictEqual(await exist(filePath), true)
+    expect(await exist(filePath)).toBeTrue()
   }
 
   before(async () => {
@@ -58,8 +59,8 @@ describe('CLI [handler]', () => {
     await handler(options)
     const files = await globFiles('./dist/*.js')
 
-    assert.strictEqual(Array.isArray(files), true)
-    assert.strictEqual(files.length, 2)
+    expect(Array.isArray(files)).toBeTrue()
+    expect(files.length).equal(2)
     await Promise.all([
       assertFiles('./dist/aria-sample.es.js'),
       assertFiles('./dist/aria-sample.js'),
@@ -84,8 +85,8 @@ describe('CLI [handler]', () => {
     await handler(options)
     const files = await globFiles('./dist/*.js')
 
-    assert.strictEqual(Array.isArray(files), true)
-    assert.strictEqual(files.length, 2)
+    expect(Array.isArray(files)).toBeTrue()
+    expect(files.length).equal(2)
     await Promise.all([
       assertFiles('./dist/aria-sample.es.js'),
       assertFiles('./dist/aria-sample.js'),
@@ -110,9 +111,12 @@ describe('CLI [handler]', () => {
     await handler(options)
     const files = await globFiles('./dist/*.js')
 
-    assert.strictEqual(Array.isArray(files), true)
-    assert.strictEqual(files.length, 2)
-    await Promise.all([ assertFiles('./dist/file.es.js'), assertFiles('./dist/file.js') ])
+    expect(Array.isArray(files)).toBeTrue()
+    expect(files.length).equal(2)
+    await Promise.all([ 
+      assertFiles('./dist/file.es.js'), 
+      assertFiles('./dist/file.js') 
+    ])
   })
 
   it('should build with .d.ts or declaration file(s).', async () => {
@@ -160,8 +164,8 @@ describe('CLI [handler]', () => {
 
     const files = await globFiles('./dist/**/*')
 
-    assert.strictEqual(Array.isArray(files), true)
-    assert.strictEqual(files.length, 4)
+    expect(Array.isArray(files)).toBeTrue()
+    expect(files.length).equal(4)
     await Promise.all([
       assertFiles('./dist/hello-world.js'),
       assertFiles('./dist/hello-world.js.map'),
@@ -195,8 +199,8 @@ describe('CLI [handler]', () => {
 
     const files = await globFiles('./dist/**/*')
 
-    assert.strictEqual(Array.isArray(files), true)
-    assert.strictEqual(files.length, 6)
+    expect(Array.isArray(files)).toBeTrue()
+    expect(files.length).equal(6)
     await Promise.all([
       assertFiles('./dist/hello-world.es.js'),
       assertFiles('./dist/hello-world.es.js.map'),
