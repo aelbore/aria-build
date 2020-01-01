@@ -1,8 +1,9 @@
 
 import * as pkgJson from '../package.json'
-import * as assert from 'assert'
 import * as path from 'path'
-import * as mock from 'mock-fs';
+import * as mock from 'mock-fs'
+
+import { expect } from 'aria-mocha'
 import { buildES } from './cli-build-es'
 import { BuildFormatOptions } from './cli-common';
 
@@ -31,8 +32,8 @@ describe('buildES config', () => {
     const expectedInput =  './src/hello-world.ts'
     const configOptions = buildES({ ...params, entry: './src/hello-world.ts' })
 
-    assert.ok(configOptions)
-    assert.strictEqual(configOptions.input, expectedInput)
+    expect(configOptions).toBeDefined()
+    expect(configOptions.input).equal(expectedInput)
   })
 
   it('should use package name as input, when entry is null.', () => {
@@ -43,11 +44,8 @@ describe('buildES config', () => {
     delete params.entry
     const configOptions = buildES(params)
 
-    assert.ok(configOptions)
-    assert.strictEqual(
-      path.normalize(configOptions.input), 
-      path.normalize(expectedInput)
-    )
+    expect(configOptions).toBeDefined()
+    expect(path.normalize(configOptions.input)).equal(path.normalize(expectedInput))
   })
 
   it('should use the entry option as output file', () => {
@@ -57,19 +55,15 @@ describe('buildES config', () => {
     /// has more that 1 format
     let configOptions = buildES({ ...params, entry })
 
-    assert.strictEqual(
-      path.normalize(configOptions.output.file), 
-      path.normalize('./dist/hello-world.es.js')
-    )
+    expect(path.normalize(configOptions.output.file))
+      .equal(path.normalize('./dist/hello-world.es.js'))
 
     /// has only 1 format
     params.format = 'es'
     configOptions = buildES({ ...params, entry })
 
-    assert.strictEqual(
-      path.normalize(configOptions.output.file), 
-      path.normalize('./dist/hello-world.js')
-    )
+    expect(path.normalize(configOptions.output.file))
+      .equal(path.normalize('./dist/hello-world.js'))
   })
 
   it('should use the package name as output file, when entry is null', () => {
@@ -82,49 +76,45 @@ describe('buildES config', () => {
     /// has more that 1 format
     let configOptions = buildES(params)
 
-    assert.strictEqual(
-      path.normalize(configOptions.output.file), 
-      path.normalize('./dist/aria-build.es.js')
-    )
+    expect(path.normalize(configOptions.output.file))
+      .equal(path.normalize('./dist/aria-build.es.js'))
                                 
     /// has only 1 format
     params.format = 'es'
     configOptions = buildES(params)
 
-    assert.strictEqual(
-      path.normalize(configOptions.output.file), 
-      path.normalize('./dist/aria-build.js')
-    )
+    expect(path.normalize(configOptions.output.file))
+      .equal(path.normalize('./dist/aria-build.js'))
   })
 
   it('should not add the terser plugin when the compress option is false', () => {
     const configOptions = buildES(params)
 
     const plugins = Array.isArray(configOptions.plugins) ? configOptions.plugins: [];
-    assert.strictEqual(plugins.length, 0)
+    expect(plugins.length).equal(0)
   })
 
   it('should have external and get it to package.json dependencies by default.', () => {
     const configOptions = buildES(params)
 
-    assert.ok(configOptions)
-    assert.ok(configOptions.external)
-    assert.strictEqual(configOptions.external.length, dependencies.length);
+    expect(configOptions).toBeDefined()
+    expect(configOptions.external).toBeDefined()
+    expect(configOptions.external.length).equal(dependencies.length)
     configOptions.external.forEach(e => {
       const findOne = dependencies.find(d => d === e);
-      assert.ok(findOne)
+      expect(findOne).toBeDefined()
     })
   })
 
   it('should change the output directory when --output has value.', () => {
     let configOptions = buildES({ ...params, output: 'public', entry: './src/hello-world.ts' })
 
-    assert.ok(configOptions)
-    assert.strictEqual(configOptions.output.file, './public/hello-world.es.js')
+    expect(configOptions).toBeDefined()
+    expect(configOptions.output.file).equal('./public/hello-world.es.js')
 
     params.format = 'es'
     configOptions = buildES({ ...params, output: 'public', entry: './src/hello-world.ts' })
 
-    assert.strictEqual(configOptions.output.file, './public/hello-world.js')
+    expect(configOptions.output.file).equal('./public/hello-world.js')
   })
 })

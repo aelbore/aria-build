@@ -1,5 +1,5 @@
-import * as assert from 'assert'
 import * as mock from 'mock-fs'
+import { expect } from 'aria-mocha'
 import { resolve } from 'path'
 import { TSRollupConfig } from './ts-rollup-config.js'
 import { bundle } from './build'
@@ -52,11 +52,11 @@ describe('build', () => {
 
     const files = await globFiles('./dist/**/*')
     const assertFiles = async (filePath: string) => {
-      assert.strictEqual(await exist(filePath), true)
+      expect(await exist(filePath)).toBeTrue()
     }
 
-    assert.strictEqual(Array.isArray(files), true)
-    assert.strictEqual(files.length, 4)
+    expect(Array.isArray(files)).toBeTrue()
+    expect(files.length).equal(4)
     await Promise.all([
       assertFiles('./dist/file.js'),
       assertFiles('./dist/file.d.ts'),

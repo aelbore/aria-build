@@ -1,6 +1,7 @@
-import * as assert from 'assert'
 import * as mock from 'mock-fs'
 import * as path from 'path'
+
+import { expect } from 'aria-mocha'
 import { exist } from './fs'
 import { 
   getPackageJsonFile, 
@@ -29,12 +30,12 @@ describe('utils', () => {
 
   it('should read the package.json file', async () => { 
     const pkg = await getPackageJsonFile()
-    assert.strictEqual(pkg.name, 'aria-build');
+    expect(pkg.name).equal('aria-build')
   })
 
   it('should get package name.', () => {
     const pkgName = getPackageName()
-    assert.strictEqual(pkgName, 'aria-build')
+    expect(pkgName).equal('aria-build')
   })
 
   it('should copy the readme file. [copyReadmeFile]', async () => {
@@ -45,7 +46,7 @@ describe('utils', () => {
     await copyReadmeFile()
 
     const isFileExist = await exist(path.join('dist', 'README.md'))
-    assert.strictEqual(isFileExist, true)
+    expect(isFileExist).toBeTrue()
   })
 
   it('should copy the readme file. [copyReadmeFile] with filePath.', async () => {
@@ -56,7 +57,7 @@ describe('utils', () => {
     await copyReadmeFile('./tmp/README.md')
 
     const isFileExist = await exist('./dist/README.md')
-    assert.strictEqual(isFileExist, true)
+    expect(isFileExist).toBeTrue()
   })
 
   it('should copy the readme file. [copyReadMeFile]', async () => {
@@ -68,7 +69,7 @@ describe('utils', () => {
     await copyReadMeFile({ output })
 
     const isFileExist = await exist(path.join(output, file))
-    assert.strictEqual(isFileExist, true)
+    expect(isFileExist).toBeTrue()
   })
 
   it('should copy package.json to destination. [copyPackageFile]', async () => {
@@ -93,8 +94,8 @@ describe('utils', () => {
     const content = await readFile(filePath, 'utf-8');
     const pkg = JSON.parse(content)
 
-    assert.strictEqual(isExist, true)
-    assert.strictEqual(pkg.name, 'aria-fs')
+    expect(isExist).toBeTrue()
+    expect(pkg.name).equal('aria-fs')
   })
 
   it('should copy package.json to destination. [copyPackageFile] with options.', async () => {
@@ -119,11 +120,11 @@ describe('utils', () => {
     const content = await readFile(filePath, 'utf-8');
     const pkg = JSON.parse(content)
 
-    assert.strictEqual(isExist, true)
-    assert.strictEqual(pkg.name, 'aria-fs')
-    assert.strictEqual(pkg.main, 'aria-fs.js')
-    assert.strictEqual(pkg.module, 'aria-fs.js')
-    assert.strictEqual(pkg.typings, 'aria-fs.d.ts')
+    expect(isExist).toBeTrue()
+    expect(pkg.name).equal('aria-fs')
+    expect(pkg.main).equal('aria-fs.js')
+    expect(pkg.module).equal('aria-fs.js')
+    expect(pkg.typings).equal('aria-fs.d.ts')
   })
 
   it('should [createDtsEntry], when has [filePath] as package.json path.', async () => {
@@ -143,10 +144,10 @@ describe('utils', () => {
     await createDtsEntry({ filePath: path.resolve('./package.json') })
 
     const isExistFile = await exist(dtsFile)
-    assert.strictEqual(isExistFile, true)
+    expect(isExistFile).toBeTrue()
 
     const actualContent = await readFile(dtsFile, 'utf-8')
-    assert.strictEqual(actualContent.trim(), content)
+    expect(actualContent.trim()).equal(content)
   })
 
   it('should [createDtsEntry], when has no ./dist/src/index.d.ts file', async() => {
@@ -161,10 +162,10 @@ describe('utils', () => {
     await createDtsEntry()
 
     const isExistFile = await exist(dtsFile)
-    assert.strictEqual(isExistFile, true)
+    expect(isExistFile).toBeTrue()
 
     const actualContent = await readFile(dtsFile, 'utf-8')
-    assert.strictEqual(actualContent.trim(), content)
+    expect(actualContent.trim()).equal(content)
   })
 
   it('should [createDtsEntry], when has no ./dist/src/index.d.ts file and has --output option', async() => {
@@ -179,10 +180,10 @@ describe('utils', () => {
     await createDtsEntry({ output })
 
     const isExistFile = await exist(dtsFile)
-    assert.strictEqual(isExistFile, true)
+    expect(isExistFile).toBeTrue()
 
     const actualContent = await readFile(dtsFile, 'utf-8')
-    assert.strictEqual(actualContent.trim(), content)
+    expect(actualContent.trim()).equal(content)
   })
 
   it('should [createDtsEntry], when has ./dist/src/index.d.ts file', async() => {
@@ -199,10 +200,10 @@ describe('utils', () => {
     await createDtsEntry()
 
     const isExistFile = await exist(dtsFile)
-    assert.strictEqual(isExistFile, true)
+    expect(isExistFile).toBeTrue()
 
     const actualContent = await readFile(dtsFile, 'utf-8')
-    assert.strictEqual(actualContent.trim(), content)
+    expect(actualContent.trim()).equal(content)
   })
 
   it('should [createDtsEntry], when has ./dist/src/index.d.ts file and has --output option', async() => {    
@@ -218,10 +219,10 @@ describe('utils', () => {
     await createDtsEntry({ output })
 
     const isExistFile = await exist(dtsFile)
-    assert.strictEqual(isExistFile, true)
+    expect(isExistFile).toBeTrue()
 
     const actualContent = await readFile(dtsFile, 'utf-8')
-    assert.strictEqual(actualContent.trim(), content)
+    expect(actualContent.trim()).equal(content)
   })
 
   it('should [renameDtsEntryFile] rename index.d.ts to <package-name>.d.ts.', async () => {
@@ -245,10 +246,10 @@ describe('utils', () => {
     await renameDtsEntryFile(options)
 
     let isFileExist = await exist('./dist/aria-build.d.ts')
-    assert.strictEqual(isFileExist, true);
+    expect(isFileExist).toBeTrue()
 
     isFileExist = await exist('./dist/index.d.ts')
-    assert.strictEqual(isFileExist, false)
+    expect(isFileExist).toBeFalse()
   })
 
   it('should [renameDtsEntryFile] NOT rename index.d.ts to <package-name>.d.ts.', async () => {
@@ -270,7 +271,7 @@ describe('utils', () => {
     await renameDtsEntryFile(options)
 
     const isFileExist = await exist('./dist/index.d.ts')
-    assert.strictEqual(isFileExist, true)
+    expect(isFileExist).toBeTrue()
   })
 
   it('should [renameDtsEntryFile] use --entry option as dts entry file.', async () => {
@@ -294,6 +295,6 @@ describe('utils', () => {
     await renameDtsEntryFile(options, './src/hello-world.ts')
 
     const isFileExist = await exist('./dist/hello-world.d.ts')
-    assert.strictEqual(isFileExist, true);
+    expect(isFileExist).toBeTrue();
   })
 })  
