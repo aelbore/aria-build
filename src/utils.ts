@@ -99,8 +99,7 @@ export async function createDtsEntry(options?: {
     content = `export * from './src/index'`
   }
   
-  const fileName = resolve(join(outDir, name + '.d.ts'))
-  await writeFile(fileName, content)
+  await writeFile(`${outDir}/${name}.d.ts`, content)
 }
 
 export function copyReadMeFile(options?: { 

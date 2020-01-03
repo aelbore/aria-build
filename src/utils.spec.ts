@@ -206,7 +206,7 @@ describe('utils', () => {
     expect(actualContent.trim()).equal(content)
   })
 
-  it('should [createDtsEntry], when has ./dist/src/index.d.ts file and has --output option', async() => {    
+  it('should [createDtsEntry], when has ./<output>/src/index.d.ts file and has --output option', async() => {    
     const output = 'public'
     const dtsFile = `${output}/aria-build.d.ts`
     const destFile = path.join(output, 'src', 'index.d.ts')
