@@ -8,6 +8,10 @@ import { globFiles, exist, readFile } from './fs'
 describe('build', () => {
   let cache: NodeModule
   let content: string
+
+  const assertFiles = async (filePath: string) => {
+    expect(await exist(filePath)).toBeTrue()
+  }
   
   before(async () => {
     content = await readFile('./fixtures/mkdirp.ts', 'utf-8')
@@ -51,9 +55,6 @@ describe('build', () => {
     await bundle(opitions)
 
     const files = await globFiles('./dist/**/*')
-    const assertFiles = async (filePath: string) => {
-      expect(await exist(filePath)).toBeTrue()
-    }
 
     expect(Array.isArray(files)).toBeTrue()
     expect(files.length).equal(4)
@@ -64,4 +65,55 @@ describe('build', () => {
       assertFiles('./dist/README.md')
     ])
   })
+
+  it('should [bundle] multiple format (es,cjs) target node.', async () => {
+    const opitions: TSRollupConfig[] = [
+      {
+        input: './src/file.ts',
+        output: {
+          file: './dist/file.es.js',
+          format: 'es'
+        },
+        tsconfig: {
+          compilerOptions: {
+            declaration: true
+          }
+        }
+      }, 
+      {
+        input: './src/file.ts',
+        output: {
+          file: './dist/file.js',
+          format: 'cjs'
+        }
+      }
+    ]
+    
+    mock({
+      'dist': {},
+      'src/file.ts': content,
+      'README.md': '',
+      'package.json': `
+        {
+          "name": "aria-sample"
+        }
+      `
+    })
+
+    await bundle(opitions)
+
+    const files = await globFiles('./dist/**/*')
+
+    expect(Array.isArray(files)).toBeTrue()
+    expect(files.length).equal(5)
+    await Promise.all([
+      assertFiles('./dist/file.js'),
+      assertFiles('./dist/file.es.js'),
+      assertFiles('./dist/file.d.ts'),
+      assertFiles('./dist/package.json'),
+      assertFiles('./dist/README.md')
+    ])
+
+  })
+
 })
