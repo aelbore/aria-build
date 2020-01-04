@@ -27,7 +27,8 @@ export interface RollupPluginCopyOptions {
     dest: string,
     recursive?: boolean,
     replace?: (filename: string) => Promise<void>
-  }[]
+  }[],
+  copyEnd?: () => Promise<void>
 }
 
 export async function replaceContent(options?: { 
@@ -112,10 +113,13 @@ export async function copyAssets(options?: RollupPluginCopyOptions) {
   }))
 }
 
-export function copy({ hook = 'buildEnd', targets = [] }: RollupPluginCopyOptions) {
+export function copy({ hook = 'buildEnd', targets = [], copyEnd }: RollupPluginCopyOptions) {
   return {
     name: 'copy',
-    [hook]: () => copyAssets({ targets })
+    [hook]: async () => {
+      await copyAssets({ targets })
+      await (copyEnd && copyEnd())
+    }
   }
 }
 
