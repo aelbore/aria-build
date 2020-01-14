@@ -1,5 +1,5 @@
 import { basename, join } from 'path'
-import { commonjs, nodeResolve, typescript2 } from './libs'
+import { commonjs, nodeResolve, typescript2, multiEntry } from './libs'
 import { getPackageName, DEFAULT_VALUES, baseDir } from './utils'
 
 export function onwarn(warning) {
@@ -8,7 +8,7 @@ export function onwarn(warning) {
 }
 
 export function createTSConfig(options: { 
-  input?: string, 
+  input?: string | string[], 
   file?: string, 
   tsconfig?: any, 
   pluginOptions?: any 
@@ -18,7 +18,7 @@ export function createTSConfig(options: {
   const transformers = tsconfig?.transformers ?? []
   const compilerOptions = tsconfig?.compilerOptions ?? {}
   const outputFile = file ? basename(file): '.rts2_cache'
-  const include = input ? { include: [ input ] }: {}
+  const include = input ? { include: Array.isArray(input) ? input: [ input ] }: {}
 
   return {
     transformers: [ 
@@ -60,7 +60,7 @@ export function createTSConfig(options: {
 }
 
 export interface TSRollupConfig {
-  input: string;
+  input: string | string[];
   external?: string[];
   output?: {
     sourcemap?: boolean,
@@ -85,7 +85,7 @@ export function createTSRollupConfig(options: TSRollupConfig) {
     ? join(baseDir(), output.file)
     : join(DEFAULT_VALUES.DIST_FOLDER, getPackageName() + '.js')
 
-  const entry = join(baseDir(), input)
+  const entry = Array.isArray(input) ? input: [ input ]
 
   const beforePlugins = Array.isArray(plugins)
     ? []
@@ -105,6 +105,7 @@ export function createTSRollupConfig(options: TSRollupConfig) {
       treeshake: true,
       plugins: [
         ...beforePlugins,
+        multiEntry(),
         typescript2(createTSConfig({ 
           input: entry, 
           file, 
