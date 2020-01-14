@@ -7,10 +7,9 @@
     "aria-build": "./bin/aria-build.js"
   },
   "scripts": {
-    "files": "ts-node index.ts",
     "fs": "aria-fs",
     "build": "node ./bin/aria-build.js -d",
-    "bundle": "ts-node tools/bundle.ts",
+    "bundle": "ts-node --project ./tools/tsconfig.json ./tools/bundle.ts",
     "build.packages": "ts-node tools/packages.ts",
     "reset.packages": "sh ./reset-packages.sh",
     "test": "aria-mocha --check-coverage --threshold statements=90,functions=90,branches=85,lines=90",
@@ -25,7 +24,7 @@
     "rollup"
   ],
   "author": "Arjay Elbore",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/aelbore/aria-build/issues"
   },
