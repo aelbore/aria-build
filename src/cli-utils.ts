@@ -78,10 +78,10 @@ export function memoize(fn: any){
   }
 }
 
-export async function getAriaConfig(config?: string) {
+export async function getAriaConfig(config?: string): Promise<AriaConfigOptions> { 
   const ROLLUP_CONFIG_PATH = resolve(config ?? 'aria.config.ts')
   if (existsSync(ROLLUP_CONFIG_PATH)) {
-    const ariaConfig: AriaConfigOptions = await import(ROLLUP_CONFIG_PATH).then(c => c.default)
+    const ariaConfig = await import(ROLLUP_CONFIG_PATH).then(c => c.default)
     return ariaConfig
   }
   return null
