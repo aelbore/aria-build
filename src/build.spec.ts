@@ -66,6 +66,50 @@ describe('build', () => {
     ])
   })
 
+  it('should [bundle] single format (es) with multiple inputs', async () => {
+    const opitions: TSRollupConfig = {
+      input: [ 
+        './src/file.ts',
+        './src/other-file.ts'
+      ],
+      output: {
+        file: './dist/output.js',
+        format: 'es'
+      },
+      tsconfig: {
+        compilerOptions: {
+          declaration: true
+        }
+      }
+    }
+
+    mock({
+      'dist': {},
+      'src/file.ts': content,
+      'src/other-file.ts': '',
+      'README.md': '',
+      'package.json': `
+        {
+          "name": "aria-sample"
+        }
+      `
+    })
+
+    await bundle(opitions)
+
+    const files = await globFiles('./dist/**/*')
+    console.log(files)
+
+    expect(Array.isArray(files)).toBeTrue()
+    expect(files.length).equal(4)
+    await Promise.all([
+      assertFiles('./dist/output.js'),
+      assertFiles('./dist/aria-sample.d.ts'),
+      assertFiles('./dist/package.json'),
+      assertFiles('./dist/README.md')
+    ])
+  })
+
   it('should [bundle] multiple format (es,cjs) target node.', async () => {
     const opitions: TSRollupConfig[] = [
       {

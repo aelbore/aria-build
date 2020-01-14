@@ -18,7 +18,7 @@ function pkgProps(options: any, pkgName: string) {
 }
 
 async function renameDtsFile(options: { 
-  input: string, 
+  input: string | string[], 
   output?: { file?: string }, 
   filePath?: string 
 }) {
