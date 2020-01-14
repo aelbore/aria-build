@@ -26,13 +26,32 @@ async function renameDtsFile(options: {
   const outDir = output.file ? dirname(output.file): DEFAULT_VALUES.DIST_FOLDER;
 
   const pkgName = getPackageName(filePath)
-  const dtsInputFileName = getInputEntryFile(join(baseDir(), input)) + '.d.ts'
+
+  if (Array.isArray(input)) {
+    const dtsFiles = await globFiles(`./${outDir}/**/*.d.ts`)
+      .then(files => {
+        return files.map(file => {
+          const value = file
+            .replace(join(resolve(), outDir), '.') 
+            .replace(/\\/g, '/')
+            .replace('.d.ts', '')          
+          return `export * from '${value}'`
+        })
+      })
+    await writeFile(`./${outDir}/${pkgName}.d.ts`, dtsFiles.join('\n'))
+  }
+
+  const inputEntry = Array.isArray(input)
+    ? pkgName
+    : getInputEntryFile(input)
+
+  const dtsInputFileName = inputEntry + '.d.ts'
   const inputFullPath = join(outDir, dtsInputFileName)
   
   const destFullPath = join(dirname(inputFullPath), 
-    (getInputEntryFile(input).includes(pkgName) || getInputEntryFile(input).includes('index'))
+    (inputEntry.includes(pkgName) || inputEntry.includes('index'))
       ? pkgName + '.d.ts'
-      : getInputEntryFile(input) + '.d.ts'
+      : inputEntry + '.d.ts'
   )
 
   const isFileExist = await exist(destFullPath)

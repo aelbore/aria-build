@@ -98,11 +98,12 @@ describe('build', () => {
     await bundle(opitions)
 
     const files = await globFiles('./dist/**/*')
-    console.log(files)
-
+    
     expect(Array.isArray(files)).toBeTrue()
-    expect(files.length).equal(4)
+    expect(files.length).equal(7)
     await Promise.all([
+      assertFiles('./dist/src/other-file.d.ts'),
+      assertFiles('./dist/src/file.d.ts'),
       assertFiles('./dist/output.js'),
       assertFiles('./dist/aria-sample.d.ts'),
       assertFiles('./dist/package.json'),
