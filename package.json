@@ -7,6 +7,7 @@
     "aria-build": "./bin/aria-build.js"
   },
   "scripts": {
+    "files": "ts-node index.ts",
     "fs": "aria-fs",
     "build": "node ./bin/aria-build.js -d",
     "bundle": "ts-node tools/bundle.ts",
