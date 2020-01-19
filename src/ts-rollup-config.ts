@@ -1,6 +1,7 @@
 import { basename, join } from 'path'
 import { commonjs, nodeResolve, typescript2, multiEntry } from './libs'
 import { getPackageName, DEFAULT_VALUES, baseDir } from './utils'
+import { PluginOptions, KeyValue } from './cli-common';
 
 export function onwarn(warning) {
   if (warning.code === 'THIS_IS_UNDEFINED') { return; }
@@ -68,9 +69,9 @@ export interface TSRollupConfig {
     format?: string,
     name?: string,
     exports?: string,
-    globals?: any
+    globals?: KeyValue
   };
-  plugins?: any[] | { before?: any[], after?: any[] };
+  plugins?: PluginOptions;
   tsconfig?: {
     compilerOptions?: any,
     transformers?: any[],

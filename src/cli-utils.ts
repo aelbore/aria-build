@@ -1,7 +1,7 @@
 import { resolve, join } from 'path'
 import { existsSync } from 'fs'
 import { terser } from './libs'
-import { KeyValue, AriaConfigOptions } from './cli-common'
+import { KeyValue, AriaConfigOptions, PluginOptions } from './cli-common'
 
 function getGlobals(globals: string = '') {
   const results = globals.split(',')
@@ -29,13 +29,16 @@ function getExternal(options?: { external: string, dependencies: string[] }) {
   ]
 }
 
-function addTerserPlugins(plugins: any[], compress: boolean) {
+function addTerserPlugins(plugins: PluginOptions, compress: boolean) {
   if (compress) {
-    plugins.push(terser({
-      output: {
-        comments: false
-      }
-    }))
+    const minify = terser({
+      output: { comments: false }
+    })
+    if (Array.isArray(plugins)) {
+      plugins.push(minify) 
+    } else {
+      plugins.after = [ ...(plugins.after ?? []), minify ]
+    }
   }
 }
 
