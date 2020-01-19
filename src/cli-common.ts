@@ -5,15 +5,18 @@ export interface BuildOptions {
 	declaration?: boolean;
 	format?: string;
 	external?: string;
-	plugins?: any[];
+	plugins?: PluginOptions;
 	name?: string;
 	globals?: string;
 	clean?: string;
 	sourcemap?: boolean;
 	config?: string;
 	output?: string;
-	compress?: boolean | string;
+	compress?: boolean | OutputFormat;
 }
+
+export type PluginOptions = any[] | { before?: any[], after?: any[] }
+export type OutputFormat = 'es' | 'cjs' | 'umd'
 
 export interface KeyValue {
 	[key: string]: string;
@@ -23,7 +26,7 @@ export interface KeyValue {
 ///		parse the the config
 export interface AriaConfigOptions {
 	external?: string[];
-	plugins?: any[];
+	plugins?: PluginOptions
 	output?: {
 		globals?: KeyValue
 	},
