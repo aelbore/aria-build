@@ -63,7 +63,7 @@ export interface TSRollupConfig {
   input: string | string[];
   external?: string[];
   output?: {
-    sourcemap?: boolean,
+    sourcemap?: boolean | string,
     file?: string,
     format?: string,
     name?: string,

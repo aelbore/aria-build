@@ -63,7 +63,7 @@ async function renameDtsFile(options: {
 export const DEFAULT_VALUES = Object.freeze({
   DIST_FOLDER: join(baseDir(), DEFAULT_OUT_DIR),
   SOURCE_FOLDER: join(baseDir(), 'src'),
-  ROLLUP_EXTERNALS: [ 'path', 'fs', 'util', 'crypto', 'events', 'http', 'net', 'url']
+  ROLLUP_EXTERNALS: [ 'child_process', 'path', 'fs', 'util', 'crypto', 'events', 'http', 'net', 'url']
 })
 
 export interface PackageFile {
