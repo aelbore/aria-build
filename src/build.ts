@@ -2,6 +2,19 @@ import { rollup } from './libs'
 import { TSRollupConfig, createTSRollupConfig } from './ts-rollup-config';
 import { copyPackageFile, copyReadmeFile, renameDtsEntryFile, moveDtsFiles } from './utils';
 
+export async function rollupGenerate({ inputOptions, outputOptions }) {
+	const bundle = await rollup(inputOptions)
+	const result  = await bundle.generate(outputOptions)
+	return result.output
+}
+
+export async function buildOutput(options: TSRollupConfig | Array<TSRollupConfig>) {
+  const configs = Array.isArray(options) ? options: [ options ]
+  return Promise.all(configs.map(config => {
+    return rollupGenerate(createTSRollupConfig(config))
+  }))
+}
+
 export async function rollupBuild({ inputOptions, outputOptions }) {
   return rollup(inputOptions).then(bundle => bundle.write(outputOptions));
 }
