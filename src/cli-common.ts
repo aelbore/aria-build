@@ -23,7 +23,8 @@ export interface AriaConfigOptions {
 	plugins?: any[];
 	output?: {
 		globals?: KeyValue
-	}
+	},
+	test?: AriaConfigOptions
 }
   
 export interface BuildFormatOptions extends BuildOptions {
