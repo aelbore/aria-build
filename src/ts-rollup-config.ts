@@ -105,7 +105,7 @@ export function createTSRollupConfig(options: TSRollupConfig) {
       treeshake: true,
       plugins: [
         ...beforePlugins,
-        multiEntry(),
+        ...(Array.isArray(entry) ? [ multiEntry() ]: []),
         typescript2(createTSConfig({ 
           input: entry, 
           file, 
