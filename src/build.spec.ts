@@ -2,8 +2,9 @@ import * as mock from 'mock-fs'
 import { expect } from 'aria-mocha'
 import { resolve } from 'path'
 import { TSRollupConfig } from './ts-rollup-config.js'
-import { bundle } from './build'
+import { bundle, buildOutput } from './build'
 import { globFiles, exist, readFile } from './fs'
+import { OutputChunk } from 'rollup'
 
 describe('build', () => {
   let cache: NodeModule
@@ -159,6 +160,37 @@ describe('build', () => {
       assertFiles('./dist/README.md')
     ])
 
+  })
+
+  it('should [buildOutput] single format (es)', async () => {
+    const options: TSRollupConfig = {
+      input: './src/file.ts',
+      output: {
+        format: 'es'
+      }
+    }
+
+    mock({
+      'dist': {},
+      'src/file.ts': content,
+      'package.json': `
+        {
+          "name": "aria-sample"
+        }
+      `
+    })
+
+    const outputs = await buildOutput(options)
+
+    const codes = outputs.map(output => {
+      return output.map(result => {
+        const { code } = result as OutputChunk
+        return code
+      })
+    })
+
+    expect(Array.isArray(codes)).toBeTrue()
+    expect(codes.shift().map(code => code).join('\n')).notEqual('')
   })
 
 })
