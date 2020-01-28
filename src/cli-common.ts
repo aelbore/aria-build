@@ -12,19 +12,22 @@ export interface BuildOptions {
 	sourcemap?: boolean;
 	config?: string;
 	output?: string;
-	compress?: boolean;
+	compress?: boolean | string;
 }
 
 export interface KeyValue {
 	[key: string]: string;
 }
 
+/// TODO: supports Array of outputs
+///		parse the the config
 export interface AriaConfigOptions {
+	external?: string[];
 	plugins?: any[];
 	output?: {
 		globals?: KeyValue
 	},
-	test?: AriaConfigOptions
+	test?: Omit<AriaConfigOptions, 'test'>
 }
   
 export interface BuildFormatOptions extends BuildOptions {
