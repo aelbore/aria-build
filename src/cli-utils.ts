@@ -1,7 +1,7 @@
 import { resolve, join } from 'path'
 import { existsSync } from 'fs'
 import { terser } from './libs'
-import { KeyValue, AriaConfigOptions, PluginOptions } from './cli-common'
+import { KeyValue, AriaConfigOptions, PluginOptions, PluginBeforeAfter, BuildOptions } from './cli-common'
 
 function getGlobals(globals: string = '') {
   const results = globals.split(',')
@@ -29,17 +29,23 @@ function getExternal(options?: { external: string, dependencies: string[] }) {
   ]
 }
 
-function addTerserPlugins(plugins: PluginOptions, compress: boolean) {
-  if (compress) {
-    const minify = terser({
-      output: { comments: false }
-    })
-    if (Array.isArray(plugins)) {
-      plugins.push(minify) 
-    } else {
-      plugins.after = [ ...(plugins.after ?? []), minify ]
-    }
-  }
+export function isCompress(compress: string | boolean, format: string) {
+  return ((typeof compress == "string" && compress.includes(format)) 
+    || (typeof compress == "boolean" && compress))
+}
+
+export function parsePlugins(plugins: PluginOptions) {
+  return Array.isArray(plugins) 
+    ? [ ...plugins ]
+    : {  
+        before: [ 
+          ...(plugins?.before || []) 
+        ], 
+        after: [ 
+          ...(plugins?.after || [])
+        ]   
+      } 
+      || { before: [], after: []  }
 }
 
 export function getEntryFile(pkgName: string) {
@@ -96,5 +102,4 @@ export function entryFile(format?: string, entry?: string, module?: string) {
 
 export const getExternalDeps = memoize(getExternal)
 export const getUmdGlobals = memoize(getGlobals)
-export const addTerserPlugin = memoize(addTerserPlugins)
 export const createGlobalsFromConfig = memoize(createGlobals)

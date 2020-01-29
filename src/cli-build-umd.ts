@@ -1,14 +1,14 @@
 import { BuildFormatOptions } from './cli-common'
 import { TSRollupConfig } from './ts-rollup-config'
-import { getExternalDeps, getUmdGlobals, entryFile, getEntryFile } from './cli-utils'
+import { getExternalDeps, getUmdGlobals, entryFile, getEntryFile, isCompress } from './cli-utils'
 import { getInputEntryFile } from './utils'
 
 export function buildUmd(options?: BuildFormatOptions): TSRollupConfig {
-  const { pkgName, dependencies, output, external, globals, plugins, name, sourcemap, entry, format } = options
+  const { pkgName, plugins, dependencies, output, external, globals, name, sourcemap, entry, format } = options
   const outDir = output.replace('./', '');
 
   const DEFAULT_FORMAT = 'umd'
-  const isSingleFormat = (format.split(',').length === 1);
+  const compress = isCompress(options.compress, DEFAULT_FORMAT)
   
   const input = entry ?? getEntryFile(pkgName)
   const file = entry
@@ -27,7 +27,8 @@ export function buildUmd(options?: BuildFormatOptions): TSRollupConfig {
       },
       name,
       sourcemap
-    }
+    },
+    compress
   }
 
   return configOptions

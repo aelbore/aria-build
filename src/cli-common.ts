@@ -9,13 +9,18 @@ export interface BuildOptions {
 	name?: string;
 	globals?: string;
 	clean?: string;
-	sourcemap?: boolean;
+	sourcemap?: boolean | string;
 	config?: string;
 	output?: string;
-	compress?: boolean | OutputFormat;
+	compress?: boolean | string;
 }
 
-export type PluginOptions = any[] | { before?: any[], after?: any[] }
+export interface PluginBeforeAfter {
+	before?: any[];
+	after?: any[];
+}
+
+export type PluginOptions = any[] | PluginBeforeAfter
 export type OutputFormat = 'es' | 'cjs' | 'umd'
 
 export interface KeyValue {
