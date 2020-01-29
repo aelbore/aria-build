@@ -13,10 +13,10 @@ export async function run(version: string) {
     .option('-c, --config', 'config file of aria-build. i.e aria.config.ts')
     .option('--external', 'Specify external dependencies')
     .option('--clean', 'Clean the dist folder default', DEFAULT_OUT_DIR)
-    .option('--globals', `Specify globals dependencies`)
-    .option('--sourcemap', 'Generate source map', false)
+    .option('--globals', 'Specify globals dependencies')
+    .option('--sourcemap', 'Generate source map')
     .option('--name', 'Specify name exposed in UMD builds')
-    .option('--compress', 'Compress or minify the output', false)
+    .option('--compress', 'Compress or minify the output')
     .action(handler)
     .parse(process.argv)
 }

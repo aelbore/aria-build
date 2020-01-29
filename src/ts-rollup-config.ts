@@ -1,5 +1,5 @@
 import { basename, join } from 'path'
-import { commonjs, nodeResolve, typescript2, multiEntry } from './libs'
+import { commonjs, nodeResolve, typescript2, multiEntry, terser } from './libs'
 import { getPackageName, DEFAULT_VALUES, baseDir } from './utils'
 import { PluginOptions, KeyValue } from './cli-common';
 
@@ -76,11 +76,12 @@ export interface TSRollupConfig {
     compilerOptions?: any,
     transformers?: any[],
     exclude?: string[]
-  }
+  },
+  compress?: boolean
 }
 
 export function createTSRollupConfig(options: TSRollupConfig) {
-  const { input, output, external, tsconfig, plugins } = options
+  const { input, output, external, tsconfig, plugins, compress } = options
   
   const file = output?.file 
     ? join(baseDir(), output.file)
@@ -95,6 +96,10 @@ export function createTSRollupConfig(options: TSRollupConfig) {
   const afterPlugins = Array.isArray(plugins) 
     ? (plugins || [])
     : (plugins?.after ?? [])
+  
+  const minify = () => terser({
+    output: { comments: false }
+  })
 
   return {
     inputOptions: {
@@ -115,6 +120,7 @@ export function createTSRollupConfig(options: TSRollupConfig) {
         commonjs(),
         nodeResolve(),
         ...afterPlugins,
+        ...(compress ? [ minify() ]: [])
       ],
       onwarn
     },

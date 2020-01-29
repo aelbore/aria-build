@@ -1,21 +1,11 @@
-import { BuildOptions, AriaConfigOptions } from './cli-common'
+import { BuildOptions } from './cli-common'
 import { getPackageJsonFile, copyPackageFile, copyReadMeFile, renameDtsEntryFile, moveDtsFiles } from './utils'
-import { getAriaConfig, mergeGlobals, addTerserPlugin } from './cli-utils'
+import { getAriaConfig, mergeGlobals, parsePlugins } from './cli-utils'
 import { clean } from './fs'
 import { buildES } from './cli-build-es'
 import { buildCommonJS } from './cli-build-cjs'
 import { buildUmd } from './cli-build-umd'
 import { build } from './build'
-
-function updatePlugins(options: BuildOptions, ariaConfig: AriaConfigOptions) {
-  options.plugins = Array.isArray(ariaConfig?.plugins) 
-    ? ariaConfig?.plugins ?? []
-    : ariaConfig?.plugins ?? { before: [], after: []  }
-    
-    if (typeof options?.compress === "boolean") {
-      addTerserPlugin(options.plugins, options.compress) 
-    }
-}
 
 export async function handler(options?: BuildOptions) {
   const { entry, output, config } = options;
@@ -28,8 +18,7 @@ export async function handler(options?: BuildOptions) {
 
   const ariaConfig = await getAriaConfig(config)
   options.globals = mergeGlobals(ariaConfig?.output?.globals, options.globals)
-
-  updatePlugins(options, ariaConfig)
+  options.plugins = parsePlugins(ariaConfig?.plugins)
 
   options.clean 
     && await clean(output ?? options.clean)
@@ -46,7 +35,7 @@ export async function handler(options?: BuildOptions) {
 
   await build(configOptions)
   await Promise.all([ 
-    copyPackageFile({ ...pkgJson, entry }), 
+    copyPackageFile({ ...pkgJson, output, entry }), 
     copyReadMeFile(options), 
     renameDtsEntryFile(configOptions, entry) 
   ])

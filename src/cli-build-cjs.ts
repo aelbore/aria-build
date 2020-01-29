@@ -1,16 +1,18 @@
 import { BuildFormatOptions } from './cli-common'
 import { TSRollupConfig } from './ts-rollup-config'
 import { getInputEntryFile } from './utils'
-import { getExternalDeps, getEntryFile } from './cli-utils'
+import { getExternalDeps, getEntryFile, isCompress } from './cli-utils'
 
 export function buildCommonJS(options?: BuildFormatOptions): TSRollupConfig {
-  const { pkgName, dependencies, format, entry, plugins, declaration, external, sourcemap, output } = options
+  const { pkgName, plugins, dependencies, format, entry, declaration, external, sourcemap, output } = options
   const outDir = output.replace('./', '');
 
   const input = entry ?? getEntryFile(pkgName)
   const file = entry
     ? `./${outDir}/${getInputEntryFile(entry)}.js`
     : `./${outDir}/${pkgName}.js`
+
+  const compress = isCompress(options.compress, 'cjs')
 
   const tsconfig = {
     compilerOptions: { declaration }
@@ -27,7 +29,8 @@ export function buildCommonJS(options?: BuildFormatOptions): TSRollupConfig {
       format: 'cjs',
       sourcemap
     },
-    ...(isSingleFormat ? { tsconfig }: {})
+    ...(isSingleFormat ? { tsconfig }: {}),
+    compress
   }
 
   return configOptions

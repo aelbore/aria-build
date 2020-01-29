@@ -74,6 +74,7 @@ export interface PackageFile {
   entry?: string;
   output?: string;
   format?: string;
+  name?: string;
 }
 
 export function getInputEntryFile(input: string) {
@@ -91,7 +92,7 @@ export function getPackageJson(filePath?: string) {
 
 export async function getPackageJsonFile(filePath?: string) {
   const pkg = await import(filePath ?? join(baseDir(), 'package.json'))
-  return pkg.default ?? pkg
+  return pkg.default || pkg
 }
 
 export function getPackageName(filePath?: string) {
@@ -172,10 +173,12 @@ export async function renameDtsEntryFile(options: TSRollupConfig | Array<TSRollu
 }
 
 export async function copyPackageFile(options?: PackageFile) {
-  const pkgTemp = options?.main ? options: await getPackageJsonFile(options?.filePath)
+  const pkgTemp = options?.name ? options: await getPackageJsonFile(options?.filePath)
   const name = options?.entry ? getInputEntryFile(options?.entry): pkgTemp.name
   const pkg = { ...pkgTemp, ...pkgProps(options ?? {}, name) }
   delete pkg.scripts
   delete pkg.devDependencies
+  delete pkg.entry
+  delete pkg.output
   await writeFile(join(options?.output ?? DEFAULT_VALUES.DIST_FOLDER, 'package.json'), JSON.stringify(pkg, null, 2))
 }

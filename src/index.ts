@@ -1,8 +1,8 @@
+
 export * from './libs'
 export * from './build'
 export * from './ts-rollup-config'
 export * from './utils'
-export * from './fs'
 export * from './cli'
 export * from './rollup-plugin-copy'
 export * from './rollup-plugin-clean'
