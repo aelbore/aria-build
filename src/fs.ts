@@ -9,4 +9,4 @@ const exec = util.promisify(childProcess.exec)
 
 export { exist, exec, nodeMajorVersion }
 export { globFiles, mkdirp, clean, copyFiles, symlinkDir, symlinkFile, unlinkDir, unlinkFile } from 'aria-fs'
-export * from './fs.promises'
+export * from './fs-promises'
