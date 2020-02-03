@@ -1,6 +1,6 @@
 import { BuildOptions } from './cli-common'
 import { getPackageJsonFile, copyPackageFile, copyReadMeFile, renameDtsEntryFile, moveDtsFiles } from './utils'
-import { getAriaConfig, mergeGlobals, parsePlugins } from './cli-utils'
+import { getAriaConfig, mergeGlobals, parsePlugins, parseConfig } from './cli-utils'
 import { clean } from './fs'
 import { buildES } from './cli-build-es'
 import { buildCommonJS } from './cli-build-cjs'
@@ -8,7 +8,7 @@ import { buildUmd } from './cli-build-umd'
 import { build } from './build'
 
 export async function handler(options?: BuildOptions) {
-  const { entry, output, config } = options;
+  const { entry, output, config } = options
 
   const pkgJson = await getPackageJsonFile(), 
     pkgName = pkgJson.name,
@@ -16,7 +16,7 @@ export async function handler(options?: BuildOptions) {
       ? Object.keys(pkgJson.dependencies)
       : []
 
-  const ariaConfig = await getAriaConfig(config)
+  const ariaConfig = await getAriaConfig(parseConfig(config, entry))
   options.globals = mergeGlobals(ariaConfig?.output?.globals, options.globals)
   options.plugins = parsePlugins(ariaConfig?.plugins)
 
