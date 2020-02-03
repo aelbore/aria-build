@@ -1,7 +1,6 @@
-import { resolve, join } from 'path'
+import { resolve, join, dirname } from 'path'
 import { existsSync } from 'fs'
-import { terser } from './libs'
-import { KeyValue, AriaConfigOptions, PluginOptions, PluginBeforeAfter, BuildOptions } from './cli-common'
+import { KeyValue, AriaConfigOptions, PluginOptions } from './cli-common'
 
 function getGlobals(globals: string = '') {
   const results = globals.split(',')
@@ -27,6 +26,20 @@ function getExternal(options?: { external: string, dependencies: string[] }) {
     ...(options?.external ? options.external.split(','): []), 
     ...(options?.dependencies ?? [])
   ]
+}
+
+export function parseConfig(config?: string, entry?: string) {
+  const c = 'aria.config.ts'
+  if (config) {
+    return config
+  }
+  if (entry) {
+    const filePath = join(dirname(entry), c)
+    if (existsSync(filePath)) {
+      return filePath
+    }
+  }
+  return c
 }
 
 export function isCompress(compress: string | boolean, format: string) {
