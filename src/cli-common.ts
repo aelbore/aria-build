@@ -29,13 +29,17 @@ export interface KeyValue {
 	[key: string]: string;
 }
 
+export interface TestAriaConfigOptions extends Omit<AriaConfigOptions, 'test'> {
+	scripts?: string[]
+}
+
 export interface AriaConfigOptions {
 	external?: string[];
 	plugins?: PluginOptions
 	output?: {
 		globals?: KeyValue
 	},
-	test?: Omit<AriaConfigOptions, 'test'>
+	test?: TestAriaConfigOptions
 }
   
 export interface BuildFormatOptions extends BuildOptions {
