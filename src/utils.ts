@@ -139,7 +139,7 @@ export async function moveDtsFiles(options: {
   output?: string 
 } = {}) {
   const outDir = options?.output ?? DEFAULT_VALUES.DIST_FOLDER;
-  const files = options?.files ?? await globFiles(join(outDir, '**/*.d.ts'))
+  const files = options?.files ?? await globFiles(join(outDir, '**/*.d.ts'), true)
   const destFolder = join(outDir, 'src')
 
   if (files.length > 1) {

@@ -24,8 +24,8 @@ export async function handler(options?: BuildOptions) {
     && await clean(output ?? options.clean)
 
   const formats = options.format.split(',')
+  const args = { pkgName, dependencies, ...options }
   const configOptions = await Promise.all(formats.map(format => {
-    const args = { pkgName, dependencies, ...options }
     switch(format) {
       case 'es': return buildES(args)
       case 'cjs': return buildCommonJS(args)

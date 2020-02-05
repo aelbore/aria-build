@@ -96,7 +96,7 @@ export function getEntryFile(pkgName: string) {
 export function mergeGlobals(globals?: KeyValue, optionGlobals?: string) {
   const localConfigGlobals = globals ? createGlobals(globals): []
   const localOptionGlobals = optionGlobals ? optionGlobals.split(','): []
-  return ([].concat(localConfigGlobals, localOptionGlobals)).join(',') 
+  return Array.prototype.concat(localConfigGlobals, localOptionGlobals).join(',') 
 }
 
 export function memoize(fn: any){
