@@ -47,7 +47,7 @@ describe('buildCommonJS config', () => {
     const configOptions = buildCommonJS(params)
 
     expect(configOptions).toBeDefined()
-    expect(normalize(configOptions.input)).equal(normalize(entry))
+    expect(normalize(configOptions.input as string)).equal(normalize(entry))
   })
   
   it('should use the entry option as output file', () => {
@@ -122,5 +122,37 @@ describe('buildCommonJS config', () => {
     configOptions = buildCommonJS({ ...params, output: 'public', entry: './src/hello-world.ts' })
 
     expect(configOptions.output.file).equal('./public/hello-world.js')
+  })
+
+  it('should update external when has --resolve option value is true', () => {
+    const configOptions = buildCommonJS({ 
+      ...params, 
+      resolve: true,
+      dependencies: [], 
+      external: 'react,vue' 
+    })
+
+    expect(configOptions.external.length).equal(0)
+  })
+
+  it('should update external when has --resolve option value is string', () => {
+    const configOptions = buildCommonJS({ 
+      ...params, 
+      resolve: 'react',
+      dependencies: [], 
+      external: 'react,vue' 
+    })
+
+    expect(configOptions.external.length).equal(1)
+  })
+
+  it('should update external when --resolve option is not available', () => {
+    const configOptions = buildCommonJS({ 
+      ...params, 
+      dependencies: [], 
+      external: 'react,vue' 
+    })
+
+    expect(configOptions.external.length).equal(2)
   })
 }) 

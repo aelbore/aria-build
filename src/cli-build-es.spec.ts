@@ -45,7 +45,7 @@ describe('buildES config', () => {
     const configOptions = buildES(params)
 
     expect(configOptions).toBeDefined()
-    expect(path.normalize(configOptions.input)).equal(path.normalize(expectedInput))
+    expect(path.normalize(configOptions.input as string)).equal(path.normalize(expectedInput))
   })
 
   it('should use the entry option as output file', () => {
@@ -117,4 +117,37 @@ describe('buildES config', () => {
 
     expect(configOptions.output.file).equal('./public/hello-world.js')
   })
+
+  it('should update external when has --resolve option value is true', () => {
+    const configOptions = buildES({ 
+      ...params, 
+      resolve: true,
+      dependencies: [], 
+      external: 'react,vue' 
+    })
+
+    expect(configOptions.external.length).equal(0)
+  })
+
+  it('should update external when has --resolve option value is string', async () => {
+    const configOptions = buildES({ 
+      ...params, 
+      resolve: 'react',
+      dependencies: [], 
+      external: 'react,vue' 
+    })
+
+    expect(configOptions.external.length).equal(1)
+  })
+
+  it('should update external when --resolve option is not available', async () => {
+    const configOptions = buildES({ 
+      ...params, 
+      dependencies: [], 
+      external: 'react,vue' 
+    })
+
+    expect(configOptions.external.length).equal(2)
+  })
+
 })
