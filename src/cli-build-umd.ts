@@ -1,10 +1,10 @@
 import { BuildFormatOptions } from './cli-common'
 import { TSRollupConfig } from './ts-rollup-config'
-import { getExternalDeps, getUmdGlobals, entryFile, getEntryFile, isCompress } from './cli-utils'
+import { getExternalDeps, getUmdGlobals, entryFile, getEntryFile, isCompress, updateExternalWithResolve } from './cli-utils'
 import { getInputEntryFile } from './utils'
 
 export function buildUmd(options?: BuildFormatOptions): TSRollupConfig {
-  const { pkgName, plugins, dependencies, output, external, globals, name, sourcemap, entry, format } = options
+  const { pkgName, plugins, dependencies, output, resolve, globals, name, sourcemap, entry, format } = options
   const outDir = output.replace('./', '');
 
   const DEFAULT_FORMAT = 'umd'
@@ -15,10 +15,14 @@ export function buildUmd(options?: BuildFormatOptions): TSRollupConfig {
     ? entryFile(format, `./${outDir}/${getInputEntryFile(entry)}`, DEFAULT_FORMAT)
     : entryFile(format, `./${outDir}/${pkgName}`, DEFAULT_FORMAT)
 
+  const external = updateExternalWithResolve(resolve, 
+      getExternalDeps({ external: options.external, dependencies })
+  )
+
   const configOptions: TSRollupConfig = {
     input,
     plugins,
-    external: getExternalDeps({ external, dependencies }),
+    external,
     output: { 
       file, 
       format: DEFAULT_FORMAT,

@@ -28,6 +28,18 @@ function getExternal(options?: { external: string, dependencies: string[] }) {
   ]
 }
 
+function updateExternalWithResolves(resolve?: boolean | string, external?: string[]) {
+  if (typeof resolve == "boolean" && resolve) {
+    return []
+  }
+  if (typeof resolve == "string") {
+    const resolves = resolve.split(',')
+    const externals = external.filter(value => (!resolves.includes(value)))
+    return externals
+  }
+  return external
+}
+
 export function parseConfig(config?: string, entry?: string) {
   const c = 'aria.config.ts'
   if (config) {
@@ -116,3 +128,4 @@ export function entryFile(format?: string, entry?: string, module?: string) {
 export const getExternalDeps = memoize(getExternal)
 export const getUmdGlobals = memoize(getGlobals)
 export const createGlobalsFromConfig = memoize(createGlobals)
+export const updateExternalWithResolve = memoize(updateExternalWithResolves)

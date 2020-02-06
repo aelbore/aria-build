@@ -45,7 +45,7 @@ describe('buildUmd config', () => {
     const configOptions = buildUmd(params)
 
     expect(configOptions).toBeDefined()
-    expect(normalize(configOptions.input)).equal(normalize(entry))
+    expect(normalize(configOptions.input as string)).equal(normalize(entry))
   })
 
   it('should use the entry option as output file', () => {
@@ -80,16 +80,16 @@ describe('buildUmd config', () => {
     expect(configOptions.hasOwnProperty('plugins')).toBeTrue()
   })
 
-  it('should have external and get it to package.json dependencies by default.', () => {
+  it('should have external and get it to package.json dependencies by default.', async () => {
     const configOptions = buildUmd(params)
 
     expect(configOptions).toBeDefined()
     expect(configOptions.external).toBeDefined()
-    expect(configOptions.external.length).equal(dependencies.length);
-    configOptions.external.forEach(e => {
+    expect(configOptions.external.length).equal(dependencies.length)
+    await Promise.all(configOptions.external.map(e => {
       const findOne = dependencies.find(d => d === e);
       expect(findOne).toBeDefined()
-    })
+    }))
   })
 
   it('should change the output directory when --output has value.', () => {
@@ -118,6 +118,38 @@ describe('buildUmd config', () => {
     Object.keys(globals).forEach(key => {
       expect(expectedGlobals[key]).toBeDefined()
     })
+  })
+
+  it('should update external when has --resolve option value is true', () => {
+    const configOptions = buildUmd({ 
+      ...params, 
+      resolve: true,
+      dependencies: [], 
+      external: 'react,vue' 
+    })
+
+    expect(configOptions.external.length).equal(0)
+  })
+
+  it('should update external when has --resolve option value is string', () => {
+    const configOptions = buildUmd({ 
+      ...params, 
+      resolve: 'react',
+      dependencies: [], 
+      external: 'react,vue' 
+    })
+
+    expect(configOptions.external.length).equal(1)
+  })
+
+  it('should update external when --resolve option is not available', () => {
+    const configOptions = buildUmd({ 
+      ...params, 
+      dependencies: [], 
+      external: 'react,vue' 
+    })
+
+    expect(configOptions.external.length).equal(2)
   })
 
 })

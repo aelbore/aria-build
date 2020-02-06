@@ -2,8 +2,8 @@ import * as mock from 'mock-fs'
 import * as path from 'path'
 
 import { expect } from 'aria-mocha'
-import { AriaConfigOptions } from './cli-common'
-import { createGlobalsFromConfig, getUmdGlobals, mergeGlobals, getAriaConfig, getEntryFile, getExternalDeps } from './cli-utils'
+import { AriaConfigOptions, PluginOptions, PluginBeforeAfter } from './cli-common'
+import { createGlobalsFromConfig, getUmdGlobals, mergeGlobals, getAriaConfig, getEntryFile, getExternalDeps, parsePlugins, parseConfig } from './cli-utils'
 import { mkdirp, writeFile } from './fs'
 import { clean } from 'aria-fs'
 
@@ -186,6 +186,55 @@ describe('CLI utils', () => {
     results.forEach(result => {
       expect(dependencies.find(value => value === result)).toBeDefined()
     })
+  })
+
+  it('should [parsePlugins] return array of plugins type any[]', async () => {
+    const copy = ({ targets: [] }) => true
+    const plugins: PluginOptions = [
+      copy({
+        targets: [
+          { src: 'bin/*', dest: 'dist/bin' }
+        ]
+      })
+    ]
+
+    const result = parsePlugins(plugins)
+
+    expect(Array.isArray(result)).toBeTrue()
+    expect((result as PluginBeforeAfter).after).toBeUndefined()
+    expect((result as PluginBeforeAfter).before).toBeUndefined()
+  })
+
+  it('should [parsePlugins] return type PluginBeforeAfter of plugins', async () => {
+    const copy = ({ targets: [] }) => true
+    const inline = () => true
+    const plugins: PluginBeforeAfter = {
+      before: [ inline() ],
+      after: [
+        copy({
+          targets: [
+            { src: 'bin/*', dest: 'dist/bin' }
+          ]
+        })
+      ]
+    }
+
+    const result = parsePlugins(plugins)
+
+    expect(Array.isArray(result)).toBeFalse()
+
+    const results = result as PluginBeforeAfter
+    expect(results.after).toBeDefined()
+    expect(results.before).toBeDefined()
+    expect(Array.isArray(results.after)).toBeTrue()
+    expect(Array.isArray(results.before)).toBeTrue()
+    expect(results.after.length).equal(1)
+    expect(results.before.length).equal(1)
+  })
+
+  it('should [parseConfig] return the config provided', () => {
+    const config = parseConfig('./aria.config.ts')
+    expect(config).equal('./aria.config.ts')
   })
 
 })

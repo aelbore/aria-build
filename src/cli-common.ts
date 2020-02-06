@@ -13,6 +13,7 @@ export interface BuildOptions {
 	config?: string;
 	output?: string;
 	compress?: boolean | string;
+	resolve?: boolean | string;
 }
 
 export interface PluginBeforeAfter {

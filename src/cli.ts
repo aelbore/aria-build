@@ -12,6 +12,7 @@ export async function run(version: string) {
     .option('-o, --output', 'Directory to place build files into', DEFAULT_OUT_DIR)
     .option('-c, --config', 'config file of aria-build. i.e aria.config.ts')
     .option('--external', 'Specify external dependencies')
+    .option('--resolve', 'Resolve dependencies')
     .option('--clean', 'Clean the dist folder default', DEFAULT_OUT_DIR)
     .option('--globals', 'Specify globals dependencies')
     .option('--sourcemap', 'Generate source map')
