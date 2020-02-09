@@ -10,6 +10,7 @@ const unlink = fs.promises.unlink
 const symlink = fs.promises.symlink
 const fstat = fs.promises.fstat
 const readlink = fs.promises.readlink
+const mkdir = fs.promises.mkdir
 
 export { 
   copyFile, 
@@ -21,5 +22,6 @@ export {
   unlink,
   symlink,
   fstat,
-  readlink
+  readlink,
+  mkdir
 }

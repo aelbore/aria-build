@@ -1,8 +1,7 @@
 import { dirname, resolve, basename, join } from 'path'
-import { globFiles, mkdirp } from 'aria-fs'
 
 import { TSRollupConfig } from './ts-rollup-config'
-import { copyFile, writeFile, rename, exist } from './fs'
+import { copyFile, writeFile, rename, exist, mkdir, globFiles } from './fs'
 import { DEFAULT_OUT_DIR } from './cli-common'
 
 function pkgProps(options: any, pkgName: string) {
@@ -143,7 +142,7 @@ export async function moveDtsFiles(options: {
   const destFolder = join(outDir, 'src')
 
   if (files.length > 1) {
-    mkdirp(destFolder)
+    await mkdir(destFolder, { recursive: true })
 
     await Promise.all(files.map(file => {
       const destFile = join(destFolder, basename(file))

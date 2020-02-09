@@ -1,11 +1,13 @@
 export const DEFAULT_OUT_DIR = 'dist'
 
+export type PluginOptions = any[] | PluginBeforeAfter
+export type OutputFormat = 'es' | 'cjs' | 'umd' | 'iife'
+
 export interface BuildOptions {
 	entry?: string;
 	declaration?: boolean;
-	format?: string;
+	format?: OutputFormat;
 	external?: string;
-	plugins?: PluginOptions;
 	name?: string;
 	globals?: string;
 	clean?: string;
@@ -21,9 +23,6 @@ export interface PluginBeforeAfter {
 	before?: any[];
 	after?: any[];
 }
-
-export type PluginOptions = any[] | PluginBeforeAfter
-export type OutputFormat = 'es' | 'cjs' | 'umd'
 
 export interface KeyValue {
 	[key: string]: string;
@@ -44,5 +43,6 @@ export interface AriaConfigOptions {
   
 export interface BuildFormatOptions extends BuildOptions {
 	pkgName?: string, 
+	plugins?: PluginOptions;
 	dependencies?: string[]
 }	

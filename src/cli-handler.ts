@@ -10,21 +10,24 @@ import { build } from './build'
 export async function handler(options?: BuildOptions) {
   const { entry, output, config } = options
 
-  const pkgJson = await getPackageJsonFile(), 
-    pkgName = pkgJson.name,
-    dependencies = pkgJson.dependencies 
+  const [ ariaConfig, pkgJson ] = await Promise.all([
+    getAriaConfig(parseConfig(config, entry)),
+    getPackageJsonFile()
+  ])
+
+  const pkgName = pkgJson.name
+  const dependencies = pkgJson.dependencies 
       ? Object.keys(pkgJson.dependencies)
       : []
 
-  const ariaConfig = await getAriaConfig(parseConfig(config, entry))
-  options.globals = mergeGlobals(ariaConfig?.output?.globals, options.globals)
-  options.plugins = parsePlugins(ariaConfig?.plugins)
+  const globals = mergeGlobals(ariaConfig?.output?.globals, options.globals)
+  const plugins = parsePlugins(ariaConfig?.plugins)
 
   options.clean 
     && await clean(output ?? options.clean)
 
   const formats = options.format.split(',')
-  const args = { pkgName, dependencies, ...options }
+  const args = { pkgName, dependencies, ...options, plugins, globals }
   const configOptions = await Promise.all(formats.map(format => {
     switch(format) {
       case 'es': return buildES(args)
