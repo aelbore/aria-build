@@ -1,5 +1,5 @@
 import { dirname, sep, resolve, basename, join, extname } from 'path'
-import { copyFile, mkdirp, globFiles, exist, stats, readFile, writeFile } from './fs'
+import { copyFile, mkdirp, globFiles, exist, mkdir, stats, readFile, writeFile } from './fs'
 
 async function getSrcRootDir(src: string) {
   let srcRootDir = dirname(src)
@@ -104,7 +104,7 @@ export async function copyAssets(options?: RollupPluginCopyOptions) {
         const srcRootDir = await getSrcRootDir(target.src)
         destFile = file.replace(srcRootDir, target.dest)
       }         
-      mkdirp(dirname(destFile))
+      await mkdir(dirname(destFile), { recursive: true })
       await copyFile(file, destFile)
       if (target.replace) {
         await target.replace(destFile)
