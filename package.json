@@ -8,7 +8,7 @@
   },
   "scripts": {
     "fs": "aria-fs",
-    "build": "node ./bin/aria-build.js -d",
+    "build": "node ./bin/aria-build.js -d --external aria-fs",
     "bundle": "ts-node --project ./tools/tsconfig.json ./tools/bundle.ts",
     "build.packages": "ts-node tools/packages.ts",
     "reset.packages": "sh ./reset-packages.sh",
@@ -21,7 +21,9 @@
   },
   "keywords": [
     "build",
-    "rollup"
+    "rollup",
+    "bundle",
+    "plugins"
   ],
   "author": "Arjay Elbore",
   "license": "MIT",
