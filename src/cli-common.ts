@@ -6,7 +6,7 @@ export type OutputFormat = 'es' | 'cjs' | 'umd' | 'iife'
 export interface BuildOptions {
 	entry?: string;
 	declaration?: boolean;
-	format?: OutputFormat;
+	format?: string;
 	external?: string;
 	name?: string;
 	globals?: string;

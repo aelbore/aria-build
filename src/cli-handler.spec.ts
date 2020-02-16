@@ -202,8 +202,8 @@ describe('CLI [handler]', () => {
     expect(Array.isArray(files)).toBeTrue()
     expect(files.length).equal(6)
     await Promise.all([
-      assertFiles('./dist/hello-world.es.js'),
-      assertFiles('./dist/hello-world.es.js.map'),
+      assertFiles('./dist/hello-world.js'),
+      assertFiles('./dist/hello-world.js.map'),
       assertFiles('./dist/hello-world.umd.js'),
       assertFiles('./dist/hello-world.umd.js.map'),
       assertFiles('./dist/package.json'),

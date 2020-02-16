@@ -8,7 +8,7 @@ import { buildUmd } from './cli-build-umd'
 import { build } from './build'
 
 export async function handler(options?: BuildOptions) {
-  const { entry, output, config } = options
+  const { entry, output, config, format } = options
 
   const [ ariaConfig, pkgJson ] = await Promise.all([
     getAriaConfig(parseConfig(config, entry)),
@@ -26,7 +26,7 @@ export async function handler(options?: BuildOptions) {
   options.clean 
     && await clean(output ?? options.clean)
 
-  const formats = options.format.split(',')
+  const formats = format.split(',')
   const args = { pkgName, dependencies, ...options, plugins, globals }
   const configOptions = await Promise.all(formats.map(format => {
     switch(format) {
@@ -38,7 +38,7 @@ export async function handler(options?: BuildOptions) {
 
   await build(configOptions)
   await Promise.all([ 
-    copyPackageFile({ ...pkgJson, output, entry }), 
+    copyPackageFile({ ...pkgJson, output, format, entry }), 
     copyReadMeFile(options), 
     renameDtsEntryFile(configOptions, entry) 
   ])

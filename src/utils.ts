@@ -6,12 +6,16 @@ import { DEFAULT_OUT_DIR } from './cli-common'
 
 function pkgProps(options: any, pkgName: string) {
   const { main, module, typings, format } = options
+  const getModule = (format: string, pkgName: string) => {
+    return !format?.split(',').includes('cjs') 
+      ? `${pkgName}.js`
+      : (format?.split(',').length === 1)
+          ? `${pkgName}.js`
+          : `${pkgName}.es.js`
+  }
   return {
     main: main || `${pkgName}.js`,
-    module: module 
-      || ((format?.split(',').length === 1) 
-            ? `${pkgName}.js`
-            : `${pkgName}.es.js`),
+    module: module || getModule(format, pkgName),
     typings: typings || `${pkgName}.d.ts`
   }
 }
@@ -179,5 +183,6 @@ export async function copyPackageFile(options?: PackageFile) {
   delete pkg.devDependencies
   delete pkg.entry
   delete pkg.output
+  delete pkg.format
   await writeFile(join(options?.output ?? DEFAULT_VALUES.DIST_FOLDER, 'package.json'), JSON.stringify(pkg, null, 2))
 }
