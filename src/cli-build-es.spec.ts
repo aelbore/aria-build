@@ -129,7 +129,7 @@ describe('buildES config', () => {
     expect(configOptions.external.length).equal(0)
   })
 
-  it('should update external when has --resolve option value is string', async () => {
+  it('should update external when has --resolve option value is string', () => {
     const configOptions = buildES({ 
       ...params, 
       resolve: 'react',
@@ -140,7 +140,7 @@ describe('buildES config', () => {
     expect(configOptions.external.length).equal(1)
   })
 
-  it('should update external when --resolve option is not available', async () => {
+  it('should update external when --resolve option is not available', () => {
     const configOptions = buildES({ 
       ...params, 
       dependencies: [], 
@@ -148,6 +148,20 @@ describe('buildES config', () => {
     })
 
     expect(configOptions.external.length).equal(2)
+  })
+
+  it('should have .js extension when format is es,umd without cjs format', () => {
+    const options = { 
+      ...params, 
+      resolve: 'react',
+      dependencies: [], 
+      external: 'react,vue',
+      format: 'es,umd'
+    }
+    delete options.entry
+    
+    const configOptions = buildES(options)
+    expect(configOptions.output.file).equal('./dist/aria-build.js')
   })
 
 })

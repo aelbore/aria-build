@@ -9,10 +9,17 @@ export function buildES(options?: BuildFormatOptions): TSRollupConfig {
 
     const compress = isCompress(options.compress, 'es')
 
+    const getMain = (format: string, outDir: string, pkgName: string) => {
+      const outFile = `./${outDir}/${pkgName}`
+      return (!format?.split(',').includes('cjs') 
+          ? entryFile('es', outFile): entryFile(format, outFile)
+        )
+    }
+
     const input = entry ?? getEntryFile(pkgName)
     const file = entry
       ? entryFile(format, `./${outDir}/${getInputEntryFile(entry)}`)
-      : entryFile(format, `./${outDir}/${pkgName}`)
+      : getMain(format, outDir, pkgName)
 
     const external = updateExternalWithResolve(resolve, 
       getExternalDeps({ external: options.external, dependencies })
