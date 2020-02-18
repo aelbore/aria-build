@@ -14,6 +14,7 @@ export interface BuildOptions {
 	output?: string;
 	compress?: boolean | string;
 	resolve?: boolean | string;
+	watch?: boolean
 }
 
 export interface PluginBeforeAfter {
@@ -28,8 +29,6 @@ export interface KeyValue {
 	[key: string]: string;
 }
 
-/// TODO: supports Array of outputs
-///		parse the the config
 export interface AriaConfigOptions {
 	external?: string[];
 	plugins?: PluginOptions

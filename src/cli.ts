@@ -11,6 +11,7 @@ export async function run(version: string) {
     .option('-i, --entry', 'Entry module(s)')
     .option('-o, --output', 'Directory to place build files into', DEFAULT_OUT_DIR)
     .option('-c, --config', 'config file of aria-build. i.e aria.config.ts')
+    .option('-w, --watch', 'Rebuilds on any change  (default false)', false)
     .option('--external', 'Specify external dependencies')
     .option('--resolve', 'Resolve dependencies')
     .option('--clean', 'Clean the dist folder default', DEFAULT_OUT_DIR)
