@@ -1,6 +1,6 @@
 {
   "name": "aria-build",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Build any web components",
   "main": "aria-build.js",
   "bin": {
@@ -44,7 +44,7 @@
   "devDependencies": {
     "@types/mocha": "^7.0.1",
     "@types/mock-fs": "^4.10.0",
-    "@types/node": "^13.7.4",
+    "@types/node": "^13.7.6",
     "coveralls": "^3.0.9",
     "mock-fs": "^4.11.0",
     "typescript": "^3.8.2"
