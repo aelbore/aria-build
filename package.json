@@ -1,6 +1,6 @@
 {
   "name": "aria-build",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Build any web components",
   "main": "aria-build.js",
   "bin": {
@@ -37,9 +37,9 @@
   },
   "homepage": "https://github.com/aelbore/aria-build#readme",
   "peerDependencies": {
-    "aria-fs": ">= ^0.1.0 <= ^0.2.1",
-    "aria-mocha": ">= ^0.1.0 <= ^0.2.1",
-    "typescript": ">= ^3.7.0 <= ^3.8.2"
+    "aria-fs": ">= ^0.2.2",
+    "aria-mocha": ">= ^0.2.2",
+    "typescript": ">= ^3.7.4 <= ^3.8.2"
   },
   "devDependencies": {
     "@types/mocha": "^7.0.1",
