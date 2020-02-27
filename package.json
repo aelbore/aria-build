@@ -1,6 +1,6 @@
 {
   "name": "aria-build",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Build any web components",
   "main": "aria-build.js",
   "bin": {
@@ -26,8 +26,8 @@
     "plugins",
     "modules",
     "bundler",
-    "bundling", 
-    "es6", 
+    "bundling",
+    "es6",
     "optimizer"
   ],
   "author": "Arjay Elbore",
@@ -37,9 +37,9 @@
   },
   "homepage": "https://github.com/aelbore/aria-build#readme",
   "peerDependencies": {
-    "typescript": ">= ^3.7.0 < ^3.8.2",
-    "aria-fs": ">= ^0.1.0",
-    "aria-mocha": ">= ^0.1.0"
+    "aria-fs": ">= ^0.1.0 <= ^0.2.1",
+    "aria-mocha": ">= ^0.1.0 <= ^0.2.1",
+    "typescript": ">= ^3.7.0 <= ^3.8.2"
   },
   "devDependencies": {
     "@types/mocha": "^7.0.1",
