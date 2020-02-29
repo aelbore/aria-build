@@ -14,6 +14,7 @@ export const getCliOptions = () => ({
     { alias: '--compress', description: 'Compress or minify the output' },
     { alias: '--sourcemap', description: 'Generate sourcemap' },
     { alias: '--resolve', description: 'Resolve dependencies' },
+    { alias: '--target', description: 'Target framework or library to build (i.e react or vue)' },
     { alias: '--clean', description: 'Clean the dist folder default (dist)', defaultValue: 'dist' }        
   ]
 })

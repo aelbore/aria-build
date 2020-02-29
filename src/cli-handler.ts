@@ -6,6 +6,8 @@ import { buildES } from './cli-build-es'
 import { buildCommonJS } from './cli-build-cjs'
 import { buildUmd } from './cli-build-umd'
 import { build } from './build'
+import { findTargetBuild } from './find-target'
+import { RollupConfigBase } from './base-rollup-config'
 
 export async function handler(options?: BuildOptions) {
   const { entry, output, config, format } = options
@@ -36,7 +38,10 @@ export async function handler(options?: BuildOptions) {
     }
   }))
 
-  await build(configOptions)
+  options?.target 
+    ? await findTargetBuild(options.target, configOptions as RollupConfigBase[])
+    : await build(configOptions)
+
   await Promise.all([ 
     copyPackageFile({ ...pkgJson, output, format, entry }), 
     copyReadMeFile(options), 

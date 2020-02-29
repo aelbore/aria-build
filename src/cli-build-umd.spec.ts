@@ -152,4 +152,16 @@ describe('buildUmd config', () => {
     expect(configOptions.external.length).equal(2)
   })
 
+  it('should override default sourcemap value', () => {
+    params.sourcemap = true
+    let configOptions = buildUmd({ ...params, entry: './src/hello-world.ts' })
+
+    expect(configOptions.output.sourcemap).equal(true)
+
+    params.sourcemap = 'inline'
+    configOptions = buildUmd({ ...params, entry: './src/hello-world.ts' })
+
+    expect(configOptions.output.sourcemap).equal('inline')
+  })
+
 })

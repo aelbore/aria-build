@@ -4,19 +4,20 @@ export type PluginOptions = any[] | PluginBeforeAfter
 export type OutputFormat = 'es' | 'cjs' | 'umd' | 'iife'
 
 export interface BuildOptions {
-	entry?: string;
-	declaration?: boolean;
-	format?: string;
-	external?: string;
-	name?: string;
-	globals?: string;
-	clean?: string;
-	sourcemap?: boolean | string;
-	config?: string;
-	output?: string;
-	compress?: boolean | string;
-	resolve?: boolean | string;
+	entry?: string
+	declaration?: boolean
+	format?: string
+	external?: string
+	name?: string
+	globals?: string
+	clean?: string
+	sourcemap?: boolean | string
+	config?: string
+	output?: string
+	compress?: boolean | string
+	resolve?: boolean | string
 	watch?: boolean
+	target?: string
 }
 
 export interface PluginBeforeAfter {

@@ -164,4 +164,16 @@ describe('buildES config', () => {
     expect(configOptions.output.file).equal('./dist/aria-build.js')
   })
 
+  it('should override default sourcemap value', () => {
+    params.sourcemap = true
+    let configOptions = buildES({ ...params, entry: './src/hello-world.ts' })
+
+    expect(configOptions.output.sourcemap).equal(true)
+
+    params.sourcemap = 'inline'
+    configOptions = buildES({ ...params, entry: './src/hello-world.ts' })
+
+    expect(configOptions.output.sourcemap).equal('inline')
+  })
+
 })

@@ -1,11 +1,19 @@
 import { basename, join } from 'path'
-import { commonjs, nodeResolve, typescript2, multiEntry, terser } from './libs'
+import { commonjs, nodeResolve, typescript2 } from './libs'
 import { getPackageName, DEFAULT_VALUES, baseDir } from './utils'
-import { PluginOptions, KeyValue } from './cli-common';
+import { PluginOptions } from './cli-common'
+import { RollupConfigBase, createRollupConfig, NodeResolveOptions, CommonJsOptions } from './base-rollup-config'
+import { CustomTransformer, CompilerOptions } from 'typescript'
 
-export function onwarn(warning) {
-  if (warning.code === 'THIS_IS_UNDEFINED') { return; }
-  console.log("Rollup warning: ", warning.message);
+export interface TSConfigOptions {
+  compilerOptions?: CompilerOptions,
+  transformers?: CustomTransformer,
+  exclude?: string[]
+}
+
+export interface TSRollupConfig extends Omit<RollupConfigBase, 'plugins'>  {
+  plugins?: PluginOptions
+  tsconfig?: TSConfigOptions
 }
 
 export function createTSConfig(options: { 
@@ -49,7 +57,7 @@ export function createTSConfig(options: {
       ...(tsconfig?.exclude ? { exclude: tsconfig.exclude }: {})
     },
     check: false,
-    objectHashIgnoreUnknownHack: true,
+    objectHashIgnoreUnknownHack: false,
     cacheRoot: join(baseDir(), 'node_modules/.tmp', outputFile), 
     /// compilerOptions.declation = true
     /// create dts files
@@ -60,77 +68,56 @@ export function createTSConfig(options: {
   }
 }
 
-export interface TSRollupConfig {
-  input: string | string[];
-  external?: string[];
-  output?: {
-    sourcemap?: boolean | string,
-    file?: string,
-    format?: string,
-    name?: string,
-    exports?: string,
-    globals?: KeyValue
-  };
-  plugins?: PluginOptions;
-  tsconfig?: {
-    compilerOptions?: any,
-    transformers?: any[],
-    exclude?: string[]
-  },
-  compress?: boolean
+export function createTSPlugin({
+  input,
+  file,
+  tsconfig
+}) {
+  return typescript2(createTSConfig({ 
+    input, 
+    file, 
+    tsconfig 
+  }))
 }
 
 export function createTSRollupConfig(options: TSRollupConfig) {
-  const { input, output, external, tsconfig, plugins, compress } = options
-  
+  const { input, output, external, tsconfig, resolve, commonOpts, compress } = options
+
+  const entry = Array.isArray(input) ? input: [ input ]
+
   const file = output?.file 
     ? join(baseDir(), output.file)
     : join(DEFAULT_VALUES.DIST_FOLDER, getPackageName() + '.js')
 
-  const entry = Array.isArray(input) ? input: [ input ]
-
-  const beforePlugins = Array.isArray(plugins)
+  const beforePlugins = Array.isArray(options.plugins)
     ? []
-    : (plugins?.before ?? [])
+    : (options.plugins?.before ?? [])
 
-  const afterPlugins = Array.isArray(plugins) 
-    ? (plugins || [])
-    : (plugins?.after ?? [])
-  
-  const minify = () => terser({
-    output: { comments: false }
+  const afterPlugins = Array.isArray(options.plugins) 
+    ? (options.plugins || [])
+    : (options.plugins?.after ?? [])
+
+  const plugins = [ 
+    ...beforePlugins, 
+    createTSPlugin({ 
+      input: entry, 
+      file, 
+      tsconfig 
+    }),
+    commonjs({
+      ...(commonOpts ?? {})
+    }),
+    nodeResolve({ 
+      ...(resolve ?? {}) 
+    }),
+    ...afterPlugins 
+  ]
+
+  return createRollupConfig({
+    input,
+    output,
+    external,
+    compress,
+    plugins
   })
-
-  return {
-    inputOptions: {
-      input: entry,
-      external: [
-        ...DEFAULT_VALUES.ROLLUP_EXTERNALS,
-        ...(external || [])
-      ],
-      treeshake: true,
-      plugins: [
-        ...beforePlugins,
-        ...(Array.isArray(entry) ? [ multiEntry() ]: []),
-        typescript2(createTSConfig({ 
-          input: entry, 
-          file, 
-          tsconfig 
-        })),
-        commonjs(),
-        nodeResolve(),
-        ...afterPlugins,
-        ...(compress ? [ minify() ]: [])
-      ],
-      onwarn
-    },
-    outputOptions: {
-      sourcemap: false,
-      format: 'es',
-      exports: 'named',
-      globals: {},
-      ...(output || {}),
-      file
-    }
-  }
 }
