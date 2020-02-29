@@ -37,27 +37,29 @@
   },
   "homepage": "https://github.com/aelbore/aria-build#readme",
   "peerDependencies": {
-    "typescript": ">= ^3.7.0 < ^3.7.4",
+    "typescript": ">= ^3.7.0 < ^3.8.2",
     "aria-fs": ">= ^0.1.0",
     "aria-mocha": ">= ^0.1.0"
   },
   "devDependencies": {
     "@types/mocha": "^7.0.1",
     "@types/mock-fs": "^4.10.0",
-    "@types/node": "^13.7.0",
+    "@types/node": "^13.7.4",
     "coveralls": "^3.0.9",
-    "mock-fs": "^4.10.4",
-    "typescript": "^3.7.4"
+    "mock-fs": "^4.11.0",
+    "typescript": "^3.8.2"
   },
   "dependencies": {
     "@rollup/plugin-commonjs": "^11.0.2",
     "@rollup/plugin-multi-entry": "^3.0.0",
-    "@rollup/plugin-node-resolve": "^7.1.0",
-    "rollup": "^1.31.0",
-    "rollup-plugin-minify-html-literals": "^1.2.2",
+    "@rollup/plugin-node-resolve": "^7.1.1",
+    "@rollup/plugin-replace": "^2.3.1",
+    "@rollup/plugin-url": "^4.0.2",
+    "rollup": "^1.31.1",
+    "rollup-plugin-minify-html-literals": "^1.2.3",
     "rollup-plugin-terser": "^5.2.0",
-    "rollup-plugin-typescript2": "^0.25.3",
-    "sade": "^1.7.0",
+    "rollup-plugin-typescript2": "^0.26.0",
+    "sade": "^1.7.3",
     "ts-node": "^8.6.2"
   }
 }
