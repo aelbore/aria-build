@@ -1,7 +1,10 @@
 import { RollupConfigBase } from './base-rollup-config';
 import { exist } from './fs'
+import { TSRollupConfig } from './ts-rollup-config';
 
-export async function findTargetBuild(target: string, config: RollupConfigBase[]) {
+export async function findTargetBuild(target: string, 
+  config: RollupConfigBase[] | TSRollupConfig[]
+) {
   const ariaModule = `aria-${target}`
   const isTargetExist = await exist(`./node_modules/${ariaModule}`)
 

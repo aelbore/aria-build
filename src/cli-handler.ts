@@ -39,7 +39,7 @@ export async function handler(options?: BuildOptions) {
   }))
 
   options?.target 
-    ? await findTargetBuild(options.target, configOptions as RollupConfigBase[])
+    ? await findTargetBuild(options.target, configOptions)
     : await build(configOptions)
 
   await Promise.all([ 
