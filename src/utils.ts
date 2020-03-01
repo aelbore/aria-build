@@ -2,7 +2,7 @@ import { dirname, resolve, basename, join } from 'path'
 
 import { TSRollupConfig } from './ts-rollup-config'
 import { copyFile, writeFile, rename, exist, mkdir, globFiles } from './fs'
-import { DEFAULT_OUT_DIR } from './cli-common'
+import { DEFAULT_OUT_DIR, KeyValue } from './cli-common'
 
 function pkgProps(options: any, pkgName: string) {
   const { main, module, typings, format } = options
@@ -70,14 +70,17 @@ export const DEFAULT_VALUES = Object.freeze({
 })
 
 export interface PackageFile {
-  filePath?: string;
-  main?: string;
-  module?: string;
-  typings?: string;
-  entry?: string;
-  output?: string;
-  format?: string;
-  name?: string;
+  filePath?: string
+  main?: string
+  module?: string
+  typings?: string
+  entry?: string
+  output?: string
+  format?: string
+  name?: string
+  dependencies?: KeyValue
+  devDependencies?: KeyValue
+  peerDependencies?: KeyValue
 }
 
 export function getInputEntryFile(input: string) {

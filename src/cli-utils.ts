@@ -1,6 +1,7 @@
 import { resolve, join, dirname } from 'path'
 import { existsSync } from 'fs'
 import { KeyValue, AriaConfigOptions, PluginOptions } from './cli-common'
+import { PackageFile } from './utils'
 
 function getGlobals(globals: string = '') {
   const results = globals.split(',')
@@ -38,6 +39,17 @@ function updateExternalWithResolves(resolve?: boolean | string, external?: strin
     return externals
   }
   return external
+}
+
+function getPkgDependencies(pkgJson?: PackageFile) {
+  const dependencies = pkgJson?.dependencies 
+    ? Object.keys(pkgJson.dependencies): []
+  const devDependencies = pkgJson?.devDependencies
+    ? Object.keys(pkgJson?.devDependencies): []
+  const peerDependencies = pkgJson?.peerDependencies
+    ? Object.keys(pkgJson.peerDependencies): []
+
+  return [ ...dependencies, ...devDependencies, ...peerDependencies ]
 }
 
 export function parseConfig(config?: string, entry?: string) {
@@ -128,4 +140,5 @@ export function entryFile(format?: string, entry?: string, module?: string) {
 export const getExternalDeps = memoize(getExternal)
 export const getUmdGlobals = memoize(getGlobals)
 export const createGlobalsFromConfig = memoize(createGlobals)
+export const getPackageDependencies = memoize(getPkgDependencies)
 export const updateExternalWithResolve = memoize(updateExternalWithResolves)
