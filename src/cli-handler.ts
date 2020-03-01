@@ -1,13 +1,12 @@
 import { BuildOptions } from './cli-common'
 import { getPackageJsonFile, copyPackageFile, copyReadMeFile, renameDtsEntryFile, moveDtsFiles } from './utils'
-import { getAriaConfig, mergeGlobals, parsePlugins, parseConfig } from './cli-utils'
+import { getAriaConfig, mergeGlobals, parsePlugins, parseConfig, getPackageDependencies } from './cli-utils'
 import { clean } from './fs'
 import { buildES } from './cli-build-es'
 import { buildCommonJS } from './cli-build-cjs'
 import { buildUmd } from './cli-build-umd'
 import { build } from './build'
 import { findTargetBuild } from './find-target'
-import { RollupConfigBase } from './base-rollup-config'
 
 export async function handler(options?: BuildOptions) {
   const { entry, output, config, format } = options
@@ -18,9 +17,7 @@ export async function handler(options?: BuildOptions) {
   ])
 
   const pkgName = pkgJson.name
-  const dependencies = pkgJson.dependencies 
-      ? Object.keys(pkgJson.dependencies)
-      : []
+  const dependencies = getPackageDependencies(pkgJson)
 
   const globals = mergeGlobals(ariaConfig?.output?.globals, options.globals)
   const plugins = parsePlugins(ariaConfig?.plugins)
