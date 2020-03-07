@@ -14,27 +14,29 @@ export interface CommonJsOptions {
   exclude?: string | string[]
 }
 
-export function onwarn(warning: { code: string, message: string }) {
-  if (warning.code === 'THIS_IS_UNDEFINED') { return; }
-  console.log("Rollup warning: ", warning.message);
+export interface RollupConfigOutput {
+  sourcemap?: boolean | string,
+  file?: string,
+  format?: string,
+  name?: string,
+  exports?: string,
+  globals?: KeyValue
 }
 
 export interface RollupConfigBase {
   input: string | string[]
   external?: string[]
-  output?: {
-    sourcemap?: boolean | string,
-    file?: string,
-    format?: string,
-    name?: string,
-    exports?: string,
-    globals?: KeyValue
-  };
+  output?: RollupConfigOutput
   plugins?: any[]
   compress?: boolean
   resolve?: NodeResolveOptions
-  commonOpts?: CommonJsOptions,
+  commonOpts?: CommonJsOptions
   replace?: KeyValue
+}
+
+export function onwarn(warning: { code: string, message: string }) {
+  if (warning.code === 'THIS_IS_UNDEFINED') { return; }
+  console.log("Rollup warning: ", warning.message);
 }
 
 export function createRollupConfig(options: RollupConfigBase) {

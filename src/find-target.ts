@@ -9,7 +9,10 @@ export async function findTargetBuild(target: string,
   const isTargetExist = await exist(`./node_modules/${ariaModule}`)
 
   if (!isTargetExist) {
-    throw new Error(`Module ${ariaModule} not Found.`)
+    return Promise.reject({
+      code: 'MODULE_NOT_FOUND',
+      message: `Module ${ariaModule} not Found.`
+    })
   }
 
   if (isTargetExist) {
