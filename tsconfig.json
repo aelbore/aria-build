@@ -4,6 +4,13 @@
     "module": "esnext",
     "outDir": "dist",
     "moduleResolution": "node",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "lib" :[
+      "dom",
+      "es2015",
+      "es2017",
+      "es2018",
+      "es2019"
+    ]
   }
 }
