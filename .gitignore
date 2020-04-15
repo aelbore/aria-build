@@ -3,4 +3,4 @@ dist
 .tmp
 .DS_Store
 coverage
-build
+./build
