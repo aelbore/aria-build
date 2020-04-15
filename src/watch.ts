@@ -3,7 +3,7 @@ import * as path from 'path'
 import * as crypto from 'crypto'
 
 import { EventEmitter } from 'events'
-import { stats, readdir, readFile } from './fs-promises'
+import { stats, readdir, readFile } from './fs/fs'
 
 const contentHash = (str: string) => crypto.createHash('md5').update(str, 'utf8').digest('hex')
 const getFileStat = (file: string) => stats(file).then(stat => stat) 
