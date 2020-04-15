@@ -1,6 +1,6 @@
 import { getPackage, findTargetBuild, copyPackageFile, copyReadMeFile, renameDtsEntryFile, moveDtsFiles } from '../utils/utils'
 import { clean } from '../fs/fs'
-import { build } from '../build/build'
+import { build } from '../build/index'
 
 import { BuildOptions } from './common'
 import { getAriaConfig } from './get-aria-config'
