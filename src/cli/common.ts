@@ -1,4 +1,4 @@
-import { KeyValue } from '../utils'
+import { KeyValue } from '../utils/utils'
 
 export const DEFAULT_OUT_DIR = 'dist'
 

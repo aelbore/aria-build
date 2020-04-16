@@ -12,7 +12,7 @@
     "bundle": "ts-node --project ./tools/tsconfig.json ./tools/bundle.ts",
     "build.packages": "ts-node tools/packages.ts",
     "reset.packages": "sh ./reset-packages.sh",
-    "test": "aria-mocha --file ./src/**/*.spec.ts --include-dir ./src --check-coverage",
+    "test": "aria-mocha --check-coverage",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
