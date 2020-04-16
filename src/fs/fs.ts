@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import * as fs from 'fs'
 import * as util from 'util'
 import * as childProcess from 'child_process'
