@@ -35,7 +35,7 @@ describe('handler', () => {
     const buildesStub = sinon.stub(buildES, 'buildES').returns({})
     const buildcjsStub = sinon.stub(buildCJS, 'buildCommonJS').returns({})
     const buildUmdStub = sinon.stub(buildUmd, 'buildUmd').returns({})
-    const buildStub = sinon.stub(build, 'build').returns(void 0)
+    const buildStub = sinon.stub(build, '_build').returns(void 0)
 
     const parseConfigStub = sinon.spy(cliUtils, 'parseConfig')
 
