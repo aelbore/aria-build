@@ -2,7 +2,7 @@ import { basename, join, parse } from 'path'
 import { CompilerOptions, CustomTransformers } from 'typescript'
 
 import { commonjs, nodeResolve, typescript2 } from '../libs'
-import { RollupConfigBase, createRollupConfig, ConfigResult } from './base-config'
+import { RollupConfigBase, createRollupConfig, ConfigResult, CreateRollupConfigOptions } from './base-config'
 
 export interface TSConfigOptions {
   compilerOptions?: CompilerOptions,
@@ -78,19 +78,25 @@ export function createTSConfig(options: CreateTSConfigOptions) {
 }
 
 export function createTSRollupConfig(options: TSRollupConfig) {
-  const { resolveOpts, commonOpts, input, compress, tsconfig } = options
+  return _createTSRollupConfig({ config: options })
+}
+
+export function _createTSRollupConfig(options: CreateRollupConfigOptions) {
+  const { config, name } = options
+  const { resolveOpts, commonOpts, input, compress, tsconfig } = config as TSRollupConfig
 
   const insertPlugin = (plugins: any[], index: number, value: any) => {
     plugins.splice(index, 0, value)
   }
  
-  const beforePlugins = Array.isArray(options.plugins)
+  const _plugins = (config as TSRollupConfig).plugins
+  const beforePlugins = Array.isArray(_plugins)
     ? []
-    : options.plugins?.before ?? []
+    : _plugins?.before ?? []
 
-  const afterPlugins = Array.isArray(options.plugins) 
-    ? options.plugins
-    : options.plugins?.after ?? []
+  const afterPlugins = Array.isArray(_plugins) 
+    ? _plugins
+    : _plugins?.after ?? []
 
   const plugins = [
     ...beforePlugins,
@@ -103,12 +109,12 @@ export function createTSRollupConfig(options: TSRollupConfig) {
     ...afterPlugins
   ]
 
-  const config: RollupConfigBase = {
-    ...options,
+  const configOptions: RollupConfigBase = {
+    ...config,
     plugins
   } 
 
-  const { inputOptions, outputOptions } = createRollupConfig({ config })
+  const { inputOptions, outputOptions } = createRollupConfig({ config: configOptions, name })
   const { file } = outputOptions
 
   const pluginValues = inputOptions.plugins as any[]

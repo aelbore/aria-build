@@ -1,6 +1,6 @@
 import { getPackage, findTargetBuild, copyPackageFile, copyReadMeFile, renameDtsEntryFile, moveDtsFiles } from '../utils/utils'
 import { clean } from '../fs/fs'
-import { build } from '../build/index'
+import { _build } from '../build/index'
 
 import { BuildOptions } from './common'
 import { getAriaConfig } from './get-aria-config'
@@ -38,7 +38,7 @@ export async function handler(options?: BuildOptions) {
 
   options.target
     ? await findTargetBuild(options.target, configOptions)
-    : await build(configOptions) 
+    : await _build({ config: configOptions, name: pkgName }) 
 
   await Promise.all([ 
     copyPackageFile({ ...pkgJson, output, format, entry }), 

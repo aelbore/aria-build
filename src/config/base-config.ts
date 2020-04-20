@@ -38,7 +38,7 @@ export interface RollupConfigBase {
 }
 
 export interface CreateRollupConfigOptions {
-  config: RollupConfigBase | TSRollupConfig
+  config: RollupConfigBase | TSRollupConfig | RollupConfigBase[] | TSRollupConfig[]
   name?: string
 }
 
@@ -59,10 +59,10 @@ export function onwarn(options: { code: string, message: string }) {
 }
 
 export function createRollupConfig(options: CreateRollupConfigOptions) {
-  const { input, output, compress, replace } = options.config
+  const { input, output, compress, replace } = options.config as RollupConfigBase
 
-  const plugins = (options.config.plugins ?? []) as any[]
-  const external = options.config.external ?? []
+  const plugins = ((options.config as RollupConfigBase).plugins ?? []) as any[]
+  const external = (options.config as RollupConfigBase).external ?? []
 
   const name = options.name ?? getPackageNameSync()
   const file = output?.file 
