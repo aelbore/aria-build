@@ -1,10 +1,16 @@
 import * as mockfs from 'mock-fs'
+
+import { normalize } from 'path'
 import { expect } from 'aria-mocha'
 
 import { BuildFormatOptions } from './common'
 import { buildES } from './build-es'
 
 describe('build-es', () => {
+
+  function assertPath(actual: string, expected: string) {
+    expect(normalize(actual)).equal(normalize(expected))
+  }
 
   afterEach(() => {
     mockfs.restore()
@@ -29,9 +35,10 @@ describe('build-es', () => {
 
     const config = buildES(options)
 
-    expect(config.input).equal(`src/${options.pkgName}.ts`)
+    assertPath(config.input as string, `src/${options.pkgName}.ts`)
+    assertPath(config.output.file, `./${options.output}/${options.pkgName}.js`)
+
     expect(config.output.format).equal(options.format)
-    expect(config.output.file).equal(`./${options.output}/${options.pkgName}.js`)
     expect(config.output.sourcemap).toBeTrue()
     expect(config.tsconfig.compilerOptions.declaration).equal(options.declaration)
     expect(config.external.length).equal(0)
@@ -95,7 +102,7 @@ describe('build-es', () => {
 
     const config = buildES(options)
 
-    expect(config.input).equal(`src/${options.pkgName}.ts`)
+    assertPath(config.input as string, `src/${options.pkgName}.ts`)
     expect(config.output.format).equal('es')
   })
 
