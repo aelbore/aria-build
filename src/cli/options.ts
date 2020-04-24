@@ -12,7 +12,7 @@ export const getCliOptions = () => ({
     { alias: '--name', description: 'Specify name exposed in UMD builds' },
     { alias: '--globals', description: 'Specify global dependencies' },
     { alias: '--compress', description: 'Compress or minify the output' },
-    { alias: '--sourcemap', description: 'Generate sourcemap' },
+    { alias: '--sourcemap', description: 'Generate sourcemap', defaultValue: false },
     { alias: '--resolve', description: 'Resolve dependencies' },
     { alias: '--target', description: 'Target framework or library to build (i.e react or vue)' },
     { alias: '--clean', description: 'Clean the dist folder default (dist)', defaultValue: 'dist' }        
