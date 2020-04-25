@@ -36,7 +36,6 @@ describe('ts-rollup-config', () => {
     expect((plugins as any[]).length).equal(4)
     expect(external.length).equal(DEFAULT_VALUES.ROLLUP_EXTERNALS.length)
     expect(file).equal(path.resolve(config.output.file))
-    expect((plugins as any[])[(plugins as any[]).length - 2].name).equal('rpt2')
   })
   
   it('should create ts rollup config with plugins is array', () => {
@@ -73,7 +72,6 @@ describe('ts-rollup-config', () => {
     const { plugins } = inputOptions
 
     expect((plugins as any[]).length).equal(5)
-    expect((plugins as any[])[(plugins as any[]).length - 1].name).equal('rpt2')
   })  
 
   it('should create rollup-plugin-typescript2 config', () => {

@@ -54,7 +54,7 @@ export function createTSConfig(options: CreateTSConfigOptions) {
         experimentalDecorators: true,
         declaration: false,
         allowJs: true,
-        lib: [ 'dom', 'es2015', 'es2017' ],
+        lib: [ 'dom', 'es2015', 'es2017', 'es2018' ],
         module: 'es2015',
         moduleResolution: 'node',
         target: 'es2018',
@@ -83,11 +83,7 @@ export function createTSRollupConfig(options: TSRollupConfig) {
 
 export function _createTSRollupConfig(options: CreateRollupConfigOptions) {
   const { config, name } = options
-  const { resolveOpts, commonOpts, input, compress, tsconfig } = config as TSRollupConfig
-
-  const insertPlugin = (plugins: any[], index: number, value: any) => {
-    plugins.splice(index, 0, value)
-  }
+  const { resolveOpts, commonOpts, input, tsconfig } = config as TSRollupConfig
  
   const _plugins = (config as TSRollupConfig).plugins
   const beforePlugins = Array.isArray(_plugins)
@@ -118,10 +114,7 @@ export function _createTSRollupConfig(options: CreateRollupConfigOptions) {
   const { file } = outputOptions
 
   const pluginValues = inputOptions.plugins as any[]
-  insertPlugin(pluginValues, 
-    compress ? pluginValues.length - 1: pluginValues.length, 
-    typescript2(createTSConfig({ input, tsconfig, file }))
-  )
+  pluginValues.unshift(typescript2(createTSConfig({ input, tsconfig, file })))
 
   const configResult: ConfigResult = { 
     inputOptions, 
