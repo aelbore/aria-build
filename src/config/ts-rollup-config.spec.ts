@@ -50,7 +50,10 @@ describe('ts-rollup-config', () => {
     }
 
     const { inputOptions, outputOptions } = createTSRollupConfig(config)
+    const { plugins } = inputOptions
 
+    expect((plugins as any[]).length).equal(4)
+    expect((plugins as any[])[0].name).equal('rpt2')
   })
   
   it('should create ts rollup config with plugins typeof PluginBeforeAfter', () => {
@@ -72,6 +75,7 @@ describe('ts-rollup-config', () => {
     const { plugins } = inputOptions
 
     expect((plugins as any[]).length).equal(5)
+    expect((plugins as any[])[1].name).equal('rpt2')
   })  
 
   it('should create rollup-plugin-typescript2 config', () => {
