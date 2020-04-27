@@ -114,7 +114,8 @@ export function _createTSRollupConfig(options: CreateRollupConfigOptions) {
   const { file } = outputOptions
 
   const pluginValues = inputOptions.plugins as any[]
-  pluginValues.unshift(typescript2(createTSConfig({ input, tsconfig, file })))
+  pluginValues.splice(beforePlugins.length, 0, 
+      typescript2(createTSConfig({ input, tsconfig, file })))
 
   const configResult: ConfigResult = { 
     inputOptions, 
