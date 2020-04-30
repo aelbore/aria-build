@@ -1,6 +1,5 @@
 import * as sinon from 'sinon'
 import * as mockfs from 'mock-fs'
-import * as fs from 'fs'
 
 import { expect } from 'aria-mocha'
 import { TSRollupConfig } from '../config/config'
