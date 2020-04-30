@@ -83,7 +83,7 @@ export function createTSRollupConfig(options: TSRollupConfig) {
 
 export function _createTSRollupConfig(options: CreateRollupConfigOptions) {
   const { config, name } = options
-  const { resolveOpts, commonOpts, input, tsconfig } = config as TSRollupConfig
+  const { resolveOpts, commonOpts, input, tsconfig, watch } = config as TSRollupConfig
  
   const _plugins = (config as TSRollupConfig).plugins
   const beforePlugins = Array.isArray(_plugins)
@@ -107,7 +107,8 @@ export function _createTSRollupConfig(options: CreateRollupConfigOptions) {
 
   const configOptions: RollupConfigBase = {
     ...config,
-    plugins
+    plugins,
+    watch
   } 
 
   const { inputOptions, outputOptions } = createRollupConfig({ config: configOptions, name })

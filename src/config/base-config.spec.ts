@@ -73,7 +73,7 @@ describe('base-config', () => {
     expect(pkgNameStub.called).toBeTrue()
   })
 
-  it('should create base config witn replace,compress,external,sourcemap options', () => {
+  it('should create base config witn replace,compress,external,sourcemap,watch options', () => {
     const fakePlugin = () => {}
 
     const config: RollupConfigBase = {
@@ -87,7 +87,10 @@ describe('base-config', () => {
       replace: {
         'process.env.NODE_ENV': JSON.stringify('production')
       },
-      compress: true
+      compress: true,
+      watch: {
+        clearScreen: true
+      }
     }
     
     const pkgNameStub = sinon

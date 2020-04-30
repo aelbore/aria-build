@@ -14,7 +14,7 @@ export interface BuildOptions {
 	name?: string
 	globals?: string
 	clean?: string
-	sourcemap?: boolean | string
+	sourcemap?: boolean | 'inline' | 'hidden'
 	config?: string
 	output?: string
 	compress?: boolean | string
