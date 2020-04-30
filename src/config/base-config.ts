@@ -36,6 +36,7 @@ export interface RollupConfigBase {
   replace?: KeyValue
   compress?: boolean
   watch?: WatcherOptions
+  hmr?: boolean
 }
 
 export interface CreateRollupConfigOptions {
