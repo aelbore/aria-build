@@ -2,7 +2,7 @@ import { join } from 'path'
 
 import { baseDir, KeyValue, getPackageNameSync, DEFAULT_VALUES, DEFAULT_DEST } from '../utils/utils'
 import { PluginOptions } from '../cli/cli'
-import { terser, multiEntry, replacePlugin } from '../libs'
+import { terser, multiEntry, replacePlugin, WatcherOptions, ModuleFormat } from '../libs'
 
 import { TSRollupConfig } from './ts-rollup-config'
 
@@ -18,9 +18,9 @@ export interface CommonJsOptions {
 }
 
 export interface RollupConfigOutput {
-  sourcemap?: boolean | string,
+  sourcemap?: boolean | 'inline' | 'hidden',
   file?: string,
-  format?: string,
+  format?: ModuleFormat,
   name?: string,
   exports?: string,
   globals?: KeyValue
@@ -35,6 +35,7 @@ export interface RollupConfigBase {
   commonOpts?: CommonJsOptions
   replace?: KeyValue
   compress?: boolean
+  watch?: WatcherOptions
 }
 
 export interface CreateRollupConfigOptions {
@@ -42,7 +43,7 @@ export interface CreateRollupConfigOptions {
   name?: string
 }
 
-export interface InputOptions extends Pick<RollupConfigBase, 'external' | 'plugins' | 'input'> {
+export interface InputOptions extends Pick<RollupConfigBase, 'external' | 'plugins' | 'input' | 'watch'> {
   onwarn(options: { code: string, message: string }): void
 }
 
@@ -59,7 +60,7 @@ export function onwarn(options: { code: string, message: string }) {
 }
 
 export function createRollupConfig(options: CreateRollupConfigOptions) {
-  const { input, output, compress, replace } = options.config as RollupConfigBase
+  const { input, output, compress, replace, watch } = options.config as RollupConfigBase
 
   const plugins = ((options.config as RollupConfigBase).plugins ?? []) as any[]
   const external = (options.config as RollupConfigBase).external ?? []
@@ -89,7 +90,11 @@ export function createRollupConfig(options: CreateRollupConfigOptions) {
         ...plugins,
         ...(compress ? [ minify() ]: [])
       ],
-      onwarn
+      onwarn,
+      watch: {
+        clearScreen: false,
+        ...(watch ?? {})
+      }
     },
     outputOptions: {
       sourcemap: false,
