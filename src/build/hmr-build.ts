@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-
 import { hmrPlugin, watch as rollupWatch } from '../libs'
 import { CreateRollupConfigOptions, _createTSRollupConfig } from '../config/config'
 
