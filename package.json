@@ -1,6 +1,6 @@
 {
   "name": "aria-build",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Build any web components",
   "main": "aria-build.js",
   "bin": {
@@ -9,8 +9,6 @@
   "scripts": {
     "build": "node ./bin/aria-build.js -d",
     "bundle": "ts-node --project ./tools/tsconfig.json ./tools/bundle.ts",
-    "build.packages": "ts-node tools/packages.ts",
-    "reset.packages": "sh ./reset-packages.sh",
     "test": "aria-mocha --check-coverage",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
@@ -36,8 +34,8 @@
   },
   "homepage": "https://github.com/aelbore/aria-build#readme",
   "peerDependencies": {
-    "aria-fs": ">= ^0.2.2",
-    "aria-mocha": ">= ^0.2.2",
+    "aria-fs": ">= ^0.3.0",
+    "aria-mocha": ">= ^0.3.0",
     "typescript": ">= ^3.7.4 <= ^3.8.2"
   },
   "devDependencies": {
@@ -58,7 +56,7 @@
     "@rollup/plugin-replace": "^2.3.2",
     "@rollup/plugin-url": "^4.0.2",
     "magic-string": "^0.25.7",
-    "rollup": "^2.7.5",
+    "rollup": "^2.7.6",
     "rollup-plugin-hot": "^0.0.20",
     "rollup-plugin-minify-html-literals": "^1.2.3",
     "rollup-plugin-terser": "^5.3.0",
