@@ -9,6 +9,8 @@ os:
   - windows
   - linux
   - osx
+env:
+  - YARN_GPG=no
 branches:
   only:
   - master
