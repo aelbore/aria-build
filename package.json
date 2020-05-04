@@ -10,7 +10,7 @@
     "build": "node ./bin/aria-build.js -d",
     "bundle": "ts-node --project ./tools/tsconfig.json ./tools/bundle.ts",
     "test": "aria-mocha --check-coverage",
-    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+    "coveralls": "ts-node --project ./tools/tsconfig.json ./tools/coveralls.ts"
   },
   "repository": {
     "type": "git",
