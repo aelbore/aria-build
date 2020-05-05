@@ -20,6 +20,6 @@ before_install:
 install: 
   - yarn install
 script:
-  - yarn build && yarn test
+  - yarn build && yarn test && yarn test.e2e
 after_success:
   - yarn coveralls
