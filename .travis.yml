@@ -22,4 +22,4 @@ install:
 script:
   - yarn build && yarn test && yarn test.e2e
 after_success:
-  - yarn coveralls
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then yarn coveralls; fi

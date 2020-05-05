@@ -12,19 +12,19 @@ export const DEFAULT_VALUES = Object.freeze({
   DIST_FOLDER: join(baseDir(), DEFAULT_DEST),
   SOURCE_FOLDER: join(baseDir(), DEFAULT_SOURCE),
   ROLLUP_EXTERNALS: [ 
-    'child_process', 'path', 'fs', 'util', 'crypto', 'events', 'http', 'net', 'url'
+    'child_process', 'path', 'fs', 'stream', 'util', 'crypto', 'events', 'http', 'net', 'url'
   ]
 })
 
 export interface PackageFile {
   filePath?: string
-  main?: string
-  module?: string
-  typings?: string
   entry?: string
   output?: string
   format?: string
   name?: string
+  main?: string
+  module?: string
+  typings?: string
   dependencies?: KeyValue
   devDependencies?: KeyValue
   peerDependencies?: KeyValue

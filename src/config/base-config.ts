@@ -18,19 +18,20 @@ export interface CommonJsOptions {
 }
 
 export interface RollupConfigOutput {
-  sourcemap?: boolean | 'inline' | 'hidden',
-  file?: string,
-  format?: ModuleFormat,
-  name?: string,
-  exports?: string,
+  sourcemap?: boolean | 'inline' | 'hidden'
+  file?: string
+  format?: ModuleFormat
+  name?: string
+  exports?: string
   globals?: KeyValue
+  plugins?: PluginOptions
 }
 
 export interface RollupConfigBase {
   input?: string | string[]
   external?: string[]
   plugins?: PluginOptions
-  output?: RollupConfigOutput
+  output?: RollupConfigOutput | RollupConfigOutput[]
   resolveOpts?: NodeResolveOptions
   commonOpts?: CommonJsOptions
   replace?: KeyValue
@@ -61,10 +62,12 @@ export function onwarn(options: { code: string, message: string }) {
 }
 
 export function createRollupConfig(options: CreateRollupConfigOptions) {
-  const { input, output, compress, replace, watch } = options.config as RollupConfigBase
+  const { input, compress, replace, watch } = options.config as RollupConfigBase
 
   const plugins = ((options.config as RollupConfigBase).plugins ?? []) as any[]
   const external = (options.config as RollupConfigBase).external ?? []
+
+  const output = (options.config as RollupConfigBase).output as RollupConfigOutput
 
   const name = options.name ?? getPackageNameSync()
   const file = output?.file 
