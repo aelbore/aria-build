@@ -1,7 +1,7 @@
 import { dirname, join, sep, basename } from 'path'
 import { existsSync } from 'fs'
 
-import { TSRollupConfig } from '../config/config'
+import { TSRollupConfig, RollupConfigOutput } from '../config/config'
 import { rename, globFiles, writeFile } from '../fs/fs'
 
 import { getPackageName } from './get-package'
@@ -28,7 +28,9 @@ export async function renameDtsFile(options: RenameDtsEntryOptions) {
   const config = options.config as TSRollupConfig
   config.input = options.entry ?? config.input  
 
-  const { output, input } = config
+  const { input } = config
+
+  const output = config.output as RollupConfigOutput
   const outDir = output?.file ? dirname(output.file): DEFAULT_DEST
   const name = options.name ?? await getPackageName()
 
