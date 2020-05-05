@@ -22,12 +22,13 @@ async function deleteKeys(pkg: PackageFile) {
 }
 
 export async function copyPackageFile(options?: PackageFile) {
-  const pkgTemp = options?.name ? options: await getPackage(options?.filePath)
-  const name = options?.entry ? getInputEntryFile(options.entry): pkgTemp.name
+  const { filePath, entry, main, typings, format } = (options ?? {})
+
+  const pkgTemp = options?.name ? options: await getPackage(filePath)
+  const name = entry ? getInputEntryFile(options.entry): pkgTemp.name
 
   await deleteKeys(pkgTemp)
-
-  const { main, typings, format } = (options ?? {})
+  
   const module = options?.module ?? getModule({ format, name })
   
   const pkg = { 

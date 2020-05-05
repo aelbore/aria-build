@@ -14,7 +14,8 @@ export async function handler(options?: BuildOptions) {
 
   const [ ariaConfig, pkgJson ] = await Promise.all([
     getAriaConfig(parseConfig({ config, entry })),
-    getPackage()
+    getPackage(),
+    options.clean && clean(options.clean)
   ])
 
   const pkgName = pkgJson.name
@@ -23,9 +24,6 @@ export async function handler(options?: BuildOptions) {
   const globals = mergeGlobals(ariaConfig?.output?.globals, options.globals)
   const plugins = parsePlugins(ariaConfig?.plugins)
 
-  options.clean 
-    && await clean(options.clean)
-  
   const formats = format.split(',')
   const args = { pkgName, dependencies, ...options, plugins, globals }
   const configOptions = await Promise.all(formats.map(format => {
