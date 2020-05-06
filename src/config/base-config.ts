@@ -1,8 +1,8 @@
 import { join } from 'path'
 
 import { baseDir, KeyValue, getPackageNameSync, DEFAULT_VALUES, DEFAULT_DEST } from '../utils/utils'
-import { PluginOptions } from '../cli/cli'
 import { terser, multiEntry, replacePlugin, WatcherOptions, ModuleFormat } from '../libs'
+import { PluginOptions } from '../cli/cli'
 
 import { TSRollupConfig } from './ts-rollup-config'
 
@@ -61,18 +61,11 @@ export function onwarn(options: { code: string, message: string }) {
     && console.log('Rollup warning: ', options.message)
 }
 
-export function createRollupConfig(options: CreateRollupConfigOptions) {
+export function createInputOptions(options: CreateRollupConfigOptions) {
   const { input, compress, replace, watch } = options.config as RollupConfigBase
 
   const plugins = ((options.config as RollupConfigBase).plugins ?? []) as any[]
   const external = (options.config as RollupConfigBase).external ?? []
-
-  const output = (options.config as RollupConfigBase).output as RollupConfigOutput
-
-  const name = options.name ?? getPackageNameSync()
-  const file = output?.file 
-    ? join(baseDir(), output.file)
-    : join(DEFAULT_DEST, `${name}.js`)
 
   const minify = () => terser({
     output: { comments: false }
@@ -82,33 +75,48 @@ export function createRollupConfig(options: CreateRollupConfigOptions) {
     && (Object.keys(replace).length > 0)
     && (plugins.unshift(replacePlugin(replace)))
 
-  const configResult: ConfigResult = {
-    inputOptions: {
-      input,
-      external: [
-        ...external,
-        ...DEFAULT_VALUES.ROLLUP_EXTERNALS
-      ],
-      plugins: [
-        ...(Array.isArray(input) ? [ multiEntry() ]: []),
-        ...plugins,
-        ...(compress ? [ minify() ]: [])
-      ],
-      onwarn,
-      watch: {
-        clearScreen: false,
-        ...(watch ?? {})
-      }
-    },
-    outputOptions: {
-      sourcemap: false,
-      format: 'es',
-      exports: 'named',
-      globals: {},
-      ...(output ?? {}),
-      file
+  const inputOptions: InputOptions = {
+    input,
+    external: [
+      ...external,
+      ...DEFAULT_VALUES.ROLLUP_EXTERNALS
+    ],
+    plugins: [
+      ...(Array.isArray(input) ? [ multiEntry() ]: []),
+      ...plugins,
+      ...(compress ? [ minify() ]: [])
+    ],
+    onwarn,
+    watch: {
+      clearScreen: false,
+      ...(watch ?? {})
     }
   }
 
-  return configResult
+  return inputOptions
+}
+
+export function createOutputOptions(options: CreateRollupConfigOptions) {
+  const output = (options.config as RollupConfigBase).output as RollupConfigOutput
+  const name = options.name ?? getPackageNameSync()
+  const file = output?.file 
+    ? join(baseDir(), output.file)
+    : join(DEFAULT_DEST, `${name}.js`)
+
+  const outputOptions: OutputOptions = {
+    sourcemap: false,
+    format: 'es',
+    exports: 'named',
+    globals: {},
+    ...(output ?? {}),
+    file
+  }
+
+  return outputOptions
+}
+
+export function createRollupConfig(options: CreateRollupConfigOptions) {
+  const inputOptions = createInputOptions(options)
+  const outputOptions = createOutputOptions(options)
+  return ({ inputOptions, outputOptions }) as ConfigResult
 }

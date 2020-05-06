@@ -7,7 +7,7 @@ import { isCompress, entryFile, updateExternalWithResolve, getExternalDeps } fro
 
 const DEFAULT_FORMAT = 'umd'
 
-function getGlobals(globals: string = '') {
+export function getGlobals(globals: string = '') {
   const results = globals.split(',')
   /// @ts-ignore
   const entries = new Map(results.map(global => global.split('=')))

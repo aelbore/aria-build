@@ -3,7 +3,8 @@ import * as path from 'path'
 
 import { expect } from 'aria-mocha'
 import { DEFAULT_VALUES } from '../utils/utils'
-import { createTSRollupConfig, TSRollupConfig, createTSConfig, CreateTSConfigOptions } from './ts-rollup-config'
+import { createTSRollupConfig, TSRollupConfig, createTSConfig, CreateTSConfigOptions, createTSRollupConfigs } from './ts-rollup-config'
+import { RollupConfigOutput, CreateRollupConfigOptions } from './base-config'
 
 describe('ts-rollup-config', () => {
 
@@ -35,7 +36,7 @@ describe('ts-rollup-config', () => {
     expect(input).equal(config.input)
     expect((plugins as any[]).length).equal(4)
     expect(external.length).equal(DEFAULT_VALUES.ROLLUP_EXTERNALS.length)
-    expect(file).equal(path.resolve(config.output.file))
+    expect(file).equal(path.resolve((config.output as RollupConfigOutput).file))
   })
   
   it('should create ts rollup config with plugins is array', () => {
@@ -143,6 +144,31 @@ describe('ts-rollup-config', () => {
     expect(cacheRoot).equal(path.join('./node_modules', '.tmp', path.parse(path.basename(options.file)).name))
     expect(useTsconfigDeclarationDir).toBeFalse()
     expect(tsconfigDefaults.exclude.length).equal(1)
+  })
+
+  it('should createTSRollupConfigs with multiple outputs', () => {
+    const options: CreateRollupConfigOptions = {
+      config: {
+        input: './src/index.ts',
+        output: [
+          {
+            sourcemap: false,
+            format: 'es',
+            file: `dist/index.es.js`
+          },
+          {
+            sourcemap: false,
+            format: 'cjs',
+            file: `dist/index.js`
+          }
+        ]
+      },
+      name: 'aria'
+    }
+
+    const configs = createTSRollupConfigs(options)
+
+    expect(configs.length).equal(2)
   })
 
 })
