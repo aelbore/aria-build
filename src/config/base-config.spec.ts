@@ -3,7 +3,7 @@ import * as path from 'path'
 
 import { expect } from 'aria-mocha'
 import { DEFAULT_VALUES } from '../utils/utils'
-import { onwarn, createRollupConfig, RollupConfigBase } from './base-config'
+import { onwarn, createRollupConfig, RollupConfigBase, RollupConfigOutput } from './base-config'
 
 describe('base-config', () => {
   let utils: any, libs: any
@@ -104,10 +104,11 @@ describe('base-config', () => {
     const { input, external, plugins } = inputOptions
     const { file, sourcemap } = outputOptions
 
+    
     expect(input).equal(config.input)
     expect((plugins as any[]).length).equal(3)
-    expect(file).equal(path.resolve(config.output.file))
-    expect(sourcemap).equal(config.output.sourcemap)
+    expect(file).equal(path.resolve((config.output as RollupConfigOutput).file))
+    expect(sourcemap).equal((config.output as RollupConfigOutput).sourcemap)
     expect(external.length).equal(DEFAULT_VALUES.ROLLUP_EXTERNALS.length)
 
     expect(pkgNameStub.called).toBeTrue()
