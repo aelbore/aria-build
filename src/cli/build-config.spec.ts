@@ -1,5 +1,6 @@
 import * as mockfs from 'mock-fs'
 
+import { normalize } from 'path'
 import { expect } from 'aria-mocha'
 
 import { TSRollupConfig, RollupConfigOutput } from '../config/config'
@@ -18,7 +19,7 @@ describe('buildConfig', () => {
 
       expect(value.sourcemap).equal(output.sourcemap)
       expect(value.format).equal(output.format)
-      expect(value.file).equal(output.file)
+      expect(normalize(value.file)).equal(normalize(output.file))
 
       if (output.format.includes('umd')) {
         expect(value.name).equal(output.name)
@@ -71,7 +72,7 @@ describe('buildConfig', () => {
 
     const config = buildConfig(options)
 
-    expect(config.input).equal(expected.input)
+    expect(normalize(config.input as string)).equal(normalize(expected.input as string))
     expect((config.plugins as any[]).length).equal((expected.plugins as any[]).length)
     expect(config.external.length).equal(config.external.length)
     expect(config.tsconfig.compilerOptions.declaration).equal(false)
