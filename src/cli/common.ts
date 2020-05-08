@@ -21,6 +21,7 @@ export interface BuildOptions {
 	resolve?: boolean | string
 	watch?: boolean
 	target?: string
+	expirement?: boolean
 }
 
 export interface PluginBeforeAfter {

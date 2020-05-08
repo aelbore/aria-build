@@ -1,6 +1,6 @@
 import { TSRollupConfig } from '../config/config'
 import { copyPackageFile, copyReadMeFile, renameDtsEntryFile, moveDtsFiles } from '../utils/utils'
-import { build, __build } from './build'
+import { build, ebuild } from './build'
 
 async function bundleAssets(config: TSRollupConfig | Array<TSRollupConfig>) {
   await Promise.all([ copyPackageFile(), copyReadMeFile(), renameDtsEntryFile({ config }) ])
@@ -12,7 +12,7 @@ export async function bundle(options: TSRollupConfig | Array<TSRollupConfig>) {
   await bundleAssets(options)
 }
 
-export async function __bundle(config: TSRollupConfig) {
-  await __build({ config })
+export async function ebundle(config: TSRollupConfig) {
+  await ebuild({ config })
   await bundleAssets(config)
 }

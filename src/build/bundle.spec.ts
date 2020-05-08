@@ -3,7 +3,7 @@ import * as mockfs from 'mock-fs'
 
 import { expect } from 'aria-mocha'
 import { TSRollupConfig } from '../config/config'
-import { bundle, __bundle } from './bundle'
+import { bundle, ebundle } from './bundle'
 
 describe('bundle', () => {
   let build: typeof import('./build')
@@ -63,7 +63,7 @@ describe('bundle', () => {
     expect(moveDtsFilesStub.called).toBeTrue()
   })
 
-  it('should __bundle with config', async () => {
+  it('should ebundle with config', async () => {
     mockfs({
       'dist': {},
       './src/input.ts': `import * as fs from 'fs'`
@@ -80,10 +80,10 @@ describe('bundle', () => {
       ]
     }
 
-    const buildStub = sinon.stub(build, '__build').returns(Promise.resolve(null))
+    const buildStub = sinon.stub(build, 'ebuild').returns(Promise.resolve(null))
     const { copyPackageFileStub, copyReadMeFileStub, renameDtsEntryFileStub, moveDtsFilesStub } = createStubs()
 
-    await __bundle(config)
+    await ebundle(config)
 
     expect(buildStub.called).toBeTrue()
     expect(copyPackageFileStub.called).toBeTrue()

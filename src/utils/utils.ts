@@ -7,4 +7,4 @@ export * from './find-target'
 export * from './get-package'
 
 export { moveDtsFiles, MoveDtsOptions, MoveFilesDtsOptions } from './move-dts'
-export { renameDtsEntryFile, RenameDtsEntryOptions } from './rename-dts'
+export { renameDtsEntryFile, RenameDtsEntryOptions, erenameDtsEntryFile } from './rename-dts'

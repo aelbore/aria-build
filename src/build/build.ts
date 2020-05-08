@@ -25,7 +25,7 @@ export async function _build(options: CreateRollupConfigOptions) {
   }))
 }
 
-export async function __build(options: CreateRollupConfigOptions) {
+export async function ebuild(options: CreateRollupConfigOptions) {
   const configs = createTSRollupConfigs(options)
   return Promise.all(configs.map(config => {
     const { inputOptions, outputOptions } = config

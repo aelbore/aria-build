@@ -11,6 +11,7 @@ export interface RenameDtsEntryOptions {
   config: TSRollupConfig | TSRollupConfig[],
   name?: string | string[]
   entry?: string
+  outDir?: string
 }
 
 export async function createEntryFile(outDir: string, name: string) {
@@ -61,4 +62,16 @@ export async function renameDtsEntryFile(options: RenameDtsEntryOptions) {
   })
 
   config && await renameDtsFile({ ...options, config })
+}
+
+export async function erenameDtsEntryFile(options: RenameDtsEntryOptions) {
+  const config = options.config as TSRollupConfig
+  config.tsconfig?.compilerOptions?.declaration 
+    && await renameDtsFile({ 
+      ...options, 
+      config: { 
+        ...config, 
+        output: Array.isArray(config.output) ? {}: config.output
+      } 
+    })
 }

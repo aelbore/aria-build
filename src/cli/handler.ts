@@ -1,13 +1,11 @@
-import { getPackage, findTargetBuild, copyPackageFile, copyReadMeFile, renameDtsEntryFile, moveDtsFiles } from '../utils/utils'
+import { getPackage, findTargetBuild, copyPackageFile, copyReadMeFile, erenameDtsEntryFile, renameDtsEntryFile, moveDtsFiles } from '../utils/utils'
 import { clean } from '../fs/fs'
-import { _build } from '../build/index'
+import { ebuild } from '../build/index'
 
 import { BuildOptions } from './common'
 import { getAriaConfig } from './get-aria-config'
 import { parseConfig, getPkgDependencies, mergeGlobals, parsePlugins } from './utils'
-import { buildES } from './build-es'
-import { buildCommonJS } from './build-cjs'
-import { buildUmd } from './build-umd'
+import { buildConfig } from './build-config'
 
 export async function handler(options?: BuildOptions) { 
   const { entry, output, config, format } = options
@@ -24,24 +22,18 @@ export async function handler(options?: BuildOptions) {
   const globals = mergeGlobals(ariaConfig?.output?.globals, options.globals)
   const plugins = parsePlugins(ariaConfig?.plugins)
 
-  const formats = format.split(',')
   const args = { pkgName, dependencies, ...options, plugins, globals }
-  const configOptions = await Promise.all(formats.map(format => {
-    switch(format) {
-      case 'es': return buildES(args)
-      case 'cjs': return buildCommonJS(args)
-      case 'umd': return buildUmd(args)
-    }
-  }))
+  const configOptions = buildConfig(args)
 
+  const buildArgs = { config: configOptions, name: pkgName }
   options.target
-    ? await findTargetBuild(options.target, configOptions)
-    : await _build({ config: configOptions, name: pkgName }) 
+    ? await findTargetBuild(options.target, [ configOptions ])
+    : await ebuild(buildArgs)
 
   await Promise.all([ 
+    erenameDtsEntryFile(buildArgs),
     copyPackageFile({ ...pkgJson, output, format, entry }), 
-    copyReadMeFile({ output }), 
-    renameDtsEntryFile({ config: configOptions, entry, name: pkgName }) 
+    copyReadMeFile({ output })
   ])
   await moveDtsFiles({ name: pkgName, output, entry })  
 }
