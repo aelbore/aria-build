@@ -4,6 +4,7 @@ import { expect } from 'aria-mocha'
 
 import { BuildFormatOptions } from './common'
 import { buildCommonJS } from './build-cjs'
+import { RollupConfigOutput } from '../config/config'
 
 describe('build-cjs', () => {
 
@@ -33,12 +34,13 @@ describe('build-cjs', () => {
     })
 
     const config = buildCommonJS(options)
+    const output = config.output as RollupConfigOutput
 
     assertPath(config.input as string, `src/${options.pkgName}.ts`)
-    assertPath(config.output.file, `./${options.output}/${options.pkgName}.js`)
+    assertPath(output.file, `./${options.output}/${options.pkgName}.js`)
 
-    expect(config.output.format).equal(options.format)
-    expect(config.output.sourcemap).toBeTrue()
+    expect(output.format).equal(options.format)
+    expect(output.sourcemap).toBeTrue()
     expect(config.tsconfig.compilerOptions.declaration).equal(options.declaration)
     expect(config.external.length).equal(0)
   })
@@ -58,10 +60,11 @@ describe('build-cjs', () => {
     })
 
     const config = buildCommonJS(options)
+    const output = config.output as RollupConfigOutput
 
     expect(config.input).equal(options.entry)
     expect(config.external.length).equal(2)
-    expect(config.output.file).equal(`./dist/entry-file.js`)
+    expect(output.file).equal(`./dist/entry-file.js`)
   })
 
   it('should create config when compress is a string', () => {
@@ -78,11 +81,12 @@ describe('build-cjs', () => {
     })
 
     const config = buildCommonJS(options)
+    const output = config.output as RollupConfigOutput
 
     assertPath(config.input as string, `src/${options.pkgName}.ts`)
-    assertPath(config.output.file, `./${options.output}/${options.pkgName}.js`)
+    assertPath(output.file, `./${options.output}/${options.pkgName}.js`)
     
-    expect(config.output.sourcemap).toBeTrue()
+    expect(output.sourcemap).toBeTrue()
     expect(config.compress).toBeTrue()
     expect(config.external.length).equal(0)
   })
