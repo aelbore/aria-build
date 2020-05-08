@@ -5,7 +5,7 @@ import * as sinon from 'sinon'
 import { expect } from 'aria-mocha'
 
 import { TSRollupConfig } from '../config/config'
-import { renameDtsEntryFile } from './rename-dts'
+import { renameDtsEntryFile, erenameDtsEntryFile } from './rename-dts'
 
 describe('rename-dts', () => {
   let sanbox: sinon.SinonSandbox, getPackage: any
@@ -133,6 +133,82 @@ describe('rename-dts', () => {
 
     await renameDtsEntryFile({ config })
     expect(fs.existsSync('./dist/rename-dts.d.ts')).toBeTrue()
+  })
+
+  it('should erenameDtsEntryFile when config is an object and multiple outputs', async () => {  
+    const config: TSRollupConfig = {
+      input: [ './src/input.ts', './src/fs.ts' ],
+      output: [
+        {
+          file : './dist/output.ts'
+        },
+        {
+          file : './dist/output2.ts'
+        }
+      ],
+      tsconfig: {
+        compilerOptions: {
+          declaration: true
+        }
+      }
+    }
+
+    mockfs({
+      'dist': {
+        'input.d.ts': '',
+        'fs.d.ts': ''
+      }
+    })
+
+    await erenameDtsEntryFile({ config })
+    expect(fs.existsSync('./dist/rename-dts.d.ts')).toBeTrue()
+  })
+
+  it('should erenameDtsEntryFile when config is an object and single outputs', async () => {
+    
+    const config: TSRollupConfig = {
+      input: [ './src/input.ts', './src/fs.ts' ],
+      output: {
+        file : './build/output.ts'
+      },
+      tsconfig: {
+        compilerOptions: {
+          declaration: true
+        }
+      }
+    }
+
+    mockfs({
+      'build': {},
+      'dist': {
+        'input.d.ts': '',
+        'fs.d.ts': ''
+      }
+    })
+
+    await erenameDtsEntryFile({ config })
+    expect(fs.existsSync('./build/rename-dts.d.ts')).toBeTrue()
+  })
+
+  it('should erenameDtsEntryFile when config is an object, single outputs and with tsconfig and dts', async () => {
+    
+    const config: TSRollupConfig = {
+      input: [ './src/input.ts', './src/fs.ts' ],
+      output: {
+        file : './build/output.ts'
+      }
+    }
+
+    mockfs({
+      'build': {},
+      'dist': {
+        'input.d.ts': '',
+        'fs.d.ts': ''
+      }
+    })
+
+    await erenameDtsEntryFile({ config })
+    expect(fs.existsSync('./build/rename-dts.d.ts')).toBeFalse()
   })
 
 })

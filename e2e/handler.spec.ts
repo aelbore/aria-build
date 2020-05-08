@@ -9,13 +9,7 @@ import { BuildOptions, handler } from '../src'
 
 describe('handler', () => {
 
-  afterEach(() => {
-    mockfs.restore()
-    sinon.restore()
-    mock.stopAll()
-  })
-
-  it('should build with default options', async () => {
+  beforeEach(() => {
     mockfs({
       'dist': {},
       'src': {
@@ -44,7 +38,15 @@ describe('handler', () => {
     mock(path.resolve('package.json'), {  
       name: 'aria'
     })
+  })
 
+  afterEach(() => {
+    mockfs.restore()
+    sinon.restore()
+    mock.stopAll()
+  })
+
+  it('should build with default options', async () => {
     const options: BuildOptions = {
       format: 'es,cjs',
       declaration: false,
@@ -60,6 +62,40 @@ describe('handler', () => {
     expect(fs.existsSync('./dist/package.json')).toBeTrue()
     expect(fs.existsSync('./dist/README.md')).toBeTrue()
     expect(fs.existsSync('./dist/aria.d.ts')).toBeFalse()
+
+    const pkgFile = './dist/package.json'
+    const pkg = JSON.parse((await fs.promises.readFile(pkgFile, 'utf-8')))
+
+    expect(pkg.name).equal('aria')
+    expect(pkg.main).equal('aria.js')
+    expect(pkg.module).equal('aria.es.js')
+  })
+
+  it('should build with declaration,sourcemap', async () => {
+    const expected = [
+      './dist/aria.js', 
+      './dist/aria.js.map',
+      './dist/aria.es.js',
+      './dist/aria.es.js.map',
+      './dist/package.json',
+      './dist/README.md',
+      './dist/aria.d.ts'
+    ]
+
+    const options: BuildOptions = {
+      format: 'es,cjs',
+      declaration: true,
+      output: 'dist',
+      watch: false,
+      clean: 'dist',
+      sourcemap: true
+    }
+
+    await handler(options)
+
+    await Promise.all(expected.map(file => {
+      expect(fs.existsSync(file)).toBeTrue()
+    }))
 
     const pkgFile = './dist/package.json'
     const pkg = JSON.parse((await fs.promises.readFile(pkgFile, 'utf-8')))

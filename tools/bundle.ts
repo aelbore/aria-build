@@ -1,4 +1,4 @@
-import { TSRollupConfig, clean, __bundle } from '../src'
+import { TSRollupConfig, clean, ebundle } from '../src'
 import { plugins } from './plugins'
 
 (async function() {
@@ -32,5 +32,5 @@ import { plugins } from './plugins'
   }
 
   await clean('dist')
-  await __bundle(config)
+  await ebundle(config)
 })()

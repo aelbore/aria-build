@@ -11,10 +11,8 @@ describe('handler', () => {
   let cliUtils: typeof import('./utils')
   let utils: typeof import('../utils/utils')
   let fs: typeof import('../fs/fs')
-  let buildES: typeof import('./build-es')
-  let buildCJS: typeof import('./build-cjs')
-  let buildUmd: typeof import('./build-umd')
-  let build: typeof import('../build/index')
+  let buildConfig: typeof import('./build-config')
+  let build: typeof import('../build/build')
 
   function createStubs() {
     const mergeGlobalsStub = sinon.spy(cliUtils, 'mergeGlobals')
@@ -27,15 +25,13 @@ describe('handler', () => {
       .returns(Promise.resolve(void 0))
     const copyReadMeFileStub = sinon.stub(utils, 'copyReadMeFile')
       .returns(Promise.resolve(void 0))
-    const renameDtsEntryFileStub = sinon.stub(utils, 'renameDtsEntryFile')
+    const renameDtsEntryFileStub = sinon.stub(utils, 'erenameDtsEntryFile')
       .returns(Promise.resolve(void 0))
     const moveDtsFilesStub = sinon.stub(utils, 'moveDtsFiles')
       .returns(Promise.resolve(void 0))
 
-    const buildesStub = sinon.stub(buildES, 'buildES').returns({})
-    const buildcjsStub = sinon.stub(buildCJS, 'buildCommonJS').returns({})
-    const buildUmdStub = sinon.stub(buildUmd, 'buildUmd').returns({})
-    const buildStub = sinon.stub(build, '_build').returns(void 0)
+    const buildConfigStub = sinon.stub(buildConfig, 'buildConfig').returns({})
+    const buildStub = sinon.stub(build, 'ebuild').returns(void 0)
 
     const parseConfigStub = sinon.spy(cliUtils, 'parseConfig')
 
@@ -53,9 +49,7 @@ describe('handler', () => {
       mergeGlobalsStub,
       parsePluginsStub,
       fsCleanStub,
-      buildesStub,
-      buildcjsStub,
-      buildUmdStub,
+      buildConfigStub,
       buildStub,
       parseConfigStub,
       getPackage,
@@ -68,16 +62,14 @@ describe('handler', () => {
   }
 
   before(async() => {
-    [ ariaConfig, cliUtils, utils, fs, buildES, buildCJS, buildUmd, build ] 
+    [ ariaConfig, cliUtils, utils, fs, build, buildConfig ] 
       = await Promise.all([
           import('./get-aria-config'),
           import('./utils'),
           import('../utils/utils'),
           import('../fs/fs'),
-          import('./build-es'),
-          import('./build-cjs'),
-          import('./build-umd'),
-          import('../build/index')
+          import('../build/index'),
+          import('./build-config')
       ])
   })
 
@@ -108,9 +100,7 @@ describe('handler', () => {
       mergeGlobalsStub,
       parsePluginsStub,
       fsCleanStub,
-      buildesStub,
-      buildcjsStub,
-      buildUmdStub,
+      buildConfigStub,
       buildStub,
       parseConfigStub,
       getPackage,
@@ -129,9 +119,7 @@ describe('handler', () => {
     expect(mergeGlobalsStub.called).toBeTrue()
     expect(parsePluginsStub.called).toBeTrue()
     expect(fsCleanStub.called).toBeTrue()
-    expect(buildesStub.called).toBeTrue()
-    expect(buildcjsStub.called).toBeTrue()
-    expect(buildUmdStub.called).toBeFalse()
+    expect(buildConfigStub.called).toBeTrue()
     expect(buildStub.called).toBeTrue()
     expect(findTargetBuildStub.called).toBeFalse()
     expect(copyPackageFileStub.called).toBeTrue()
@@ -156,9 +144,7 @@ describe('handler', () => {
       mergeGlobalsStub,
       parsePluginsStub,
       fsCleanStub,
-      buildesStub,
-      buildcjsStub,
-      buildUmdStub,
+      buildConfigStub,
       buildStub,
       parseConfigStub,
       getPackage,
@@ -177,9 +163,7 @@ describe('handler', () => {
     expect(mergeGlobalsStub.called).toBeTrue()
     expect(parsePluginsStub.called).toBeTrue()
     expect(fsCleanStub.called).toBeFalse()
-    expect(buildesStub.called).toBeTrue()
-    expect(buildcjsStub.called).toBeTrue()
-    expect(buildUmdStub.called).toBeTrue()
+    expect(buildConfigStub.called).toBeTrue()
     expect(buildStub.called).toBeTrue()
     expect(findTargetBuildStub.called).toBeFalse()
     expect(copyPackageFileStub.called).toBeTrue()

@@ -5,7 +5,7 @@ import * as fs from 'fs'
 import { expect } from 'aria-mocha'
 import { TSRollupConfig, ConfigResult } from '../config/config'
 
-import { build, _build, __build } from './build'
+import { build, _build, ebuild } from './build'
 
 describe('build', () => {
   let config: typeof import('../config/config')
@@ -102,7 +102,7 @@ describe('build', () => {
     expect(fs.existsSync('./dist/input.js')).toBeTrue()
   }) 
 
-  it('should __build with config', async () => {
+  it('should ebuild with config', async () => {
     const options = [
       {
         inputOptions: { input: './src/input.ts', external: [ 'fs' ] },
@@ -118,7 +118,7 @@ describe('build', () => {
       input: './src/input.ts'
     }
 
-    await __build({ config: configOptions, name: 'aria-test' })
+    await ebuild({ config: configOptions, name: 'aria-test' })
 
     expect(createTSRollupConfigStub.called).toBeTrue()
     expect(fs.existsSync('./dist/input.js')).toBeTrue()
