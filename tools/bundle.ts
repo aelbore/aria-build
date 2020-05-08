@@ -1,38 +1,36 @@
-import { TSRollupConfig, clean, bundle } from '../src'
+import { TSRollupConfig, clean, __bundle } from '../src'
 import { plugins } from './plugins'
 
 (async function() {
   const pkg = require('../package.json')
 
   const external = [
-    ...Object.keys(pkg.dependencies)
+    ...Object.keys(pkg.dependencies),
+    ...Object.keys(pkg.peerDependencies),
+    ...Object.keys(pkg.devDependencies)
   ]
 
-  const configOptions: TSRollupConfig[] = [
-    {  
-      input: './src/index.ts',
-      external,
-      plugins,
-      output: {
+  const config: TSRollupConfig = {
+    input: './src/index.ts',
+    external,
+    plugins,
+    output: [ 
+      {
         format: 'es',
         file: './dist/aria-build.es.js'
       },
-      tsconfig: {
-        compilerOptions: {
-          declaration: true
-        }
+      {
+        format: 'es',
+        file: './dist/aria-build.js'  
       }
-    },
-    {
-      input: './src/index.ts',
-      external,
-      output: {
-        format: 'cjs',
-        file: './dist/aria-build.js'
+    ],
+    tsconfig: {
+      compilerOptions: {
+        declaration: true
       }
     }
-  ]
+  }
 
   await clean('dist')
-  await bundle(configOptions)
+  await __bundle(config)
 })()

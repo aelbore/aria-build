@@ -8,6 +8,9 @@ import {
   createInputOptions, createOutputOptions 
 } from './base-config'
 
+import { InputOptions } from './base-config'
+import { getPackageNameSync } from '../utils/utils'
+
 export interface TSConfigOptions {
   compilerOptions?: CompilerOptions,
   transformers?: CustomTransformers,
@@ -17,6 +20,7 @@ export interface TSConfigOptions {
 
 export interface TSRollupConfig extends RollupConfigBase  {
   tsconfig?: TSConfigOptions
+  ts?: boolean
 }
 
 export interface CreateTSConfigOptions {
@@ -81,13 +85,9 @@ export function createTSConfig(options: CreateTSConfigOptions) {
   return config
 }
 
-export function createTSRollupConfig(options: TSRollupConfig) {
-  return _createTSRollupConfig({ config: options })
-}
-
 export function createTSRollupInputOptions(options: CreateRollupConfigOptions) {
   const { config, name } = options
-  const { resolveOpts, commonOpts, output, input, tsconfig } = config as TSRollupConfig
+  const { resolveOpts, commonOpts, input, output, tsconfig } = config as TSRollupConfig
  
   const _plugins = (config as TSRollupConfig).plugins
   const beforePlugins = Array.isArray(_plugins)
@@ -100,6 +100,8 @@ export function createTSRollupInputOptions(options: CreateRollupConfigOptions) {
 
   const plugins = [
     ...beforePlugins,
+    (!Array.isArray(output))
+      && typescript2(createTSConfig({ input, tsconfig, file: output.file })),
     commonjs({
       ...(commonOpts ?? {})
     }),
@@ -114,11 +116,11 @@ export function createTSRollupInputOptions(options: CreateRollupConfigOptions) {
     plugins
   } 
 
-  const file = (output as RollupConfigOutput).file
-  plugins.splice(beforePlugins.length, 0, 
-      typescript2(createTSConfig({ input, tsconfig, file })))
-
   return createInputOptions({ config: configOptions, name })
+}
+
+export function createTSRollupConfig(options: TSRollupConfig) {
+  return _createTSRollupConfig({ config: options })
 }
 
 export function _createTSRollupConfig(options: CreateRollupConfigOptions) { 
@@ -129,14 +131,24 @@ export function _createTSRollupConfig(options: CreateRollupConfigOptions) {
 
 export function createTSRollupConfigs(options: CreateRollupConfigOptions) {
   const config = options.config as TSRollupConfig
+  const { input, tsconfig } = config
 
-  const outputs = config.output as RollupConfigOutput[]
-  const inputOptions = createInputOptions(options)
+  const outputs = Array.isArray(config.output) ? config.output: [ config.output ]
+  const inputOptions = createTSRollupInputOptions(options)
 
-  const result: ConfigResult[] = outputs.map(output => ({
-    inputOptions, 
-    outputOptions: { ...createOutputOptions(options), ...output }
-  }))
+  const plugins = inputOptions.plugins as any[]
+  const index = plugins.findIndex(plugin => typeof plugin == 'boolean')
+
+  const ts = (file: string) => typescript2(createTSConfig({ input, tsconfig, file }))
+
+  const result: ConfigResult[] = outputs.map(output => {
+    index !== -1 && plugins.splice(index, 1, ts(output.file))
+    const outputOptions = createOutputOptions({ 
+      config: { output },
+      name: options.name
+    })    
+    return { inputOptions, outputOptions }
+  })
 
   return result
 }

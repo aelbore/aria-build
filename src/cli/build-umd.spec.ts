@@ -5,6 +5,7 @@ import { expect } from 'aria-mocha'
 
 import { BuildFormatOptions } from './common'
 import { buildUmd } from './build-umd'
+import { RollupConfigOutput } from '../config/config'
 
 describe('build-umd', () => {
 
@@ -34,12 +35,13 @@ describe('build-umd', () => {
     })
 
     const config = buildUmd(options)
+    const output = config.output as RollupConfigOutput
 
     assertPath(config.input as string, `src/${options.pkgName}.ts`)
-    assertPath(config.output.file, `./${options.output}/${options.pkgName}.js`)
+    assertPath(output.file, `./${options.output}/${options.pkgName}.js`)
 
-    expect(config.output.format).equal(options.format)
-    expect(config.output.sourcemap).toBeTrue()
+    expect(output.format).equal(options.format)
+    expect(output.sourcemap).toBeTrue()
     expect(config.external.length).equal(0)
   })
 
@@ -58,11 +60,12 @@ describe('build-umd', () => {
     })
 
     const config = buildUmd(options)
+    const output = config.output as RollupConfigOutput
 
     expect(config.input).equal(options.entry)
-    expect(config.output.format).equal(options.format)
+    expect(output.format).equal(options.format)
     expect(config.external.length).equal(2)
-    expect(config.output.file).equal(`./dist/entry-file.js`)
+    expect(output.file).equal(`./dist/entry-file.js`)
   })
 
   it('should create config with entry file with multiple format', () => {
@@ -80,10 +83,11 @@ describe('build-umd', () => {
     })
 
     const config = buildUmd(options)
+    const output = config.output as RollupConfigOutput
 
     expect(config.input).equal(options.entry)
-    expect(config.output.format).equal('umd')
-    expect(config.output.file).equal('./dist/entry-file.umd.js')
+    expect(output.format).equal('umd')
+    expect(output.file).equal('./dist/entry-file.umd.js')
   })
 
   it('should create config when compress is a string', () => {
@@ -100,9 +104,10 @@ describe('build-umd', () => {
     })
 
     const config = buildUmd(options)
+    const output = config.output as RollupConfigOutput
 
     assertPath(config.input as string, `src/${options.pkgName}.ts`) 
-    expect(config.output.format).equal('umd')
+    expect(output.format).equal('umd')
   })
 
   it('should create config when multiple format, external, globals, resolve is a string', () => {
@@ -122,6 +127,7 @@ describe('build-umd', () => {
     })
 
     const config = buildUmd(options)
+    const output = config.output as RollupConfigOutput
 
     expect(config.external.length).equal(0)
     const globals = (function() {
@@ -131,7 +137,7 @@ describe('build-umd', () => {
       return Object.fromEntries(entries)
     })()
     Object.keys(globals).forEach(global => {
-      expect(config.output.globals[global]).equal(globals[global])
+      expect(output.globals[global]).equal(globals[global])
     })
   })
 

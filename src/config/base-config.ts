@@ -1,6 +1,6 @@
 import { join } from 'path'
 
-import { baseDir, KeyValue, getPackageNameSync, DEFAULT_VALUES, DEFAULT_DEST } from '../utils/utils'
+import { KeyValue, getPackageNameSync, DEFAULT_VALUES, DEFAULT_DEST } from '../utils/utils'
 import { terser, multiEntry, replacePlugin, WatcherOptions, ModuleFormat } from '../libs'
 import { PluginOptions } from '../cli/cli'
 
@@ -99,9 +99,7 @@ export function createInputOptions(options: CreateRollupConfigOptions) {
 export function createOutputOptions(options: CreateRollupConfigOptions) {
   const output = (options.config as RollupConfigBase).output as RollupConfigOutput
   const name = options.name ?? getPackageNameSync()
-  const file = output?.file 
-    ? join(baseDir(), output.file)
-    : join(DEFAULT_DEST, `${name}.js`)
+  const file = output?.file ?? join(DEFAULT_DEST, `${name}.js`)
 
   const outputOptions: OutputOptions = {
     sourcemap: false,

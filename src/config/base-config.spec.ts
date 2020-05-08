@@ -107,7 +107,7 @@ describe('base-config', () => {
     
     expect(input).equal(config.input)
     expect((plugins as any[]).length).equal(3)
-    expect(file).equal(path.resolve((config.output as RollupConfigOutput).file))
+    expect(path.normalize(file)).equal(path.normalize((config.output as RollupConfigOutput).file))
     expect(sourcemap).equal((config.output as RollupConfigOutput).sourcemap)
     expect(external.length).equal(DEFAULT_VALUES.ROLLUP_EXTERNALS.length)
 

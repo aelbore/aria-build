@@ -36,7 +36,7 @@ describe('ts-rollup-config', () => {
     expect(input).equal(config.input)
     expect((plugins as any[]).length).equal(4)
     expect(external.length).equal(DEFAULT_VALUES.ROLLUP_EXTERNALS.length)
-    expect(file).equal(path.resolve((config.output as RollupConfigOutput).file))
+    expect(path.normalize(file)).equal(path.normalize((config.output as RollupConfigOutput).file))
   })
   
   it('should create ts rollup config with plugins is array', () => {
@@ -147,17 +147,17 @@ describe('ts-rollup-config', () => {
   })
 
   it('should createTSRollupConfigs with multiple outputs', () => {
+    const expectedPlugins = [ 'rpt2', 'commonjs', 'node-resolve' ]
+
     const options: CreateRollupConfigOptions = {
       config: {
         input: './src/index.ts',
         output: [
           {
-            sourcemap: false,
             format: 'es',
             file: `dist/index.es.js`
           },
           {
-            sourcemap: false,
             format: 'cjs',
             file: `dist/index.js`
           }
@@ -167,8 +167,36 @@ describe('ts-rollup-config', () => {
     }
 
     const configs = createTSRollupConfigs(options)
-
     expect(configs.length).equal(2)
+    configs.forEach(config => {
+      const plugins = config.inputOptions.plugins as any[]
+      const findIndex = name => plugins.findIndex(plugin => plugin.name.includes(name))
+
+      expect(plugins.length).equal(3)
+      expect(findIndex('rpt2')).equal(0)
+      expect(findIndex('commonjs')).equal(1)
+      expect(findIndex('node-resolve')).equal(2)
+    })
+  })
+
+  it('should createTSRollupConfigs with output typeof object', () => {
+    const options: CreateRollupConfigOptions = {
+      config: {
+        input: './src/index.ts',
+        output: {
+          sourcemap: true,
+          format: 'es',
+          file: `dist/index.es.js`
+        }
+      },
+      name: 'aria'
+    }
+
+    const configs = createTSRollupConfigs(options)
+    expect(configs.length).equal(1)
+    configs.forEach(config => {
+      expect((config.inputOptions.plugins as any[]).length).equal(3)
+    })
   })
 
 })
