@@ -1,5 +1,5 @@
 import { rollup } from '../libs'
-import { createTSRollupConfig, TSRollupConfig, CreateRollupConfigOptions, RollupConfigBase, _createTSRollupConfig, createTSRollupConfigs } from '../config/config'
+import { createTSRollupConfig, TSRollupConfig, CreateRollupConfigOptions, RollupConfigBase, _createTSRollupConfig, createTSRollupConfigs, createRollupConfigs } from '../config/config'
 
 function getConfigs(config: TSRollupConfig | RollupConfigBase | TSRollupConfig[] | RollupConfigBase[]) {
   return Array.isArray(config) ? config: [ config ]
@@ -26,9 +26,11 @@ export async function _build(options: CreateRollupConfigOptions) {
 }
 
 export async function ebuild(options: CreateRollupConfigOptions) {
-  const opts = getConfigs(options.config)
+  const { config, name, esbuild } = options
+  const opts = getConfigs(config)
   return Promise.all(opts.map(opt => {
-    const configs = createTSRollupConfigs({ config: opt, name: options.name })
+    const args = { config: opt, name, esbuild }
+    const configs = esbuild ? createRollupConfigs(args): createTSRollupConfigs(args)
     return Promise.all(configs.map(config => {
       const { inputOptions, outputOptions } = config
       return rollupBuild({ inputOptions, outputOptions })
