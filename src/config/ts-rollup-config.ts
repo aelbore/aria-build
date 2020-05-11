@@ -4,12 +4,9 @@ import { CompilerOptions, CustomTransformers } from 'typescript'
 import { commonjs, nodeResolve, typescript2 } from '../libs'
 import { 
   RollupConfigBase, ConfigResult, 
-  CreateRollupConfigOptions, RollupConfigOutput, 
-  createInputOptions, createOutputOptions 
+  CreateRollupConfigOptions, createInputOptions, 
+  createOutputOptions 
 } from './base-config'
-
-import { InputOptions } from './base-config'
-import { getPackageNameSync } from '../utils/utils'
 
 export interface TSConfigOptions {
   compilerOptions?: CompilerOptions,
