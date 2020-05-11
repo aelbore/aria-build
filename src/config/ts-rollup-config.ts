@@ -83,7 +83,7 @@ export function createTSConfig(options: CreateTSConfigOptions) {
 }
 
 export function createTSRollupInputOptions(options: CreateRollupConfigOptions) {
-  const { config, name } = options
+  const { config, name, esbuild } = options
   const { resolveOpts, commonOpts, input, output, tsconfig } = config as TSRollupConfig
  
   const _plugins = (config as TSRollupConfig).plugins
@@ -95,10 +95,15 @@ export function createTSRollupInputOptions(options: CreateRollupConfigOptions) {
     ? _plugins
     : _plugins?.after ?? []
 
+  const insertTSPlugin = () => {
+    return (!esbuild) 
+      && (!Array.isArray(output))
+      && (typescript2(createTSConfig({ input, tsconfig, file: output.file })))
+  }
+
   const plugins = [
     ...beforePlugins,
-    (!Array.isArray(output))
-      && typescript2(createTSConfig({ input, tsconfig, file: output.file })),
+    insertTSPlugin(),
     commonjs({
       ...(commonOpts ?? {})
     }),
@@ -133,13 +138,17 @@ export function createTSRollupConfigs(options: CreateRollupConfigOptions) {
   const outputs = Array.isArray(config.output) ? config.output: [ config.output ]
   const inputOptions = createTSRollupInputOptions(options)
 
-  const plugins = inputOptions.plugins as any[]
-  const index = plugins.findIndex(plugin => typeof plugin == 'boolean')
-
-  const ts = (file: string) => typescript2(createTSConfig({ input, tsconfig, file }))
+  const ts = (file: string) => {
+    const plugins = inputOptions.plugins as any[]
+    const index = plugins.findIndex(plugin => typeof plugin == 'boolean');
+    
+    (!options.esbuild) 
+      && index !== -1 
+      && plugins.splice(index, 1, typescript2(createTSConfig({ input, tsconfig, file })))
+  }
 
   const result: ConfigResult[] = outputs.map(output => {
-    index !== -1 && plugins.splice(index, 1, ts(output.file))
+    ts(output.file)
     const outputOptions = createOutputOptions({ 
       config: { output },
       name: options.name

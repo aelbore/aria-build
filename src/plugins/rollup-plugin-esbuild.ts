@@ -40,7 +40,7 @@ export function esBuildPlugin(options?: EsBuildPluginOptions) {
   const extensions = [ 
     'ts', 'js', 'tsx', 'jsx', 
     ...([ transformOptions.loader ]  ?? []),
-    ...(options.extensions ?? [])
+    ...(options?.extensions ?? [])
   ]
 
   return {

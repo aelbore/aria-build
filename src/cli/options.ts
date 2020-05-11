@@ -15,6 +15,7 @@ export const getCliOptions = () => ({
     { alias: '--sourcemap', description: 'Generate sourcemap', defaultValue: false },
     { alias: '--resolve', description: 'Resolve dependencies' },
     { alias: '--target', description: 'Target framework or library to build (i.e react or vue)' },
-    { alias: '--clean', description: 'Clean the dist folder default (dist)', defaultValue: 'dist' }        
+    { alias: '--clean', description: 'Clean the dist folder default (dist)', defaultValue: 'dist' },
+    { alias: '--esbuild', description: 'Enabled esbuild plugin to use transform ts,js,jsx,tsx', defaultValue: false }         
   ]
 })

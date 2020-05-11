@@ -8,7 +8,7 @@ import { parseConfig, getPkgDependencies, mergeGlobals, parsePlugins } from './u
 import { buildConfig } from './build-config'
 
 export async function handler(options?: BuildOptions) { 
-  const { entry, output, config, format } = options
+  const { entry, output, config, format, esbuild } = options
 
   const [ ariaConfig, pkgJson ] = await Promise.all([
     getAriaConfig(parseConfig({ config, entry })),
@@ -25,7 +25,7 @@ export async function handler(options?: BuildOptions) {
   const args = { pkgName, dependencies, ...options, plugins, globals }
   const configOptions = buildConfig(args)
 
-  const buildArgs = { config: configOptions, name: pkgName }
+  const buildArgs = { config: configOptions, name: pkgName, esbuild }
   options.target
     ? await findTargetBuild(options.target, [ configOptions ])
     : await ebuild(buildArgs)
