@@ -43,13 +43,15 @@ export interface RollupConfigBase {
 export interface CreateRollupConfigOptions {
   config: RollupConfigBase | TSRollupConfig | RollupConfigBase[] | TSRollupConfig[]
   name?: string
+  esbuild?: boolean
 }
 
 export interface InputOptions extends Pick<RollupConfigBase, 'external' | 'plugins' | 'input' | 'watch'> {
   onwarn(options: { code: string, message: string }): void
 }
 
-export interface OutputOptions extends RollupConfigOutput { }
+export interface OutputOptions extends RollupConfigOutput { 
+}
 
 export interface ConfigResult {
   inputOptions?: InputOptions
