@@ -22,6 +22,7 @@ export interface BuildOptions {
 	watch?: boolean
 	target?: string
 	expirement?: boolean
+	esbuild?: boolean
 }
 
 export interface PluginBeforeAfter {

@@ -3,8 +3,9 @@ import * as path from 'path'
 import * as mockfs from 'mock-fs'
 
 import { expect } from 'aria-mocha'
-import { esBuildPlugin, resolveId, transform } from './rollup-plugin-esbuild'
 import { Service, startService, TransformResult } from 'esbuild'
+
+import { resolveId, transform } from './rollup-plugin-esbuild'
 
 describe('rollup-plugin-esbuild', () => {
   let service: Service | undefined
