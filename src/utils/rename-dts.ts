@@ -2,10 +2,10 @@ import { dirname, join, sep, basename } from 'path'
 import { existsSync } from 'fs'
 
 import { TSRollupConfig, RollupConfigOutput } from '../config/config'
+import { getInputEntryFile, DEFAULT_DEST } from '../common/common'
 import { rename, globFiles, writeFile } from '../fs/fs'
 
 import { getPackageName } from './get-package'
-import { getInputEntryFile, DEFAULT_DEST } from '../common/common'
 
 export interface RenameDtsEntryOptions {
   config: TSRollupConfig | TSRollupConfig[],
@@ -14,7 +14,7 @@ export interface RenameDtsEntryOptions {
   outDir?: string
 }
 
-export async function createEntryFile(outDir: string, name: string) {
+async function createEntryFile(outDir: string, name: string) {
   const files = await globFiles(`./${outDir}/**/*.d.ts`, true)
   const dtsFiles = files.map(file => {
     const value = `.${sep}${basename(file, '.d.ts')}`
@@ -25,7 +25,7 @@ export async function createEntryFile(outDir: string, name: string) {
   return name
 }
 
-export async function renameDtsFile(options: RenameDtsEntryOptions) {
+async function renameDtsFile(options: RenameDtsEntryOptions) {
   const config = options.config as TSRollupConfig
   config.input = options.entry ?? config.input  
 
