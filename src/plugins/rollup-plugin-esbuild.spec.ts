@@ -5,7 +5,7 @@ import * as mockfs from 'mock-fs'
 import { expect } from 'aria-mocha'
 import { Service, startService, TransformResult } from 'esbuild'
 
-import { resolveId, transform } from './rollup-plugin-esbuild'
+import { resolveId, transformCode } from './rollup-plugin-esbuild'
 
 describe('rollup-plugin-esbuild', () => {
   let service: Service | undefined
@@ -67,7 +67,7 @@ describe('rollup-plugin-esbuild', () => {
 
     const transformStub = sinon.spy(service, 'transform')
 
-    const { code, map } = await transform(service)(content, './src/index.ts')
+    const { code, map } = await transformCode(service)(content, './src/index.ts')
     const mapResult = JSON.parse(map)
 
     expect(code).equal('console.log("");\n\n')
@@ -90,7 +90,7 @@ describe('rollup-plugin-esbuild', () => {
     const transformStub = sinon.stub(service, 'transform')
       .returns(Promise.resolve(result))
 
-    const { code, map } = await transform(service, { target: 'es2015' })('', './src/index.js')
+    const { code, map } = await transformCode(service, { target: 'es2015' })('', './src/index.js')
 
     expect(code).equal('')
     expect(map).equal('')

@@ -18,10 +18,11 @@ export function resolveId(extensions: string[]) {
   }
 }
 
-export function transform(service: import('esbuild').Service, options?: import('esbuild').TransformOptions) {
+export function transformCode(service: import('esbuild').Service, options?: import('esbuild').TransformOptions) {
   return async function (code: string, id: string) {
     const result = await service.transform(code, { 
       loader: extname(id).slice(1) as import('esbuild').Loader,
+      target: 'es2018',
       sourcemap: true,
       ...(options ?? {})
     })
@@ -50,7 +51,10 @@ export function esBuildPlugin(options?: EsBuildPluginOptions) {
       service = await esbuild.startService()
     },
     resolveId: resolveId(extensions),
-    transform: transform(service, transformOptions),
+    transform(code: string, id: string) {
+      if (!extensions.includes(extname(id).slice(1))) return
+      return transformCode(service, transformOptions)(code, id)
+    },
     buildEnd: (error?: Error) => error && service.stop(),
     generateBundle: () => service.stop()
   }
