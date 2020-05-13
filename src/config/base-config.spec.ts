@@ -2,14 +2,19 @@ import * as sinon from 'sinon'
 import * as path from 'path'
 
 import { expect } from 'aria-mocha'
-import { DEFAULT_VALUES } from '../utils/utils'
-import { onwarn, createRollupConfig, RollupConfigBase, RollupConfigOutput } from './base-config'
+import { DEFAULT_VALUES } from '../common/common'
+import { onwarn, createRollupConfig } from './base-config'
+import { RollupConfigBase, RollupConfigOutput } from './common'
 
 describe('base-config', () => {
-  let utils: any, libs: any
+  let libs: typeof import('../libs')
+  let common: typeof import('../common/common')
 
   before(async() => {
-    [ utils, libs ] = await Promise.all([ import('../utils/utils'), import('../libs') ])
+    [ libs, common ] = await Promise.all([ 
+      import('../libs'),
+      import('../common/common')
+    ])
   })
 
   afterEach(() => {
@@ -43,8 +48,7 @@ describe('base-config', () => {
       }
     }
 
-    const utils = await import('../utils/utils')
-    sinon.stub(utils, 'getPackageNameSync').returns('custom-name')
+    sinon.stub(common, 'getPackageNameSync').returns('custom-name')
 
     createRollupConfig({ config })
   })
@@ -64,7 +68,7 @@ describe('base-config', () => {
     }
 
     const pkgNameStub = sinon
-      .stub(utils, 'getPackageNameSync')
+      .stub(common, 'getPackageNameSync')
       .returns('custom-name')
 
     const { inputOptions } = createRollupConfig({ config })
@@ -94,7 +98,7 @@ describe('base-config', () => {
     }
     
     const pkgNameStub = sinon
-      .stub(utils, 'getPackageNameSync')
+      .stub(common, 'getPackageNameSync')
       .returns('custom-name')
 
     const terserStub = sinon.stub(libs, 'terser').returns(null)

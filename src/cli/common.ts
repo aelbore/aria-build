@@ -1,8 +1,6 @@
-import { KeyValue } from '../utils/utils'
+import { KeyValue, PluginOptions } from '../common/common'
 
 export const DEFAULT_OUT_DIR = 'dist'
-
-export type PluginOptions = any[] | PluginBeforeAfter
 export type OutputFormat = 'es' | 'cjs' | 'umd' | 'iife'
 
 export interface BuildOptions {
@@ -23,11 +21,6 @@ export interface BuildOptions {
 	target?: string
 	expirement?: boolean
 	esbuild?: boolean
-}
-
-export interface PluginBeforeAfter {
-	before?: any[];
-	after?: any[];
 }
 
 export interface TestAriaConfigOptions extends Omit<AriaConfigOptions, 'test'> {

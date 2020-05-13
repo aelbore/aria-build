@@ -1,7 +1,8 @@
-import { resolve, join } from 'path'
+import { join } from 'path'
 import { existsSync } from 'fs'
+import { baseDir } from '../common/common'
+
 import { AriaConfigOptions } from './common'
-import { baseDir } from '../utils/utils'
 
 export async function getAriaConfig(config?: string): Promise<AriaConfigOptions> { 
   const ROLLUP_CONFIG_PATH = join(baseDir(), config ?? 'aria.config.ts')

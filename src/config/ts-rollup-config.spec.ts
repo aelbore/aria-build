@@ -2,9 +2,10 @@ import * as sinon from 'sinon'
 import * as path from 'path'
 
 import { expect } from 'aria-mocha'
-import { DEFAULT_VALUES } from '../utils/utils'
-import { createTSRollupConfig, TSRollupConfig, createTSConfig, CreateTSConfigOptions, createTSRollupConfigs } from './ts-rollup-config'
-import { RollupConfigOutput, CreateRollupConfigOptions } from './base-config'
+import { DEFAULT_VALUES } from '../common/common'
+import { createTSRollupConfig, createTSConfig, CreateTSConfigOptions, createTSRollupConfigs } from './ts-rollup-config'
+import { CreateRollupConfigOptions } from './base-config'
+import { RollupConfigOutput, TSRollupConfig } from './common'
 
 describe('ts-rollup-config', () => {
 

@@ -1,4 +1,4 @@
-import { getInputEntryFile } from '../utils/utils'
+import { getInputEntryFile } from '../common/common'
 import { TSRollupConfig } from '../config/config'
 
 import { BuildFormatOptions } from './common'

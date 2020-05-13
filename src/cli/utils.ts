@@ -1,7 +1,6 @@
 import { dirname, join } from 'path'
 import { existsSync } from 'fs'
-import { PackageFile, KeyValue } from '../utils/utils'
-import { PluginOptions } from './common'
+import { PackageFile, KeyValue, PluginOptions } from '../common/common'
 
 export interface ExternalDepsOptions {
   external?: string

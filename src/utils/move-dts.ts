@@ -1,6 +1,6 @@
 import { join, dirname, sep } from 'path'
 import { globFiles, mkdir, rename, clean, writeFile, exist } from '../fs/fs'
-import { getInputEntryFile, DEFAULT_DEST, DEFAULT_SOURCE } from './common'
+import { getInputEntryFile, DEFAULT_DEST, DEFAULT_SOURCE } from '../common/common'
 import { getPackageName } from './get-package'
 
 export interface MoveDtsOptions {

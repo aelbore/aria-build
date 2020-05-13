@@ -2,23 +2,9 @@ import { basename, join, parse } from 'path'
 import { CompilerOptions, CustomTransformers } from 'typescript'
 
 import { commonjs, nodeResolve, typescript2 } from '../libs'
-import { 
-  RollupConfigBase, ConfigResult, 
-  CreateRollupConfigOptions, createInputOptions, 
-  createOutputOptions 
-} from './base-config'
+import { ConfigResult, CreateRollupConfigOptions, createInputOptions, createOutputOptions } from './base-config'
 
-export interface TSConfigOptions {
-  compilerOptions?: CompilerOptions,
-  transformers?: CustomTransformers,
-  exclude?: string[]
-  include?: string[]
-}
-
-export interface TSRollupConfig extends RollupConfigBase  {
-  tsconfig?: TSConfigOptions
-  ts?: boolean
-}
+import { TSRollupConfig, TSConfigOptions } from './common'
 
 export interface CreateTSConfigOptions {
   input?: string | string[]

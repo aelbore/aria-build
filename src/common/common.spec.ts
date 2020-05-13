@@ -1,9 +1,10 @@
 import * as path from 'path'
 import * as sinon from 'sinon'
+import * as mock from 'mock-require'
 
 import { expect } from 'aria-mocha'
 
-import { baseDir, getInputEntryFile } from './common'
+import { baseDir, getInputEntryFile, getPackageNameSync } from './common'
 
 describe('common', () => {
   const sandbox = sinon.createSandbox()
@@ -11,6 +12,7 @@ describe('common', () => {
   afterEach(() => {
     sandbox.restore()
     sinon.restore()
+    mock.stopAll()
   })
 
   it('should get the baseDir', () => {
@@ -32,6 +34,30 @@ describe('common', () => {
   it('should getInputEntryFile', () => {
     const result = getInputEntryFile('./src/input.ts')
     expect(result).equal('input')
+  })
+
+  it('should get name in package.json [getPackageNameSync]', () => {
+    const pkg = {
+      name: 'aria-test'
+    }
+  
+    mock(path.resolve('package.json'), pkg)
+
+    const name = getPackageNameSync()
+    expect(name).equal('aria-test')
+  })
+
+  it('should get name in package.json with filePath [getPackageNameSync]', () => {
+    const filePath = path.resolve('./build/package.json')
+    
+    const pkg = {
+      name: 'aria-test'
+    }
+  
+    mock(filePath, pkg)
+
+    const name = getPackageNameSync(filePath)
+    expect(name).equal('aria-test')
   })
 
 })

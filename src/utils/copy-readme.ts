@@ -1,7 +1,7 @@
 import { join } from 'path'
 import { copyFile, exist } from '../fs/fs'
 
-import { baseDir, DEFAULT_DEST } from './common'
+import { baseDir, DEFAULT_DEST } from '../common/common'
 
 export interface CopyReadmeOptions {
   filePath?: string

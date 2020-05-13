@@ -2,7 +2,7 @@ import { basename, parse, join } from 'path'
 
 import { writeFile } from '../fs/fs'
 
-import { PackageFile, DEFAULT_DEST } from './common'
+import { PackageFile, DEFAULT_DEST } from '../common/common'
 import { getPackage } from './get-package'
 
 function getInputEntryFile(input: string) {
