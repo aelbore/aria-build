@@ -5,7 +5,7 @@ import { TSRollupConfig, RollupConfigOutput } from '../config/config'
 import { rename, globFiles, writeFile } from '../fs/fs'
 
 import { getPackageName } from './get-package'
-import { getInputEntryFile, DEFAULT_DEST } from './common'
+import { getInputEntryFile, DEFAULT_DEST } from '../common/common'
 
 export interface RenameDtsEntryOptions {
   config: TSRollupConfig | TSRollupConfig[],

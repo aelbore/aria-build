@@ -3,7 +3,7 @@ import * as mock from 'mock-require'
 import * as sinon from 'sinon'
 
 import { expect } from 'aria-mocha'
-import { getPackage, getPackageName, getPackageNameSync } from './get-package'
+import { getPackage, getPackageName } from './get-package'
 
 describe('get-package', () => {
   const sanbox = sinon.createSandbox()
@@ -61,30 +61,6 @@ describe('get-package', () => {
     mock(path.resolve('package.json'), pkg)
     const name = await getPackageName()
 
-    expect(name).equal('aria-test')
-  })
-
-  it('should get name in package.json [getPackageNameSync]', () => {
-    const pkg = {
-      name: 'aria-test'
-    }
-  
-    mock(path.resolve('package.json'), pkg)
-
-    const name = getPackageNameSync()
-    expect(name).equal('aria-test')
-  })
-
-  it('should get name in package.json with filePath [getPackageNameSync]', () => {
-    const filePath = path.resolve('./build/package.json')
-    
-    const pkg = {
-      name: 'aria-test'
-    }
-  
-    mock(filePath, pkg)
-
-    const name = getPackageNameSync(filePath)
     expect(name).equal('aria-test')
   })
 

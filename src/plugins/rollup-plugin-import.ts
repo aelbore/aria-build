@@ -1,6 +1,6 @@
 import { join, resolve } from 'path'
 
-import { KeyValue } from '../utils/utils'
+import { KeyValue } from '../common/common'
 import { MagicString, ts } from '../libs'
 
 /* istanbul ignore next */

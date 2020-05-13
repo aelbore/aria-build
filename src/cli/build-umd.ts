@@ -1,5 +1,5 @@
 import { TSRollupConfig } from '../config/config'
-import { getInputEntryFile } from '../utils/utils'
+import { getInputEntryFile } from '../common/common'
 
 import { BuildFormatOptions } from './common'
 import { getEntryFile } from './get-entry-file'

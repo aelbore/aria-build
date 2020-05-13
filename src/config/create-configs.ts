@@ -1,6 +1,7 @@
-import { TSRollupConfig, createTSRollupInputOptions } from './ts-rollup-config'
+import { createTSRollupInputOptions } from './ts-rollup-config'
 import { CreateRollupConfigOptions, ConfigResult, createOutputOptions } from './base-config'
 import { esBuildPlugin } from '../libs'
+import { TSRollupConfig } from './common'
 
 export function createRollupConfigs(options: CreateRollupConfigOptions) {
   const config = options.config as TSRollupConfig

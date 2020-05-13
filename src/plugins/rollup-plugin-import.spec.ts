@@ -1,8 +1,7 @@
 import * as mockfs from 'mock-fs'
 
-import { expect } from 'aria-mocha'
 import { transform } from './rollup-plugin-import'
-import { KeyValue } from '../utils/utils'
+import { KeyValue } from '../common/common'
 
 describe('rollup-plugin-import', () => {
 

@@ -1,44 +1,9 @@
 import { join } from 'path'
 
-import { KeyValue, getPackageNameSync, DEFAULT_VALUES, DEFAULT_DEST } from '../utils/utils'
-import { terser, multiEntry, replacePlugin, WatcherOptions, ModuleFormat } from '../libs'
-import { PluginOptions } from '../cli/cli'
+import { getPackageNameSync, DEFAULT_VALUES, DEFAULT_DEST } from '../common/common'
+import { terser, multiEntry, replacePlugin } from '../libs'
 
-import { TSRollupConfig } from './ts-rollup-config'
-
-export interface NodeResolveOptions {
-  extensions?: string[]
-  mainFields?: string[]
-}
-
-export interface CommonJsOptions {
-  extensions?: string[]
-  include?: string | string[]
-  exclude?: string | string[]
-}
-
-export interface RollupConfigOutput {
-  sourcemap?: boolean | 'inline' | 'hidden'
-  file?: string
-  format?: ModuleFormat
-  name?: string
-  exports?: string
-  globals?: KeyValue
-  plugins?: PluginOptions
-}
-
-export interface RollupConfigBase {
-  input?: string | string[]
-  external?: string[]
-  plugins?: PluginOptions
-  output?: RollupConfigOutput | RollupConfigOutput[]
-  resolveOpts?: NodeResolveOptions
-  commonOpts?: CommonJsOptions
-  replace?: KeyValue
-  compress?: boolean
-  watch?: WatcherOptions
-  hmr?: boolean
-}
+import { TSRollupConfig, RollupConfigBase, RollupConfigOutput } from './common'
 
 export interface CreateRollupConfigOptions {
   config: RollupConfigBase | TSRollupConfig | RollupConfigBase[] | TSRollupConfig[]
