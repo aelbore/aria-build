@@ -19,22 +19,22 @@ const WATCH_EVENT = Object.freeze({
 
 const log = (msg: string) => console.log(msg)
 
-interface Listener {
+export interface Listener {
   (file?: string, stats?: fs.Stats): void
 }
 
-interface ReadyListener {
+export interface ReadyListener {
   (files: string[]): void
 }
 
-interface WatchOptions {
+export interface WatchOptions {
   onChange?: Listener;
   onCreate?: Listener;
   onDelete?: Listener;
   onReady?: ReadyListener; 
 }
 
-class Watcher extends EventEmitter {
+export class Watcher extends EventEmitter {
 
   private watchers = new Map()
   private store = new Map()
@@ -132,7 +132,7 @@ class Watcher extends EventEmitter {
 
 }
 
-const watcher = async (src: string, 
+export const watcher = async (src: string, 
   options: WatchOptions = {
     onReady: (files: string[]) => log(`> Initial scan complete. Ready for changes. Total files: ${files.length}`)
   }) => {
@@ -140,5 +140,3 @@ const watcher = async (src: string,
   await watcher.watch(src)
   watcher.emit('ready', watcher.watchFiles)
 }
-
-export { watcher, WatchOptions, Listener, ReadyListener }
