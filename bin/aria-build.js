@@ -28,7 +28,8 @@ require('ts-node').register({
     ...tsconfigDefaults,
     lib: [ 
       ...tsconfigDefaults.lib, 
-      ...(compilerOptions?.lib ?? [])
+      ...(compilerOptions && compilerOptions.lib 
+            ? compilerOptions.lib: [])
     ]
   }
 })
