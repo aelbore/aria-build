@@ -1,27 +1,25 @@
-import { clean, DEFAULT_VALUES, onwarn, terser, copyReadMeFile, mkdir, copyPackageFile, esBuildPlugin, TSRollupConfig, buildConfig } from '../src'
+import { clean, DEFAULT_VALUES, mkdir, buildConfig, getPkgDependencies, BuildFormatOptions } from '../src'
 import { plugins } from './plugins'
 import { esbundle } from '../src/esbuild/esbuild'
-
-import { builtinModules } from 'module'
 
 (async function() {
   const pkg = require('../package.json')
 
-  const external = [
-    ...Object.keys(pkg.dependencies),
-    ...Object.keys(pkg.peerDependencies),
-    ...Object.keys(pkg.devDependencies),
-    ...builtinModules,
-    ...DEFAULT_VALUES.ROLLUP_EXTERNALS
+  const external = [ 
+    ...getPkgDependencies({ ...pkg }), 
+    ...DEFAULT_VALUES.ROLLUP_EXTERNALS 
   ]
 
-  const config = buildConfig({
+  const options: BuildFormatOptions = {
     format: 'es,cjs',
     dependencies: external,
     output: 'dist',
     pkgName: 'aria-build',
-    declaration: true
-  })
+    declaration: true,
+    plugins
+  }
+  
+  const config = buildConfig(options)
 
   await clean('dist')
   await mkdir('dist')

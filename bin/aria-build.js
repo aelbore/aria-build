@@ -19,12 +19,17 @@ const compilerOptions = (fs.existsSync(TS_CONFIG_PATH)
 
 delete compilerOptions.exclude
 delete compilerOptions.include
+delete compilerOptions.lib
 
 require('ts-node').register({
-  typeCheck: false,
+  transpileOnly: true,
   compilerOptions: {
     ...compilerOptions,
-    ...tsconfigDefaults
+    ...tsconfigDefaults,
+    lib: [ 
+      ...tsconfigDefaults.lib, 
+      ...(compilerOptions?.lib ?? [])
+    ]
   }
 })
 
