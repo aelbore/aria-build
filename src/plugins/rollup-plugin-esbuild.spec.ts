@@ -70,7 +70,7 @@ describe('rollup-plugin-esbuild', () => {
     const { code, map } = await transformCode(service)(content, './src/index.ts')
     const mapResult = JSON.parse(map)
 
-    expect(code).equal('console.log("");\n\n')
+    expect(code.replace(/\n/g, '')).equal('console.log("");'.replace(/\n/g, ''))
     expect(mapResult.version).equal(3)
     expect(mapResult.sources.length).equal(1)
     expect(mapResult.sourcesContent.length).equal(1)

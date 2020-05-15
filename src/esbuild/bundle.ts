@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { CreateRollupConfigOptions } from '../config/config'
 import { BuildFormatOptions, buildConfig } from '../cli/cli'
 import { copyPackageFile, copyReadMeFile } from '../utils/utils'
