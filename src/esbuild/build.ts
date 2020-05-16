@@ -1,42 +1,11 @@
-/* istanbul ignore file */
-import { dirname, join } from 'path'
-
-import { rollup, esBuildPlugin, commonjs  } from '../libs'
-import { CreateRollupConfigOptions, OutputOptions, TSRollupConfig } from '../config/config'
-import { getPackageName } from '../utils/utils'
-
-export async function esbuildDts(options: CreateRollupConfigOptions) {  
-  const { config } = options
-
-  const opts = Array.isArray(config) ? config: [ config ]
-  const configs = opts.filter((opt: TSRollupConfig) => {
-    return opt.tsconfig?.compilerOptions?.declaration
-  })
-
-  const name = (configs.length > 0) 
-    ? options.name ? options.name: await getPackageName()
-    : undefined
-
-  return Promise.all(configs.map(async opt => { 
-    const dts = await import('rollup-plugin-dts')
-    
-    const { input, external, output } = opt as TSRollupConfig
-    const outputs: OutputOptions = Array.isArray(output) ? output[0]: output
-
-    const bundle = await rollup({ 
-      input, 
-      external, 
-      plugins: [ dts.default() ] 
-    })
-    const file = join(dirname(outputs.file), `${name}.d.ts`)
-
-    return bundle.write({ file })
-  }))
-}
+import { rollup, esBuildPlugin, commonjs } from '../libs'
+import { CreateRollupConfigOptions, TSRollupConfig } from '../config/config'
+import { DEFAULT_VALUES } from '../common/common'
 
 export async function esbuild(options: CreateRollupConfigOptions) {
   const { config, esbuild } = options
   const opts = Array.isArray(config) ? config: [ config ]
+
   return Promise.all(opts.map(async opt => {
     const { input, plugins, external, output, commonOpts } = opt as TSRollupConfig
 
@@ -53,7 +22,10 @@ export async function esbuild(options: CreateRollupConfigOptions) {
         ...mutiplyEntryPlugin(),
         commonjs(commonOpts)
       ], 
-      external
+      external: [
+        ...(external ?? []),
+        ...DEFAULT_VALUES.ROLLUP_EXTERNALS
+      ]
     })
     const outputs: any[] = Array.isArray(output) ? output: [ output ]
     

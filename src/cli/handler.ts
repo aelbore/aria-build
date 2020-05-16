@@ -1,4 +1,4 @@
-import { getPackage, findTargetBuild, copyPackageFile, copyReadMeFile, erenameDtsEntryFile, renameDtsEntryFile, moveDtsFiles } from '../utils/utils'
+import { getPackage, findTargetBuild, copyPackageFile, copyReadMeFile, erenameDtsEntryFile, moveDtsFiles } from '../utils/utils'
 import { clean } from '../fs/fs'
 import { ebuild } from '../build/index'
 
@@ -6,9 +6,10 @@ import { BuildOptions } from './common'
 import { getAriaConfig } from './get-aria-config'
 import { parseConfig, getPkgDependencies, mergeGlobals, parsePlugins } from './utils'
 import { buildConfig } from './build-config'
+import { esbuild, esbuildDts } from '../esbuild/esbuild'
 
 export async function handler(options?: BuildOptions) { 
-  const { entry, output, config, format, esbuild } = options
+  const { entry, output, config, format } = options
 
   const [ ariaConfig, pkgJson ] = await Promise.all([
     getAriaConfig(parseConfig({ config, entry })),
@@ -25,10 +26,14 @@ export async function handler(options?: BuildOptions) {
   const args = { pkgName, dependencies, ...options, plugins, globals }
   const configOptions = buildConfig(args)
 
-  const buildArgs = { config: configOptions, name: pkgName, esbuild }
+  const buildArgs = { config: configOptions, name: pkgName, esbuild: options.esbuild }
+
   options.target
     ? await findTargetBuild(options.target, [ configOptions ])
-    : await ebuild(buildArgs)
+    : await (options.esbuild 
+        ? Promise.all([ esbuild(buildArgs), esbuildDts(buildArgs) ])
+        : ebuild(buildArgs)
+      )
 
   await Promise.all([ 
     erenameDtsEntryFile(buildArgs),

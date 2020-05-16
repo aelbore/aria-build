@@ -4,7 +4,7 @@ import { expect } from 'aria-mocha'
 
 import { handler } from './handler'
 import { BuildOptions, AriaConfigOptions } from './common'
-import { PackageFile } from '../utils/utils'
+import { PackageFile } from '../common/common'
 
 describe('handler', () => {
   let ariaConfig: typeof import('./get-aria-config')
@@ -13,6 +13,7 @@ describe('handler', () => {
   let fs: typeof import('../fs/fs')
   let buildConfig: typeof import('./build-config')
   let build: typeof import('../build/build')
+  let esbuild: typeof import('../esbuild/esbuild')
 
   function createStubs() {
     const mergeGlobalsStub = sinon.spy(cliUtils, 'mergeGlobals')
@@ -34,6 +35,12 @@ describe('handler', () => {
     const buildStub = sinon.stub(build, 'ebuild').returns(void 0)
 
     const parseConfigStub = sinon.spy(cliUtils, 'parseConfig')
+
+    const esbuildStub = sinon.stub(esbuild, 'esbuild')
+      .returns(Promise.resolve([[]] as import('rollup').RollupOutput[][]))
+
+    const esbuildDts = sinon.stub(esbuild, 'esbuildDts')
+      .returns(Promise.resolve([] as import('rollup').RollupOutput[]))
 
     const pkg: PackageFile = {
       name: 'aria-test',
@@ -57,19 +64,22 @@ describe('handler', () => {
       copyPackageFileStub,
       copyReadMeFileStub,
       renameDtsEntryFileStub,
-      moveDtsFilesStub
+      moveDtsFilesStub,
+      esbuildStub,
+      esbuildDts
     }
   }
 
   before(async() => {
-    [ ariaConfig, cliUtils, utils, fs, build, buildConfig ] 
+    [ ariaConfig, cliUtils, utils, fs, build, buildConfig, esbuild ] 
       = await Promise.all([
           import('./get-aria-config'),
           import('./utils'),
           import('../utils/utils'),
           import('../fs/fs'),
           import('../build/index'),
-          import('./build-config')
+          import('./build-config'),
+          import('../esbuild/esbuild')
       ])
   })
 
@@ -108,7 +118,9 @@ describe('handler', () => {
       copyPackageFileStub,
       copyReadMeFileStub,
       renameDtsEntryFileStub,
-      moveDtsFilesStub
+      moveDtsFilesStub,
+      esbuildStub,
+      esbuildDts
      } = createStubs()
 
     await handler(options)
@@ -126,6 +138,40 @@ describe('handler', () => {
     expect(copyReadMeFileStub.called).toBeTrue()
     expect(renameDtsEntryFileStub.called).toBeTrue()
     expect(moveDtsFilesStub.called).toBeTrue()
+    expect(esbuildStub.called).toBeFalse()
+    expect(esbuildDts.called).toBeFalse()
+  })
+
+  it('should build with handler with esbuild enabled', async () => {
+    const options: BuildOptions = {
+      format: 'es,cjs',
+      declaration: false,
+      output: 'dist',
+      watch: false,
+      clean: 'dist',
+      esbuild: true
+    }
+
+    const config: AriaConfigOptions = { 
+      output: {
+        globals: {}
+      }
+    }
+    const getAriaConfigStub = sinon
+      .stub(ariaConfig, 'getAriaConfig')
+      .returns(Promise.resolve(config))
+
+    const { 
+      buildStub,
+      esbuildStub,
+      esbuildDts
+     } = createStubs()
+
+    await handler(options)
+
+    expect(buildStub.called).toBeFalse()
+    expect(esbuildStub.called).toBeTrue()
+    expect(esbuildDts.called).toBeTrue()
   })
 
   it('should build with handler when aria.config is null', async () => {

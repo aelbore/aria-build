@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 export const getCliOptions = () => ({
   package: 'aria-build',
   command: 'build',

@@ -1,10 +1,10 @@
-/* istanbul ignore file */
-
 import { CreateRollupConfigOptions } from '../config/config'
-import { BuildFormatOptions, buildConfig } from '../cli/cli'
+import { buildConfig, } from '../cli/build-config'
+import { BuildFormatOptions } from '../cli/common';
 import { copyPackageFile, copyReadMeFile } from '../utils/utils'
 
-import { esbuild, esbuildDts } from './build'
+import { esbuild } from './build'
+import { esbuildDts } from './build-dts'
 
 function buildConfigOptions(options: BuildFormatOptions) {
   const opts: CreateRollupConfigOptions = {
@@ -16,7 +16,7 @@ function buildConfigOptions(options: BuildFormatOptions) {
 }
 
 export function createOptions(options: CreateRollupConfigOptions | BuildFormatOptions) {
-  return (typeof options.config == 'string')
+  return (!options.config || typeof options.config == 'string')
     ? buildConfigOptions(options as BuildFormatOptions)
     : options as CreateRollupConfigOptions
 }

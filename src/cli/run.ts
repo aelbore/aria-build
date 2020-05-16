@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { handler } from './handler'
 import { getCliOptions } from './options'
 
