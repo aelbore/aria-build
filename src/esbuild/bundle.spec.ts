@@ -2,7 +2,8 @@ import * as sinon from 'sinon'
 import * as mock from 'mock-require'
 import * as mockfs from 'mock-fs'
 
-import { CreateRollupConfigOptions, TSRollupConfig } from '../config/config'
+import { TSRollupConfig } from '../config/config'
+import { CreateRollupConfigOptionsEsbuild } from './bundle'
 import { expect } from 'aria-mocha'
 import { esbundle } from './bundle'
 import { BuildFormatOptions } from '../cli/cli'
@@ -12,6 +13,7 @@ describe('esbuild [bundle]', () => {
   let dts: typeof import('./build-dts')
   let utils: typeof import('../utils/utils')
   let buildConfig: typeof import('../cli/build-config')
+  let fs: typeof import('../fs/fs')
 
   function createStubs() {
     const buildConfigStub = sinon.stub(buildConfig, 'buildConfig')
@@ -29,15 +31,22 @@ describe('esbuild [bundle]', () => {
     const copyReadMeFileStub = sinon.stub(utils, 'copyReadMeFile')
         .returns(Promise.resolve(void 0))
 
-    return { buildConfigStub, buildStub, dtsStub, copyPackageFileStub, copyReadMeFileStub }
+    const getPackageStub = sinon.stub(utils, 'getPackage')
+      .returns({} as any)
+
+    const mkdirStub = sinon.stub(fs, 'mkdir')
+      .returns(Promise.resolve(''))
+
+    return { mkdirStub, getPackageStub, buildConfigStub, buildStub, dtsStub, copyPackageFileStub, copyReadMeFileStub }
   }
 
   before(async() => {
-    [ buildConfig, dts, utils, build ] = await Promise.all([
+    [ buildConfig, dts, utils, build, fs ] = await Promise.all([
       import('../cli/build-config'),
       import('./build-dts'),
       import('../utils/utils'),
-      import('./build')
+      import('./build'),
+      import('../fs/fs')
     ])
   })
 
@@ -47,8 +56,27 @@ describe('esbuild [bundle]', () => {
     mockfs.restore()
   })
 
+  it('should bundle with rollup config options and package.json', async () => {
+    const options: CreateRollupConfigOptionsEsbuild = {
+      config: {
+        input: './src/input.ts',
+        output: {
+          file: './dist/output.d.ts'
+        }
+      },
+      esbuild: true,
+      name: 'aria-build',
+      pkg: { }
+    }
+
+    const { getPackageStub } = createStubs()
+
+    await esbundle(options)
+    expect(getPackageStub.called).toBeFalse()
+  })
+
   it('should bundle with rollup config options', async () => {
-    const options: CreateRollupConfigOptions = {
+    const options: CreateRollupConfigOptionsEsbuild = {
       config: {
         input: './src/input.ts',
         output: {
@@ -90,7 +118,8 @@ describe('esbuild [bundle]', () => {
       buildStub, 
       dtsStub, 
       copyPackageFileStub, 
-      copyReadMeFileStub 
+      copyReadMeFileStub,
+      getPackageStub
     } = createStubs()
 
     await esbundle(options)
@@ -100,6 +129,7 @@ describe('esbuild [bundle]', () => {
     expect(dtsStub.called).toBeTrue()
     expect(copyPackageFileStub.called).toBeTrue()
     expect(copyReadMeFileStub.called).toBeTrue()
+    expect(getPackageStub.called).toBeTrue()
   })
   
 })
