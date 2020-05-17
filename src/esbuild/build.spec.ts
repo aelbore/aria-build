@@ -169,4 +169,33 @@ describe('esbuild [esbuild]', () => {
     expect(esBuildPluginStub.called).toBeTrue()
   })
 
+  it('should build with plugins typeof PluginBeforeAfter', async () => {
+    const options: CreateRollupConfigOptions = {
+      config: {
+        input: './src/input.ts',
+        external: [ 'fs' ],
+        plugins: {
+          before: [ libs.nodeResolve() ],
+          after: []
+        },
+        output: {
+          file: './dist/output.d.ts',
+          format: 'es'
+        },
+      },
+      esbuild: true,
+      name: 'aria-build'
+    }
+
+    mockfs({
+      'dist': {},
+      './src/input.ts': 'console.log(``)'
+    })
+
+    createStubs()
+
+    await esbuild(options)
+
+  })
+
 })
