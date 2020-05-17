@@ -36,11 +36,8 @@ describe('handler', () => {
 
     const parseConfigStub = sinon.spy(cliUtils, 'parseConfig')
 
-    const esbuildStub = sinon.stub(esbuild, 'esbuild')
-      .returns(Promise.resolve([[]] as import('rollup').RollupOutput[][]))
-
-    const esbuildDts = sinon.stub(esbuild, 'esbuildDts')
-      .returns(Promise.resolve([] as import('rollup').RollupOutput[]))
+    const esbundleStub = sinon.stub(esbuild, 'esbundle')
+      .returns(Promise.resolve(void 0))
 
     const pkg: PackageFile = {
       name: 'aria-test',
@@ -65,8 +62,7 @@ describe('handler', () => {
       copyReadMeFileStub,
       renameDtsEntryFileStub,
       moveDtsFilesStub,
-      esbuildStub,
-      esbuildDts
+      esbundleStub
     }
   }
 
@@ -119,8 +115,7 @@ describe('handler', () => {
       copyReadMeFileStub,
       renameDtsEntryFileStub,
       moveDtsFilesStub,
-      esbuildStub,
-      esbuildDts
+      esbundleStub
      } = createStubs()
 
     await handler(options)
@@ -138,8 +133,7 @@ describe('handler', () => {
     expect(copyReadMeFileStub.called).toBeTrue()
     expect(renameDtsEntryFileStub.called).toBeTrue()
     expect(moveDtsFilesStub.called).toBeTrue()
-    expect(esbuildStub.called).toBeFalse()
-    expect(esbuildDts.called).toBeFalse()
+    expect(esbundleStub.called).toBeFalse()
   })
 
   it('should build with handler with esbuild enabled', async () => {
@@ -161,17 +155,12 @@ describe('handler', () => {
       .stub(ariaConfig, 'getAriaConfig')
       .returns(Promise.resolve(config))
 
-    const { 
-      buildStub,
-      esbuildStub,
-      esbuildDts
-     } = createStubs()
+    const { buildStub, esbundleStub } = createStubs()
 
     await handler(options)
 
     expect(buildStub.called).toBeFalse()
-    expect(esbuildStub.called).toBeTrue()
-    expect(esbuildDts.called).toBeTrue()
+    expect(esbundleStub.called).toBeTrue()
   })
 
   it('should build with handler when aria.config is null', async () => {

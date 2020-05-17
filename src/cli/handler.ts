@@ -6,7 +6,7 @@ import { BuildOptions } from './common'
 import { getAriaConfig } from './get-aria-config'
 import { parseConfig, getPkgDependencies, mergeGlobals, parsePlugins } from './utils'
 import { buildConfig } from './build-config'
-import { esbuild, esbuildDts } from '../esbuild/esbuild'
+import { esbuild, esbuildDts, esbundle } from '../esbuild/esbuild'
 
 export async function handler(options?: BuildOptions) { 
   const { entry, output, config, format } = options
@@ -30,15 +30,17 @@ export async function handler(options?: BuildOptions) {
 
   options.target
     ? await findTargetBuild(options.target, [ configOptions ])
-    : await (options.esbuild 
-        ? Promise.all([ esbuild(buildArgs), esbuildDts(buildArgs) ])
-        : ebuild(buildArgs)
+    : (options.esbuild 
+        ? await esbundle({ ...buildArgs, pkg: { ...pkgJson, output, format, entry } })
+        : await ebuild(buildArgs)
       )
 
-  await Promise.all([ 
-    erenameDtsEntryFile(buildArgs),
-    copyPackageFile({ ...pkgJson, output, format, entry }), 
-    copyReadMeFile({ output })
-  ])
-  await moveDtsFiles({ name: pkgName, output, entry })  
+  if (!options.esbuild) {
+    await Promise.all([ 
+      erenameDtsEntryFile(buildArgs),
+      copyPackageFile({ ...pkgJson, output, format, entry }), 
+      copyReadMeFile({ output })
+    ])
+    await moveDtsFiles({ name: pkgName, output, entry })  
+  }
 }
