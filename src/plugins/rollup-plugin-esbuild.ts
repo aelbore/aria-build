@@ -1,5 +1,5 @@
-import { dirname, extname, join, resolve } from 'path'
-import { existsSync } from 'fs'
+import { dirname, extname, join } from 'path'
+import { existsSync, statSync } from 'fs'
 
 export interface EsBuildPluginOptions {
   transformOptions?: import('esbuild').TransformOptions ,
@@ -7,13 +7,23 @@ export interface EsBuildPluginOptions {
 }
 
 export function resolveId(extensions: string[]) {   
+  const resolveFile = (resolved: string, index: boolean = false) => {
+    for (const extension of extensions) {
+      const file = index 
+        ? join(resolved, `index.${extension}`)
+        : `${resolved}.${extension}`
+      if (existsSync(file)) return file
+    }
+    return null
+  }
   return function (id: string, origin: string | undefined) {
-    const basePath = origin ? dirname(origin): resolve()
-    for (const ext of extensions) {
-      const file = join(basePath, extname(id) ? id: `${id}.${ext}`)
-      if (existsSync(file)) {
-        return file
-      }
+    if (!origin) return id
+    const resolved = join(dirname(origin), id)
+    const file = resolveFile(resolved)
+    if (file) return file
+    if (existsSync(resolved) && statSync(resolved).isDirectory()) {
+      const coreFile = resolveFile(resolved, true)
+      if (coreFile) return coreFile
     }
   }
 }
@@ -47,15 +57,18 @@ export function esBuildPlugin(options?: EsBuildPluginOptions) {
   return {
     name: 'esbuild',
     buildStart: async () => {
-      const esbuild = await import('esbuild')
-      service = await esbuild.startService()
+      if (!service) {
+        const esbuild = await import('esbuild')
+        service = await esbuild.startService()
+      }
     },
     resolveId: resolveId(extensions),
     transform(code: string, id: string) {
-      if (!extensions.includes(extname(id).slice(1))) return
+      if (!extensions.includes(extname(id).slice(1)) && id.includes('node_modules')) return
       return transformCode(service, transformOptions)(code, id)
     },
     buildEnd: (error?: Error) => error && service.stop(),
-    generateBundle: () => service.stop()
+    generateBundle: () => service.stop(),
+    writeBundle: () => service.stop()
   }
 }

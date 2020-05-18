@@ -59,7 +59,33 @@ describe('rollup-plugin-esbuild', () => {
     })
 
     const file = resolveId(extensions)('./src/index.ts', undefined)
-    expect(file).equal(normalize(file))
+    expect(normalize(file)).equal(normalize(file))
+  })
+
+  it('should reolvedId with index inside folder', () => {
+    const { normalize } = path
+
+    const extensions = [ 'ts' ]
+
+    mockfs({
+      './src/foo/index.ts': {},
+      './src/index.ts': `import ./foo`,
+    })
+
+    const file = resolveId(extensions)('./foo', './src/index.ts')
+    expect(normalize(file)).equal(normalize('./src/foo/index.ts'))
+  })
+
+  it('should not reolvedId when index file inside folder is not exist', () => {
+    const extensions = [ 'ts' ]
+
+    mockfs({
+      './src/foo': {},
+      './src/index.ts': `import ./foo`,
+    })
+
+    const file = resolveId(extensions)('./foo', './src/index.ts')
+    expect(file).toBeUndefined()
   })
 
   it('should transform code', async () => {

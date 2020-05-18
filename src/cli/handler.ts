@@ -6,7 +6,7 @@ import { BuildOptions } from './common'
 import { getAriaConfig } from './get-aria-config'
 import { parseConfig, getPkgDependencies, mergeGlobals, parsePlugins } from './utils'
 import { buildConfig } from './build-config'
-import { esbuild, esbuildDts, esbundle } from '../esbuild/esbuild'
+import { esbundle } from '../esbuild/esbuild'
 
 export async function handler(options?: BuildOptions) { 
   const { entry, output, config, format } = options
