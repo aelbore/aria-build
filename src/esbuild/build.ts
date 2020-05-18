@@ -1,6 +1,14 @@
 import { rollup, esBuildPlugin, commonjs } from '../libs'
 import { CreateRollupConfigOptions, TSRollupConfig } from '../config/config'
-import { DEFAULT_VALUES, PluginBeforeAfter } from '../common/common'
+import { DEFAULT_VALUES, PluginBeforeAfter, PluginOptions } from '../common/common'
+
+export function flatPlugins(plugins: PluginOptions) { 
+  return [
+    ...(plugins?.hasOwnProperty('before') ? (plugins as PluginBeforeAfter).before: []),
+    ...(Array.isArray(plugins) ? plugins: []),
+    ...(plugins?.hasOwnProperty('after') ? (plugins as PluginBeforeAfter).after: []),
+  ]
+}
 
 export async function esbuild(options: CreateRollupConfigOptions) {
   const { config, esbuild } = options
@@ -15,11 +23,7 @@ export async function esbuild(options: CreateRollupConfigOptions) {
     const esBuildPluginEntry = () => esbuild ? [ esBuildPlugin() ]: []
 
     const plugins = [
-      ...(opt.plugins?.hasOwnProperty('before') 
-            ? (opt.plugins as PluginBeforeAfter).before: []),
-      ...(Array.isArray(opt.plugins) ? opt.plugins: []),
-      ...(opt.plugins?.hasOwnProperty('after') 
-            ? (opt.plugins as PluginBeforeAfter).after: []),
+      ...flatPlugins(opt.plugins),
       ...esBuildPluginEntry(),
       ...mutiplyEntryPlugin(),
       commonjs(commonOpts)
