@@ -8,6 +8,7 @@ import { expect } from 'aria-mocha'
 
 describe('esbuild [esbuild]', () => {
   let libs: typeof import('../libs')
+  let swc: typeof import('../plugins/rollup-plugin-swc')
 
   function createStubs() {
     const rollup = {
@@ -34,6 +35,8 @@ describe('esbuild [esbuild]', () => {
       .stub(libs, 'esBuildPlugin')
       .returns(void 0)
 
+    const swcPluginStub = sinon.stub(swc, 'swcPlugin').returns(void 0)
+
     const multiEntryCalled = {
       called() { }
     }
@@ -43,11 +46,14 @@ describe('esbuild [esbuild]', () => {
     mock('@rollup/plugin-multi-entry', multiEntry)
     const multiEntrySpy = sinon.spy(multiEntryCalled, 'called')
 
-    return { rollupStub, rollupWriteStub, multiEntrySpy, esBuildPluginStub }
+    return { swcPluginStub, rollupStub, rollupWriteStub, multiEntrySpy, esBuildPluginStub }
   }
 
   before(async () => {
-    libs = await import('../libs')
+    [ libs, swc ] = await Promise.all([ 
+      import('../libs'),
+      import('../plugins/rollup-plugin-swc')
+    ])
   })
 
   afterEach(() => {
@@ -79,6 +85,34 @@ describe('esbuild [esbuild]', () => {
 
     expect(rollupStub.called).toBeTrue()
     expect(esBuildPluginStub.called).toBeTrue()
+    expect(rollupWriteStub.called).toBeTrue()
+    expect(multiEntrySpy.called).toBeFalse()
+  })
+
+  it('should build with swc option enabled', async () => {
+    const options: CreateRollupConfigOptions = {
+      config: {
+        input: './src/input.ts',
+        output: {
+          file: './dist/output.d.ts'
+        }
+      },
+      swc: true,
+      name: 'aria-build'
+    }
+
+    mockfs({
+      'dist': {},
+      './src/input.ts': 'console.log(``)'
+    })
+
+    const { rollupStub, swcPluginStub, rollupWriteStub, multiEntrySpy, esBuildPluginStub } = createStubs()
+
+    await esbuild(options)
+
+    expect(rollupStub.called).toBeTrue()
+    expect(esBuildPluginStub.called).toBeFalse()
+    expect(swcPluginStub.called).toBeTrue()
     expect(rollupWriteStub.called).toBeTrue()
     expect(multiEntrySpy.called).toBeFalse()
   })

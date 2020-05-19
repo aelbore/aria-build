@@ -1,6 +1,7 @@
 import { rollup, esBuildPlugin, commonjs } from '../libs'
-import { CreateRollupConfigOptions, TSRollupConfig } from '../config/config'
+import { CreateRollupConfigOptions, TSRollupConfig, onwarn } from '../config/config'
 import { DEFAULT_VALUES, PluginBeforeAfter, PluginOptions } from '../common/common'
+import { swcPlugin } from '../plugins/rollup-plugin-swc'
 
 export function flatPlugins(plugins: PluginOptions) { 
   return [
@@ -11,7 +12,7 @@ export function flatPlugins(plugins: PluginOptions) {
 }
 
 export async function esbuild(options: CreateRollupConfigOptions) {
-  const { config, esbuild } = options
+  const { config, esbuild, swc } = options
   const opts = Array.isArray(config) ? config: [ config ]
 
   return Promise.all(opts.map(async opt => {
@@ -20,7 +21,10 @@ export async function esbuild(options: CreateRollupConfigOptions) {
     const mutiplyEntryPlugin = () => 
        Array.isArray(input) ? [ require('@rollup/plugin-multi-entry')() ]: []
 
-    const esBuildPluginEntry = () => esbuild ? [ esBuildPlugin() ]: []
+    const esBuildPluginEntry = () => 
+      esbuild 
+        ? [ esBuildPlugin() ]
+        : swc ? [ swcPlugin() ]: []
 
     const plugins = [
       ...flatPlugins(opt.plugins),
@@ -36,7 +40,13 @@ export async function esbuild(options: CreateRollupConfigOptions) {
 
     const outputs: any[] = Array.isArray(output) ? output: [ output ]
 
-    const bundle = await rollup({ input, plugins, external })
+    const bundle = await rollup({ 
+      input, 
+      plugins, 
+      external, 
+      onwarn
+    })
+
     return Promise.all(outputs.map(bundle.write))
   }))
 }

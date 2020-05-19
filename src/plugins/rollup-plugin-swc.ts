@@ -12,6 +12,7 @@ export function swcPlugin(options?: import('@swc/core').JscConfig) {
       dynamicImport: true,
       tsx: true
     },
+    target: 'es2019',
     ...(options ?? {})
   }
 
@@ -20,7 +21,7 @@ export function swcPlugin(options?: import('@swc/core').JscConfig) {
   return {
     name: 'aria-swc',
     resolveId,
-    builtStart: async () => {
+    buildStart: async () => {
       swc = await import('@swc/core')
     },
     transform(code: string, id: string) {

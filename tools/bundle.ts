@@ -1,4 +1,4 @@
-import { clean, DEFAULT_VALUES, mkdir, buildConfig, getPkgDependencies, BuildFormatOptions } from '../src'
+import { clean, DEFAULT_VALUES, buildConfig, getPkgDependencies, BuildFormatOptions } from '../src'
 import { plugins } from './plugins'
 import { esbundle } from '../src/esbuild/esbuild'
 
@@ -15,12 +15,12 @@ import { esbundle } from '../src/esbuild/esbuild'
     dependencies: external,
     output: 'dist',
     pkgName: 'aria-build',
-    declaration: false,
+    declaration: true,
     plugins
   }
   
   const config = buildConfig(options)
 
   await clean('dist')
-  await esbundle({ config, name: 'aria-build' })
+  await esbundle({ config, name: 'aria-build', swc: true })
 })()
