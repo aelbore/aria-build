@@ -1,31 +1,9 @@
-import { dirname, extname, join } from 'path'
-import { existsSync, statSync } from 'fs'
+import { extname } from 'path'
+import { pathResolver } from './path-resolver'
 
 export interface EsBuildPluginOptions {
   transformOptions?: import('esbuild').TransformOptions ,
   extensions?: string[]
-}
-
-export function resolveId(extensions: string[]) {   
-  const resolveFile = (resolved: string, index: boolean = false) => {
-    for (const extension of extensions) {
-      const file = index 
-        ? join(resolved, `index.${extension}`)
-        : `${resolved}.${extension}`
-      if (existsSync(file)) return file
-    }
-    return null
-  }
-  return function (id: string, origin: string | undefined) {
-    if (!origin) return id
-    const resolved = join(dirname(origin), id)
-    const file = resolveFile(resolved)
-    if (file) return file
-    if (existsSync(resolved) && statSync(resolved).isDirectory()) {
-      const coreFile = resolveFile(resolved, true)
-      if (coreFile) return coreFile
-    }
-  }
 }
 
 export function transformCode(service: import('esbuild').Service, options?: import('esbuild').TransformOptions) {
@@ -49,10 +27,11 @@ export function esBuildPlugin(options?: EsBuildPluginOptions) {
   
   const transformOptions = options?.transformOptions ?? {}
   const extensions = [ 
-    'ts', 'js', 'tsx', 'jsx', 
     ...([ transformOptions.loader ]  ?? []),
     ...(options?.extensions ?? [])
   ]
+
+  const resolveId = pathResolver(extensions)
 
   return {
     name: 'esbuild',
@@ -62,7 +41,7 @@ export function esBuildPlugin(options?: EsBuildPluginOptions) {
         service = await esbuild.startService()
       }
     },
-    resolveId: resolveId(extensions),
+    resolveId,
     transform(code: string, id: string) {
       if (!extensions.includes(extname(id).slice(1)) && id.includes('node_modules')) return
       return transformCode(service, transformOptions)(code, id)
