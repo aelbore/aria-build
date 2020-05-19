@@ -1,11 +1,10 @@
 import * as sinon from 'sinon'
-import * as path from 'path'
 import * as mockfs from 'mock-fs'
 
 import { expect } from 'aria-mocha'
 import { Service, startService, TransformResult } from 'esbuild'
 
-import { resolveId, transformCode } from './rollup-plugin-esbuild'
+import { transformCode } from './rollup-plugin-esbuild'
 
 describe('rollup-plugin-esbuild', () => {
   let service: Service | undefined
@@ -21,71 +20,6 @@ describe('rollup-plugin-esbuild', () => {
   afterEach(() => {
     mockfs.restore()
     sinon.restore()
-  })
-
-  it('should resolveId with origin', () => {
-    const { normalize } = path
-
-    const extensions = [ 'ts' ]
-
-    mockfs({
-      './src/index.ts': `import ./hello-world`,
-      './src/hello-world.ts': 'console.log(``)'
-    })
-
-    const file = resolveId(extensions)('./hello-world', './src/index.ts')
-    expect(file).equal(normalize('./src/hello-world.ts'))
-  })
-
-  it('should resolveId importe is not exist', () => {
-    const extensions = [ 'ts' ]
-
-    mockfs({
-      './src/index.ts': `import ./hello-world`,
-      './src/hello-world.vue': 'console.log(``)'
-    })
-
-    const file = resolveId(extensions)('./hello-world', './src/index.ts')
-    expect(file).toBeUndefined()
-  })
-
-  it('should resolveId origin is undefined', () => {
-    const { normalize } = path
-
-    const extensions = [ 'ts' ]
-
-    mockfs({
-      './src/index.ts': `console.log('')`,
-    })
-
-    const file = resolveId(extensions)('./src/index.ts', undefined)
-    expect(normalize(file)).equal(normalize(file))
-  })
-
-  it('should reolvedId with index inside folder', () => {
-    const { normalize } = path
-
-    const extensions = [ 'ts' ]
-
-    mockfs({
-      './src/foo/index.ts': {},
-      './src/index.ts': `import ./foo`,
-    })
-
-    const file = resolveId(extensions)('./foo', './src/index.ts')
-    expect(normalize(file)).equal(normalize('./src/foo/index.ts'))
-  })
-
-  it('should not reolvedId when index file inside folder is not exist', () => {
-    const extensions = [ 'ts' ]
-
-    mockfs({
-      './src/foo': {},
-      './src/index.ts': `import ./foo`,
-    })
-
-    const file = resolveId(extensions)('./foo', './src/index.ts')
-    expect(file).toBeUndefined()
   })
 
   it('should transform code', async () => {

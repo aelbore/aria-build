@@ -15,13 +15,12 @@ import { esbundle } from '../src/esbuild/esbuild'
     dependencies: external,
     output: 'dist',
     pkgName: 'aria-build',
-    declaration: true,
+    declaration: false,
     plugins
   }
   
   const config = buildConfig(options)
 
   await clean('dist')
-  await mkdir('dist')
-  await esbundle({ config, name: 'aria-build', esbuild: true  })
+  await esbundle({ config, name: 'aria-build' })
 })()
