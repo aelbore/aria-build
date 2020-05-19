@@ -2,7 +2,7 @@ import * as mockfs from 'mock-fs'
 
 import { existsSync } from 'fs'
 import { readFile } from '../fs/fs'
-import { expect, globFiles } from 'aria-mocha'
+import { expect } from 'aria-mocha'
 import { copyAssets, replaceContent } from './copy-assets'
 
 describe('copyAssets', () => {

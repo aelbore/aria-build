@@ -2,7 +2,7 @@ import { extname } from 'path'
 import { pathResolver } from './path-resolver'
 
 export interface EsBuildPluginOptions {
-  transformOptions?: import('esbuild').TransformOptions ,
+  transformOptions?: import('esbuild').TransformOptions
   extensions?: string[]
 }
 

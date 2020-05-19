@@ -9,6 +9,7 @@ export interface CreateRollupConfigOptions {
   config: RollupConfigBase | TSRollupConfig | RollupConfigBase[] | TSRollupConfig[]
   name?: string
   esbuild?: boolean
+  swc?: boolean
 }
 
 export interface InputOptions extends Pick<RollupConfigBase, 'external' | 'plugins' | 'input' | 'watch'> {

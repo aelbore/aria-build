@@ -21,6 +21,7 @@ export interface BuildOptions {
 	target?: string
 	expirement?: boolean
 	esbuild?: boolean
+	swc?: boolean
 }
 
 export interface TestAriaConfigOptions extends Omit<AriaConfigOptions, 'test'> {
