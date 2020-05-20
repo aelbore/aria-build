@@ -1,13 +1,14 @@
 import { rollup, esBuildPlugin, commonjs } from '../libs'
-import { CreateRollupConfigOptions, onwarn } from '../common/common'
-import { DEFAULT_VALUES, PluginOptions } from '../common/common'
+import { CreateRollupConfigOptions, DEFAULT_VALUES, PluginOptions, onwarn } from '../common/common'
 import { swcPlugin } from '../plugins/rollup-plugin-swc'
+import { resolvePathPlugin } from '../plugins/rollup-plugin-resolve-path'
 
 type TSRollupConfig = import('../common/common').TSRollupConfig
 type PluginBeforeAfter = import('../common/common').PluginBeforeAfter
 
 function buildPlugins({ swc, esbuild }) {
   return [
+    ...((esbuild || swc ) ? [ resolvePathPlugin() ]: []),
     ...(esbuild 
           ? [ esBuildPlugin({ 
                 transformOptions: {  
@@ -37,7 +38,7 @@ export async function esbuild(options: CreateRollupConfigOptions) {
 
     const mutiplyEntryPlugin = () => 
        Array.isArray(input) ? [ require('@rollup/plugin-multi-entry')() ]: []
-
+    
     const plugins = [
       ...mutiplyEntryPlugin(),
       ...flatPlugins(opt.plugins),
