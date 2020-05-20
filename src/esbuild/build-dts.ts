@@ -1,9 +1,12 @@
 import { dirname, join } from 'path'
 
 import { rollup } from '../libs'
-import { CreateRollupConfigOptions, OutputOptions, TSRollupConfig } from '../config/config'
 import { getPackageName } from '../utils/get-package'
 import { DEFAULT_VALUES } from '../common/common'
+
+type TSRollupConfig = import('../common/common').TSRollupConfig
+type OutputOptions = import('../common/common').OutputOptions
+type CreateRollupConfigOptions = import('../common/common').CreateRollupConfigOptions
 
 async function getName(hasConfig: boolean, name: string) {
   return hasConfig ? name ?? await getPackageName(): undefined

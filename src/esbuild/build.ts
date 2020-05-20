@@ -1,7 +1,10 @@
 import { rollup, esBuildPlugin, commonjs } from '../libs'
-import { CreateRollupConfigOptions, TSRollupConfig, onwarn } from '../config/config'
-import { DEFAULT_VALUES, PluginBeforeAfter, PluginOptions } from '../common/common'
+import { CreateRollupConfigOptions, onwarn } from '../common/common'
+import { DEFAULT_VALUES, PluginOptions } from '../common/common'
 import { swcPlugin } from '../plugins/rollup-plugin-swc'
+
+type TSRollupConfig = import('../common/common').TSRollupConfig
+type PluginBeforeAfter = import('../common/common').PluginBeforeAfter
 
 function buildPlugins({ swc, esbuild }) {
   return [

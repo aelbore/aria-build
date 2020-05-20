@@ -3,7 +3,7 @@ import * as mockfs from 'mock-fs'
 import { normalize } from 'path'
 import { expect } from 'aria-mocha'
 
-import { TSRollupConfig, RollupConfigOutput } from '../config/config'
+import { TSRollupConfig, RollupConfigOutput } from '../common/common'
 import { buildConfig } from './build-config' 
 import { BuildFormatOptions } from './common'
 

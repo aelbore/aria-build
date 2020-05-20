@@ -1,6 +1,4 @@
-import { CreateRollupConfigOptions } from '../config/config'
 import { buildConfig, } from '../cli/build-config'
-import { BuildFormatOptions } from '../cli/common';
 import { copyPackageFile, copyReadMeFile, getPackage } from '../utils/utils'
 import { PackageFile, DEFAULT_DEST } from '../common/common'
 
@@ -8,17 +6,21 @@ import { esbuild } from './build'
 import { esbuildDts } from './build-dts'
 import { mkdir } from '../fs/fs'
 
+type CreateRollupConfigOptions = import('../common/common').CreateRollupConfigOptions
+type BuildFormatOptions = import('../cli/common').BuildFormatOptions
+
 export interface CreateRollupConfigBuilderOptions extends CreateRollupConfigOptions {
   pkg?: PackageFile
 }
 
 async function buildConfigOptions(options: BuildFormatOptions) {
-  const { pkgName, output, format, esbuild } = options
+  const { pkgName, output, format, esbuild, swc } = options
   const pkgJson: Pick<PackageFile, 'main' | 'module' | 'name' | 'typings'> = await getPackage()
   const opts: CreateRollupConfigBuilderOptions = {
     name: pkgName,
     config: buildConfig(options),
     esbuild: esbuild,
+    swc,
     pkg: { ...pkgJson, output, format }
   }
   return opts
