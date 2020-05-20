@@ -1,6 +1,5 @@
-import { getPackage, findTargetBuild, copyPackageFile, copyReadMeFile, erenameDtsEntryFile, moveDtsFiles } from '../utils/utils'
+import { getPackage, findTargetBuild } from '../utils/utils'
 import { clean } from '../fs/fs'
-import { ebuild } from '../build/index'
 
 import { BuildOptions } from './common'
 import { getAriaConfig } from './get-aria-config'
@@ -30,17 +29,5 @@ export async function handler(options?: BuildOptions) {
 
   options.target
     ? await findTargetBuild(options.target, [ configOptions ])
-    : (options.esbuild || swc
-        ? await esbundle({ ...buildArgs, pkg: { ...pkgJson, output, format, entry } })
-        : await ebuild(buildArgs)
-      )
-
-  if ((!options.esbuild) && (!options.swc)) {
-    await Promise.all([ 
-      erenameDtsEntryFile(buildArgs),
-      copyPackageFile({ ...pkgJson, output, format, entry }), 
-      copyReadMeFile({ output })
-    ])
-    await moveDtsFiles({ name: pkgName, output, entry })  
-  }
+    : await esbundle({ ...buildArgs, pkg: { ...pkgJson, output, format, entry } })
 }
