@@ -2,11 +2,22 @@ import * as mockfs from 'mock-fs'
 
 import { existsSync } from 'fs'
 import { expect } from 'aria-mocha'
-
-import { rollupGenerate } from '../build/index'
+import { rollup } from '../libs'
 import { copy } from './rollup-plugin-copy'
 
 describe('rollup-plugin-copy', () => {
+
+  const build = async (plugins: any[]) => {
+    const bundle = await rollup({
+      input: './src/input.ts',
+      external: [ 'fs' ],
+      plugins
+    })
+    await bundle.generate({ 
+      file: './dist/input.js',
+      format: 'es' 
+    })
+  }
 
   afterEach(() => {
     mockfs.restore()
@@ -22,25 +33,12 @@ describe('rollup-plugin-copy', () => {
       './src/input.ts': `import * as fs from 'fs'`
     })
 
-    const options = {
-      inputOptions: {
-        input: './src/input.ts',
-        external: [ 'fs' ],
-        plugins: [
-          copy({
-            targets: [
-              { src: './public/*', dest: 'dist' }
-            ]
-          })
-        ]
-      },
-      outputOptions: {
-        file: './dist/input.js',
-        format: 'es'
-      }
-    }
-
-    await rollupGenerate(options)
+    await build([ 
+      copy({
+        targets: [
+          { src: './public/*', dest: 'dist' } ]
+      })
+    ])
 
     expect(existsSync('./dist/index.html')).toBeTrue()
     expect(existsSync('./dist/styles.css')).toBeTrue()
@@ -56,27 +54,14 @@ describe('rollup-plugin-copy', () => {
       './src/input.ts': `import * as fs from 'fs'`
     })
 
-    const options = {
-      inputOptions: {
-        input: './src/input.ts',
-        external: [ 'fs' ],
-        plugins: [
-          copy({
-            hook: 'buildStart',
-            targets: [
-              { src: './public/*', dest: 'dist' }
-            ],
-            copyEnd: async() => {}
-          })
-        ]
-      },
-      outputOptions: {
-        file: './dist/input.js',
-        format: 'es'
-      }
-    }
-
-    await rollupGenerate(options)
+    await build([
+      copy({
+        hook: 'buildStart',
+        targets: [
+          { src: './public/*', dest: 'dist' } ],
+        copyEnd: async() => {}
+      })
+    ])
 
     expect(existsSync('./dist/index.html')).toBeTrue()
     expect(existsSync('./dist/styles.css')).toBeTrue()
@@ -92,19 +77,7 @@ describe('rollup-plugin-copy', () => {
       './src/input.ts': `import * as fs from 'fs'`
     })
 
-    const options = {
-      inputOptions: {
-        input: './src/input.ts',
-        external: [ 'fs' ],
-        plugins: [ copy() ]
-      },
-      outputOptions: {
-        file: './dist/input.js',
-        format: 'es'
-      }
-    }
-
-    await rollupGenerate(options)
+    await build([ copy() ])
 
     expect(existsSync('./dist/index.html')).toBeFalse()
     expect(existsSync('./dist/styles.css')).toBeFalse()

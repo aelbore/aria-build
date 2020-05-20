@@ -7,13 +7,12 @@ import { getInputEntryFile } from '../common/common'
 import { BuildFormatOptions } from './common'
 import { getEntryFile } from './get-entry-file'
 import { updateExternalWithResolve, getExternalDeps, entryFile } from './utils'
-import { getGlobals } from './build-umd'
 
 function getMain(args: GetFileOptions) {
   const { outDir, name, formats, format } = args
   return !formats.includes('cjs') 
     ? entryFile(format, join(outDir, name))
-    : entryFile(formats, join(outDir, name))
+    : entryFile(formats, join(outDir, name), format)
 }
 
 function createOutputFile(args: GetFileOptions) {
@@ -24,8 +23,15 @@ function createOutputFile(args: GetFileOptions) {
     case 'es': 
       return getMain({ outDir, name, formats })
     case 'umd': 
-      return entryFile(formats, join(outDir, name) , format)
+      return entryFile(formats, join(outDir, name), format)
   }
+}
+
+function getGlobals(globals: string = '') {
+  const results = globals.split(',')
+  /// @ts-ignore
+  const entries = new Map(results.map(global => global.split('=')))
+  return Object.fromEntries(entries)
 }
 
 export interface GetFileOptions {
@@ -70,9 +76,10 @@ export function buildConfig(options: BuildFormatOptions) {
 
   const plugins = options.plugins ?? []
 
-  const external = updateExternalWithResolve(resolve, 
-    getExternalDeps({ external: options.external, dependencies })
-  )
+  const external = updateExternalWithResolve({ 
+    resolve, 
+    external: getExternalDeps({ external: options.external, dependencies })
+  })
 
   const configOptions: TSRollupConfig = { 
     input,
