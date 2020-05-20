@@ -1,6 +1,38 @@
-import { PluginOptions, KeyValue } from '../common/common'
-import { WatcherOptions, ModuleFormat } from '../libs'
-import { CompilerOptions, CustomTransformers } from 'typescript'
+ /* istanbul ignore file */
+
+export interface PackageFile {
+  filePath?: string
+  entry?: string
+  output?: string
+  format?: string
+  name?: string
+  main?: string
+  module?: string
+  typings?: string
+  dependencies?: KeyValue
+  devDependencies?: KeyValue
+  peerDependencies?: KeyValue
+}
+
+export interface KeyValue {
+	[key: string]: string;
+}
+
+export type PluginOptions = any[] | PluginBeforeAfter
+
+export interface PluginBeforeAfter {
+	before?: any[]
+	after?: any[]
+}
+
+export interface CreateRollupConfigOptions {
+  config: RollupConfigBase | TSRollupConfig | RollupConfigBase[] | TSRollupConfig[]
+  name?: string
+  esbuild?: boolean
+  swc?: boolean
+}
+
+export interface OutputOptions extends RollupConfigOutput {  }
 
 export interface RollupConfigBase {
   input?: string | string[]
@@ -11,7 +43,7 @@ export interface RollupConfigBase {
   commonOpts?: CommonJsOptions
   replace?: KeyValue
   compress?: boolean
-  watch?: WatcherOptions
+  watch?: import('../libs').WatcherOptions
   hmr?: boolean
 }
 
@@ -34,7 +66,7 @@ export interface CommonJsOptions {
 export interface RollupConfigOutput {
   sourcemap?: boolean | 'inline' | 'hidden'
   file?: string
-  format?: ModuleFormat
+  format?: import('../libs').ModuleFormat
   name?: string
   exports?: string
   globals?: KeyValue
@@ -42,8 +74,8 @@ export interface RollupConfigOutput {
 }
 
 export interface TSConfigOptions {
-  compilerOptions?: CompilerOptions,
-  transformers?: CustomTransformers,
+  compilerOptions?: import('typescript').CompilerOptions,
+  transformers?: import('typescript').CustomTransformers,
   exclude?: string[]
   include?: string[]
 }
@@ -58,7 +90,7 @@ export interface CreateTSConfigOptions {
 
 export interface TSRollupPluginResult {
   tsconfigDefaults: {
-    compilerOptions?: Omit<CompilerOptions, 'module' | 'moduleResolution' | 'target'>
+    compilerOptions?: Omit<import('typescript').CompilerOptions, 'module' | 'moduleResolution' | 'target'>
     exclude?: string[]
     include?: string[]
   },

@@ -4,7 +4,7 @@ import * as mock from 'mock-require'
 
 import { expect } from 'aria-mocha'
 
-import { baseDir, getInputEntryFile, getPackageNameSync } from './common'
+import { baseDir, getInputEntryFile, getPackageNameSync, onwarn } from './common'
 
 describe('common', () => {
   const sandbox = sinon.createSandbox()
@@ -14,6 +14,23 @@ describe('common', () => {
     sinon.restore()
     mock.stopAll()
   })
+
+  it('should have no warning message', () => {
+    const logSpy = sinon.spy(console, 'log')
+
+    onwarn({ code: 'THIS_IS_UNDEFINED', message: 'Message Here' })
+
+    expect(logSpy.called).toBeFalse()
+  })
+
+  it('should have no warning message', () => {
+    const logStub = sinon.stub(console, 'log').returns(null)
+
+    onwarn({ code: 'Error', message: 'Message Here' })
+
+    expect(logStub.called).toBeTrue()
+  })
+
 
   it('should get the baseDir', () => {
     const result = baseDir()
