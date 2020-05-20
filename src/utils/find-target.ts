@@ -1,4 +1,4 @@
-import { RollupConfigBase, TSRollupConfig } from '../config/config'
+import { RollupConfigBase, TSRollupConfig } from '../common/common'
 
 export async function findTargetBuild(target: string, 
   config: RollupConfigBase[] | TSRollupConfig[]
