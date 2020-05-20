@@ -1,12 +1,14 @@
 import { join } from 'path'
 
 import { ModuleFormat } from '../libs'
-import { TSRollupConfig, RollupConfigOutput } from '../config/config'
 import { getInputEntryFile } from '../common/common'
 
-import { BuildFormatOptions } from './common'
 import { getEntryFile } from './get-entry-file'
 import { updateExternalWithResolve, getExternalDeps, entryFile } from './utils'
+
+type BuildFormatOptions = import('./common').BuildFormatOptions
+type TSRollupConfig = import('../common/common').TSRollupConfig
+type RollupConfigOutput = import('../common/common').RollupConfigOutput
 
 function getMain(args: GetFileOptions) {
   const { outDir, name, formats, format } = args

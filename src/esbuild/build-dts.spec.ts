@@ -3,7 +3,7 @@ import * as mock from 'mock-require'
 import * as mockfs from 'mock-fs'
 
 import { esbuildDts } from './build-dts'
-import { CreateRollupConfigOptions } from '../config/config'
+import { CreateRollupConfigOptions } from '../common/common'
 import { expect } from 'aria-mocha'
 
 describe('esbuild [build]', () => {

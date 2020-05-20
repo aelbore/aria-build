@@ -4,7 +4,7 @@ import * as mock from 'mock-require'
 
 import { expect } from 'aria-mocha'
 
-import { RollupConfigBase, TSRollupConfig } from '../config/config'
+import { RollupConfigBase, TSRollupConfig } from '../common/common'
 import { findTargetBuild } from './find-target'
 
 describe('find-target', () => {

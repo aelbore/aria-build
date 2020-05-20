@@ -2,8 +2,7 @@ import * as sinon from 'sinon'
 import * as mock from 'mock-require'
 import * as mockfs from 'mock-fs'
 
-import { TSRollupConfig } from '../config/config'
-import { CreateRollupConfigOptionsEsbuild } from './bundle'
+import { TSRollupConfig } from '../common/common'
 import { expect } from 'aria-mocha'
 import { esbundle } from './bundle'
 import { BuildFormatOptions } from '../cli/cli'
@@ -57,7 +56,7 @@ describe('esbuild [bundle]', () => {
   })
 
   it('should bundle with rollup config options and package.json', async () => {
-    const options: CreateRollupConfigOptionsEsbuild = {
+    const options = {
       config: {
         input: './src/input.ts',
         output: {
