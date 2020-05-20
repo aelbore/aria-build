@@ -127,6 +127,9 @@ describe('buildConfig', () => {
       output: 'dist',
       watch: false,
       name: 'umdName',
+      resolve: 'react,vue',
+      external: 'react',
+      globals: 'react=react,vue=vue',
       pkgName: 'custom-package'
     }
 

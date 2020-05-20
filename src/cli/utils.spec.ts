@@ -1,7 +1,7 @@
 import * as mockfs from 'mock-fs'
 
-import { parseConfig, getPkgDependencies, mergeGlobals, parsePlugins } from './utils'
-import { PackageFile } from '../utils/utils'
+import { parseConfig, getPkgDependencies, mergeGlobals, parsePlugins, entryFile, getExternalDeps, updateExternalWithResolve } from './utils'
+import { PackageFile } from '../common/common'
 import { expect } from 'aria-mocha'
 import { AriaConfigOptions } from './common'
 
@@ -152,5 +152,79 @@ describe('cli-utils', () => {
     })
   
   })
+
+  describe('entryFile', () => {
+
+    it('should get the entryFile w/o module', () => {
+      const formats = [ 'es', 'cjs' ]
+
+      const name = entryFile(formats, 'aria-build')
+      expect(name).equal('aria-build.es.js')
+    })
+
+    it('should get the entryFile with module', () => {
+      const formats = [ 'es', 'cjs', 'umd' ]
+
+      const name = entryFile(formats, 'aria-build', 'umd')
+      expect(name).equal('aria-build.umd.js')
+    })
+
+    it('should get the entryFile with single formats', () => {
+      const formats = 'es'
+
+      const name = entryFile(formats, 'aria-build', 'umd')
+      expect(name).equal('aria-build.js')
+    })
+
+    it('should get the entryFile with single formats', () => {
+      const formats = [ 'es' ]
+
+      const name = entryFile(formats, 'aria-build')
+      expect(name).equal('aria-build.js')
+    })
+
+  })
+
+  describe('getExternalDeps', () => {
+
+    it('should getExternalDeps', () => {
+
+      const dependencies = []
+      getExternalDeps({ dependencies  })
+
+    })
+      
+  })
+
+  describe('updateExternalWithResolve', () => {
+
+    it('should update external with resolve to true', () => {
+
+      const external = updateExternalWithResolve({
+        resolve: true,
+        external: [ 'react' ]
+      })
+
+      expect(external.length).equal(0)
+    })
+
+    it('should update external with resolve typeof string', () => {
+
+      const external = updateExternalWithResolve({
+        resolve: 'react',
+        external: [ 'react' ]
+      })
+
+      expect(external.length).equal(0)
+    })
+
+    it('should update external w/o resolve', () => {
+
+      const external = updateExternalWithResolve()
+
+      expect(external.length).equal(0)
+    })
+
+  }) 
 
 })
