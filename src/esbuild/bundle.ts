@@ -8,14 +8,14 @@ import { esbuild } from './build'
 import { esbuildDts } from './build-dts'
 import { mkdir } from '../fs/fs'
 
-export interface CreateRollupConfigOptionsEsbuild extends CreateRollupConfigOptions {
+export interface CreateRollupConfigBuilderOptions extends CreateRollupConfigOptions {
   pkg?: PackageFile
 }
 
 async function buildConfigOptions(options: BuildFormatOptions) {
   const { pkgName, output, format, esbuild } = options
   const pkgJson: Pick<PackageFile, 'main' | 'module' | 'name' | 'typings'> = await getPackage()
-  const opts: CreateRollupConfigOptionsEsbuild = {
+  const opts: CreateRollupConfigBuilderOptions = {
     name: pkgName,
     config: buildConfig(options),
     esbuild: esbuild,
@@ -24,13 +24,13 @@ async function buildConfigOptions(options: BuildFormatOptions) {
   return opts
 }
 
-export async function createOptions(options: CreateRollupConfigOptionsEsbuild | BuildFormatOptions) {
+export async function createOptions(options: CreateRollupConfigBuilderOptions | BuildFormatOptions) {
   return (!options.config || typeof options.config == 'string')
     ? await buildConfigOptions(options as BuildFormatOptions)
-    : options as CreateRollupConfigOptionsEsbuild
+    : options as CreateRollupConfigBuilderOptions
 }
 
-export async function esbundle(options: CreateRollupConfigOptionsEsbuild | BuildFormatOptions) {
+export async function esbundle(options: CreateRollupConfigBuilderOptions | BuildFormatOptions) {
   const opts = await createOptions(options)
   await mkdir(opts.pkg?.output ?? DEFAULT_DEST)
   await Promise.all([ 

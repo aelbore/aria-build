@@ -1,6 +1,6 @@
 import { clean, DEFAULT_VALUES, buildConfig, getPkgDependencies, BuildFormatOptions } from '../src'
 import { plugins } from './plugins'
-import { esbundle } from '../src/esbuild/esbuild'
+import { swcBundler } from '../src/builders/swc-bundler'
 
 (async function() {
   const pkg = require('../package.json')
@@ -15,12 +15,11 @@ import { esbundle } from '../src/esbuild/esbuild'
     dependencies: external,
     output: 'dist',
     pkgName: 'aria-build',
-    declaration: true,
-    plugins
+    declaration: false,
+    plugins,
+    swc: true
   }
-  
-  const config = buildConfig(options)
 
   await clean('dist')
-  await esbundle({ config, name: 'aria-build', swc: true })
+  await swcBundler(options)
 })()
