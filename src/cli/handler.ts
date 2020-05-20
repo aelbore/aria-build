@@ -9,7 +9,7 @@ import { buildConfig } from './build-config'
 import { esbundle } from '../esbuild/esbuild'
 
 export async function handler(options?: BuildOptions) { 
-  const { entry, output, config, format } = options
+  const { entry, output, config, format, swc } = options
 
   const [ ariaConfig, pkgJson ] = await Promise.all([
     getAriaConfig(parseConfig({ config, entry })),
@@ -26,16 +26,16 @@ export async function handler(options?: BuildOptions) {
   const args = { pkgName, dependencies, ...options, plugins, globals }
   const configOptions = buildConfig(args)
 
-  const buildArgs = { config: configOptions, name: pkgName, esbuild: options.esbuild }
+  const buildArgs = { config: configOptions, name: pkgName, esbuild: options.esbuild, swc }
 
   options.target
     ? await findTargetBuild(options.target, [ configOptions ])
-    : (options.esbuild 
+    : (options.esbuild || swc
         ? await esbundle({ ...buildArgs, pkg: { ...pkgJson, output, format, entry } })
         : await ebuild(buildArgs)
       )
 
-  if (!options.esbuild) {
+  if ((!options.esbuild) && (!options.swc)) {
     await Promise.all([ 
       erenameDtsEntryFile(buildArgs),
       copyPackageFile({ ...pkgJson, output, format, entry }), 
