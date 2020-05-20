@@ -1,5 +1,4 @@
 import { extname } from 'path'
-import { pathResolver } from './path-resolver'
 
 export interface EsBuildPluginOptions {
   transformOptions?: import('esbuild').TransformOptions
@@ -31,8 +30,6 @@ export function esBuildPlugin(options?: EsBuildPluginOptions) {
     ...(options?.extensions ?? [])
   ]
 
-  const resolveId = pathResolver(extensions)
-
   return {
     name: 'esbuild',
     buildStart: async () => {
@@ -41,7 +38,6 @@ export function esBuildPlugin(options?: EsBuildPluginOptions) {
         service = await esbuild.startService()
       }
     },
-    resolveId,
     transform(code: string, id: string) {
       if (!extensions.includes(extname(id).slice(1)) && id.includes('node_modules')) return
       return transformCode(service, transformOptions)(code, id)

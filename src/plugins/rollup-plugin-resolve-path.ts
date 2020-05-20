@@ -24,3 +24,11 @@ export function pathResolver(extensions?: string[]) {
     }
   }
 }
+
+/* istanbul ignore next */
+export function resolvePathPlugin(extenstions?: string[]) {
+  return {
+    name: 'resolve-path',
+    resolveId: pathResolver(extenstions)
+  }
+}

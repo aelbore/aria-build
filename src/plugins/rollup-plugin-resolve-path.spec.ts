@@ -2,7 +2,7 @@ import * as mockfs from 'mock-fs'
 import * as path from 'path'
 
 import { expect } from 'aria-mocha'
-import { pathResolver } from './path-resolver'
+import { pathResolver } from './rollup-plugin-resolve-path'
 
 describe('path-resolver', () => {
 
