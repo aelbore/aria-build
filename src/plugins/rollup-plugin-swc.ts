@@ -1,7 +1,5 @@
 /* istanbul ignore file */
 
-import { pathResolver } from './path-resolver'
-
 export function swcPlugin(options?: import('@swc/core').JscConfig) {
   let swc: typeof import('@swc/core')
 
@@ -16,11 +14,8 @@ export function swcPlugin(options?: import('@swc/core').JscConfig) {
     ...(options ?? {})
   }
 
-  const resolveId = pathResolver()
-
   return {
     name: 'aria-swc',
-    resolveId,
     buildStart: async () => {
       swc = await import('@swc/core')
     },
