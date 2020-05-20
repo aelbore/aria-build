@@ -8,8 +8,8 @@ export interface KeyValue {
 export type PluginOptions = any[] | PluginBeforeAfter
 
 export interface PluginBeforeAfter {
-	before?: any[];
-	after?: any[];
+	before?: any[]
+	after?: any[]
 }
 
 export const DEFAULT_DEST = 'dist'

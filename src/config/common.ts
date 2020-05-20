@@ -47,3 +47,24 @@ export interface TSConfigOptions {
   exclude?: string[]
   include?: string[]
 }
+
+
+export interface CreateTSConfigOptions {
+  input?: string | string[]
+  file?: string
+  tsconfig?: TSConfigOptions
+  pluginOpts?: any
+}
+
+export interface TSRollupPluginResult {
+  tsconfigDefaults: {
+    compilerOptions?: Omit<CompilerOptions, 'module' | 'moduleResolution' | 'target'>
+    exclude?: string[]
+    include?: string[]
+  },
+  transformers?: any[]
+  check?: boolean
+  objectHashIgnoreUnknownHack?: boolean
+  useTsconfigDeclarationDir?: boolean
+  cacheRoot?: string
+}

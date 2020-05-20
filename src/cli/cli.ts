@@ -1,6 +1,5 @@
 /* istanbul ignore file */
 
-export * from './build-formats'
 export * from './common'
 export * from './get-aria-config'
 export * from './get-entry-file'

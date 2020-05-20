@@ -14,18 +14,17 @@ export function getExternalDeps(options: ExternalDepsOptions) {
   ]
 }
 
-export function entryFile(formats: string[] | string, entry?: string, module?: string) {
+export function entryFile(formats: string[] | string, entry: string, module?: string) {
   return (Array.isArray(formats) ? formats: [ formats ]).length === 1
     ? `${entry}.js`
     : `${entry}.${module ?? 'es'}.js`
 }
 
-export function isCompress(compress: string | boolean, format: string) {
-  return ((typeof compress == "string" && compress.includes(format)) 
-    || (typeof compress == "boolean" && compress))
-}
-
-export function updateExternalWithResolve(resolve?: boolean | string, external?: string[]) {
+export function updateExternalWithResolve(options: { 
+  resolve?: boolean | string, 
+  external?: string[] 
+} = {}) {
+  const { resolve, external } = options
   if (typeof resolve == "boolean" && resolve) {
     return []
   }
@@ -34,7 +33,7 @@ export function updateExternalWithResolve(resolve?: boolean | string, external?:
     const externals = external.filter(value => (!resolves.includes(value)))
     return externals
   }
-  return external
+  return external ?? []
 }
 
 export function parseConfig(options?: { config?: string, entry?: string }) {
