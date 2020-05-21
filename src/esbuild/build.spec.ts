@@ -35,6 +35,8 @@ describe('esbuild [esbuild]', () => {
       .stub(libs, 'esBuildPlugin')
       .returns(void 0)
 
+    const terserStub = sinon.stub(libs, 'terser').returns(void 0)
+
     const swcPluginStub = sinon.stub(swc, 'swcPlugin').returns(void 0)
 
     const multiEntryCalled = {
@@ -46,7 +48,7 @@ describe('esbuild [esbuild]', () => {
     mock('@rollup/plugin-multi-entry', multiEntry)
     const multiEntrySpy = sinon.spy(multiEntryCalled, 'called')
 
-    return { swcPluginStub, rollupStub, rollupWriteStub, multiEntrySpy, esBuildPluginStub }
+    return { terserStub, swcPluginStub, rollupStub, rollupWriteStub, multiEntrySpy, esBuildPluginStub }
   }
 
   before(async () => {
@@ -118,13 +120,13 @@ describe('esbuild [esbuild]', () => {
   })
 
   it('should build with multiple input esbuild is disabled', async () => {
-
     const options: CreateRollupConfigOptions = {
       config: {
         input: [ './src/input.ts' ],
         output: {
           file: './dist/output.d.ts'
-        }
+        },
+        compress: true
       },
       name: 'aria-build'
     }
@@ -134,12 +136,13 @@ describe('esbuild [esbuild]', () => {
       './src/input.ts': 'console.log(``)'
     })
 
-    const { multiEntrySpy, esBuildPluginStub } = createStubs()
+    const { multiEntrySpy, esBuildPluginStub, terserStub } = createStubs()
 
     await esbuild(options)
 
     expect(esBuildPluginStub.called).toBeFalse()
     expect(multiEntrySpy.called).toBeTrue()
+    expect(terserStub.called).toBeTrue()
   })
 
   it('should build with multple config ', async () => {
@@ -161,11 +164,12 @@ describe('esbuild [esbuild]', () => {
       './src/input.ts': 'console.log(``)'
     })
 
-    const { esBuildPluginStub } = createStubs()
+    const { esBuildPluginStub, terserStub } = createStubs()
 
     await esbuild(options)
 
     expect(esBuildPluginStub.called).toBeTrue()
+    expect(terserStub.called).toBeFalse()
   })
 
   it('should build with plugins,external and multiple output', async () => {

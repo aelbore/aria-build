@@ -1,4 +1,5 @@
 import * as mockfs from 'mock-fs'
+import * as mock from 'mock-require'
 
 import { normalize } from 'path'
 import { expect } from 'aria-mocha'
@@ -27,6 +28,10 @@ describe('buildConfig', () => {
       }
     })
   }
+
+  before(() => {
+    mock('rollup-plugin-terser', { terser() {} })
+  })
 
   afterEach(() => {
     mockfs.restore()
@@ -80,7 +85,7 @@ describe('buildConfig', () => {
     assertOutput(config, expected)
   })
 
-  it('should build config with multiple output, has entry,plugins and no declaration,sourcemap', () => {
+  it('should build config with multiple output, has entry,plugins and no declaration,sourcemap, compress', () => {
     mockfs({
       './src/index.ts': ''
     })
@@ -91,7 +96,8 @@ describe('buildConfig', () => {
       output: 'dist',
       watch: false,
       entry: './src/index.ts',
-      plugins: []
+      plugins: [],
+      compress: true
     }
 
     const expected: TSRollupConfig = {
@@ -114,7 +120,7 @@ describe('buildConfig', () => {
     assertOutput(config, expected)
   })
 
-  it('should build config with multiple output format: es,umd', () => {
+  it('should build config with multiple output format: es,umd compress umd format', () => {
     mockfs({
       './src/index.ts': ''
     })
@@ -130,7 +136,8 @@ describe('buildConfig', () => {
       resolve: 'react,vue',
       external: 'react',
       globals: 'react=react,vue=vue',
-      pkgName: 'custom-package'
+      pkgName: 'custom-package',
+      compress: 'umd'
     }
 
     const expected: TSRollupConfig = {
