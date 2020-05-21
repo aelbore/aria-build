@@ -26,6 +26,7 @@ export async function copyPackageFile(options?: PackageFile) {
 
   const pkgTemp = options?.name ? options: await getPackage(filePath)
   const name = entry ? getInputEntryFile(options.entry): pkgTemp.name
+  const outfile = join((options?.output ?? DEFAULT_DEST), 'package.json')
 
   await deleteKeys(pkgTemp)
   
@@ -38,6 +39,5 @@ export async function copyPackageFile(options?: PackageFile) {
     ...{ module }
   }
 
-  const outfile = join((options?.output ?? DEFAULT_DEST), 'package.json')
   await writeFile(outfile, JSON.stringify(pkg, null, 2))
 }

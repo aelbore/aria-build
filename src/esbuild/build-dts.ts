@@ -17,7 +17,7 @@ async function getDtsLib(hasConfig: boolean) {
 }
 
 export async function esbuildDts(options: CreateRollupConfigOptions) {  
-  const { config } = options
+  const { config, write } = options
 
   const opts = Array.isArray(config) ? config: [ config ]
   const configs = opts.filter((opt: TSRollupConfig) => 
@@ -41,8 +41,9 @@ export async function esbuildDts(options: CreateRollupConfigOptions) {
       ], 
       plugins: [ dts.default() ] 
     })
+
     const file = join(dirname(outputs.file), `${name}.d.ts`)
 
-    return bundle.write({ file })
+    return write ? bundle.write({ file }): bundle.generate({ file })
   }))
 }

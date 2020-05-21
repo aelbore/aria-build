@@ -14,14 +14,15 @@ export interface CreateRollupConfigBuilderOptions extends CreateRollupConfigOpti
 }
 
 async function buildConfigOptions(options: BuildFormatOptions) {
-  const { pkgName, output, format, esbuild, swc } = options
+  const { pkgName, output, format, esbuild, swc, write } = options
   const pkgJson: Pick<PackageFile, 'main' | 'module' | 'name' | 'typings'> = await getPackage()
   const opts: CreateRollupConfigBuilderOptions = {
     name: pkgName,
     config: buildConfig(options),
     esbuild: esbuild,
     swc,
-    pkg: { ...pkgJson, output, format }
+    pkg: { ...pkgJson, output, format },
+    write
   }
   return opts
 }
@@ -32,11 +33,15 @@ export async function createOptions(options: CreateRollupConfigBuilderOptions | 
     : options as CreateRollupConfigBuilderOptions
 }
 
-export async function esbundle(options: CreateRollupConfigBuilderOptions | BuildFormatOptions) {
+export async function bundle(options: CreateRollupConfigBuilderOptions | BuildFormatOptions) {
   const opts = await createOptions(options)
+  const args = { ...(opts.pkg ?? {})  }
+
   await mkdir(opts.pkg?.output ?? DEFAULT_DEST)
   await Promise.all([ 
-    esbuild(opts), esbuildDts(opts), 
-    copyPackageFile({ ...(opts.pkg ?? {})  }), copyReadMeFile() 
+    esbuild(opts), 
+    esbuildDts(opts), 
+    copyPackageFile({ ...args }), 
+    copyReadMeFile({ ...args }) 
   ])
 }

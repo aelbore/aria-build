@@ -25,7 +25,7 @@ describe('handler', () => {
     const buildConfigStub = sinon.stub(buildConfig, 'buildConfig').returns({})
 
     const parseConfigStub = sinon.spy(cliUtils, 'parseConfig')
-    const esbundleStub = sinon.stub(esbuild, 'esbundle').returns(Promise.resolve(void 0))
+    const esbundleStub = sinon.stub(esbuild, 'bundle').returns(Promise.resolve(void 0))
 
     const pkg: PackageFile = {
       name: 'aria-test',
