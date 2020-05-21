@@ -1,6 +1,6 @@
 import { join } from 'path'
 
-import { ModuleFormat } from '../libs'
+import { ModuleFormat, terser } from '../libs'
 import { getInputEntryFile } from '../common/common'
 
 import { getEntryFile } from './get-entry-file'
@@ -45,23 +45,29 @@ export interface GetFileOptions {
 }
 
 export function buildConfig(options: BuildFormatOptions) {
-  const { pkgName, entry, dependencies, declaration, globals, name, resolve, format } = options
+  const { pkgName, entry, dependencies, declaration, compress, globals, name, resolve, format } = options
   const outDir = options.output.replace('./', '')
   
   const sourcemap = options.sourcemap ?? false
   const formats = format.split(',')
   const input = entry ?? getEntryFile(pkgName)
 
+  const isCompressFormat = (format: string) => 
+    (compress && typeof compress == "string" && compress.split(',').includes(format))
+
   const output = formats.map((format: ModuleFormat) => {
-    const file = entry 
+    const file = entry  
       ? entryFile(format.includes('cjs') ? format: formats, 
           join(outDir, getInputEntryFile(entry)), 
           format)
       : createOutputFile({ outDir, format, formats, name: pkgName })
 
+    const plugins = [ ...(isCompressFormat(format) ? [ terser() ]: []) ] 
+
     const output: RollupConfigOutput = {
       sourcemap,
       format,
+      plugins,
       file,
       ...(format.includes('umd') 
           ? {
@@ -92,7 +98,8 @@ export function buildConfig(options: BuildFormatOptions) {
       compilerOptions: {
         declaration: declaration ?? false
       }
-    }
+    },
+    compress: (compress && typeof compress == 'boolean') ? compress: false
   }
   
   return configOptions
