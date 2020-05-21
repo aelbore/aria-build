@@ -37,7 +37,7 @@ export async function bundle(options: CreateRollupConfigBuilderOptions | BuildFo
   const opts = await createOptions(options)
   const args = { ...(opts.pkg ?? {})  }
 
-  await mkdir(opts.pkg?.output ?? DEFAULT_DEST)
+  await mkdir(opts.pkg?.output ?? DEFAULT_DEST, { recursive: true })
   await Promise.all([ 
     esbuild(opts), 
     esbuildDts(opts), 
