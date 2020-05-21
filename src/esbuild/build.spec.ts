@@ -185,9 +185,7 @@ describe('esbuild [esbuild]', () => {
       config: {
         input: './src/input.ts',
         external: [ 'fs' ],
-        plugins: [ 
-          libs.nodeResolve()
-        ],
+        plugins: [],
         output: [
           {
             file: './dist/output.d.ts',
@@ -222,7 +220,7 @@ describe('esbuild [esbuild]', () => {
         input: './src/input.ts',
         external: [ 'fs' ],
         plugins: {
-          before: [ libs.nodeResolve() ],
+          before: [],
           after: []
         },
         output: {

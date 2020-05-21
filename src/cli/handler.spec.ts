@@ -66,13 +66,14 @@ describe('handler', () => {
     sinon.restore()
   })
 
-  it('should build with handler with default options', async () => {
+  it('should build with handler with default options enabled esbuild', async () => {
     const options: BuildOptions = {
       format: 'es,cjs',
       declaration: false,
       output: 'dist',
       watch: false,
-      clean: 'dist'
+      clean: 'dist',
+      esbuild: true
     }
 
     const config: AriaConfigOptions = { 
@@ -108,12 +109,13 @@ describe('handler', () => {
     expect(esbundleStub.called).toBeTrue()
   })
 
-  it('should build with handler when aria.config is null', async () => {
+  it('should build with handler when aria.config is null enable swc', async () => {
     const options: BuildOptions = {
       format: 'es,cjs,umd',
       declaration: false,
       output: 'dist',
-      watch: false
+      watch: false,
+      swc: true
     }
 
     const getAriaConfigStub = sinon

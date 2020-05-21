@@ -1,9 +1,11 @@
 import { esBuildPlugin, commonjs, terser } from '../libs'
-import { CreateRollupConfigOptions, DEFAULT_VALUES, PluginOptions } from '../common/common'
 import { swcPlugin } from '../plugins/rollup-plugin-swc'
 import { resolvePathPlugin } from '../plugins/rollup-plugin-resolve-path'
+import { 
+  CreateRollupConfigOptions, DEFAULT_VALUES, 
+  PluginOptions, TSRollupConfig
+} from '../common/common'
 
-type TSRollupConfig = import('../common/common').TSRollupConfig
 type RollupConfigBase = import('../common/common').RollupConfigBase
 type PluginBeforeAfter = import('../common/common').PluginBeforeAfter
 

@@ -8,8 +8,11 @@ import { buildConfig } from './build-config'
 import { bundle } from '../esbuild/esbuild'
 
 export async function handler(options?: BuildOptions) { 
-  const { entry, output, config, format, swc, esbuild, write } = options
+  const { entry, output, config, format, write } = options
 
+  const esbuild = ((!options.swc && options.esbuild) || (options.swc && options.esbuild)) ? true: false 
+  const swc = (!esbuild) ? true: false
+  
   const [ ariaConfig, pkgJson ] = await Promise.all([
     getAriaConfig(parseConfig({ config, entry })),
     getPackage(),
