@@ -20,6 +20,7 @@ export interface BuildOptions {
 	watch?: boolean
 	target?: string
 	expirement?: boolean
+	bundler?: 'esbuild' | 'swc' | 'ts'
 	esbuild?: boolean
 	swc?: boolean
 	write?: boolean

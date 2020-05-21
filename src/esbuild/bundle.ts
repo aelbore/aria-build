@@ -1,13 +1,13 @@
 import { buildConfig, } from '../cli/build-config'
 import { copyPackageFile, copyReadMeFile, getPackage } from '../utils/utils'
 import { PackageFile, DEFAULT_DEST } from '../common/common'
+import { BuildFormatOptions } from '../cli/common'
 
 import { esbuild } from './build'
 import { esbuildDts } from './build-dts'
 import { mkdir } from '../fs/fs'
 
 type CreateRollupConfigOptions = import('../common/common').CreateRollupConfigOptions
-type BuildFormatOptions = import('../cli/common').BuildFormatOptions
 
 export interface CreateRollupConfigBuilderOptions extends CreateRollupConfigOptions {
   pkg?: PackageFile
