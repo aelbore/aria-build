@@ -2,9 +2,9 @@ import * as sinon from 'sinon'
 import * as mock from 'mock-require'
 import * as mockfs from 'mock-fs'
 
-import { TSRollupConfig } from '../common/common'
+import { TSRollupConfig, CreateRollupConfigOptions } from '../common/common'
 import { expect } from 'aria-mocha'
-import { esbundle } from './bundle'
+import { bundle } from './bundle'
 import { BuildFormatOptions } from '../cli/cli'
 
 describe('esbuild [bundle]', () => {
@@ -70,12 +70,12 @@ describe('esbuild [bundle]', () => {
 
     const { getPackageStub } = createStubs()
 
-    await esbundle(options)
+    await bundle(options)
     expect(getPackageStub.called).toBeFalse()
   })
 
   it('should bundle with rollup config options', async () => {
-    const options: CreateRollupConfigOptionsEsbuild = {
+    const options: CreateRollupConfigOptions = {
       config: {
         input: './src/input.ts',
         output: {
@@ -94,7 +94,7 @@ describe('esbuild [bundle]', () => {
       copyReadMeFileStub 
     } = createStubs()
 
-    await esbundle(options)
+    await bundle(options)
     
     expect(buildConfigStub.called).toBeFalse()
     expect(buildStub.called).toBeTrue()
@@ -121,7 +121,7 @@ describe('esbuild [bundle]', () => {
       getPackageStub
     } = createStubs()
 
-    await esbundle(options)
+    await bundle(options)
     
     expect(buildConfigStub.called).toBeTrue()
     expect(buildStub.called).toBeTrue()

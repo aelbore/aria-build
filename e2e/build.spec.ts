@@ -4,11 +4,24 @@ import * as mock from 'mock-require'
 import { existsSync } from 'fs'
 import { resolve } from 'path'
 import { expect } from 'aria-mocha'
-import { TSRollupConfig, ebuild } from '../src'
+import { TSRollupConfig, esbuild } from '../src'
 
 describe('build', () => {
 
-  beforeEach(() => {
+  before(async () => {
+    const [ swc, esbuild ] = await Promise.all([
+      import('@swc/core'),
+      import('esbuild')
+    ])
+    mock('esbuild', esbuild)
+    mock('@swc/core', swc)
+  })
+
+  after(() => {
+    mock.stopAll()
+  })
+
+  beforeEach(async() => {
     mockfs({
       'dist': {},
       './src/index.ts': `export const hello = (msg: string) => 'Hello ' + msg `,
@@ -22,10 +35,9 @@ describe('build', () => {
 
   afterEach(() => {
     mockfs.restore()
-    mock.stopAll()
   })
 
-  it('should build with multiple configs', async() => {
+  it('should build with multiple configs esbuild enabled', async() => {
     const tsconfig = {
       compilerOptions: {
         declaration: true
@@ -59,15 +71,56 @@ describe('build', () => {
       }
     ]
 
-    await ebuild({ config })
+    await esbuild({ config, esbuild: true, write: true })
 
     expect(existsSync('./dist/output.js')).toBeTrue()
     expect(existsSync('./dist/output.js.map')).toBeTrue()
     expect(existsSync('./dist/output.es.js')).toBeTrue()
     expect(existsSync('./dist/output.js.map')).toBeTrue()
-    expect(existsSync('./dist/index.d.ts')).toBeTrue()
     expect(existsSync('./dist/plugins/plugin.js')).toBeTrue()
-    expect(existsSync('./dist/plugins/index.d.ts')).toBeTrue()
+  })
+
+  it('should build with multiple configs swc enabled', async() => {
+    const tsconfig = {
+      compilerOptions: {
+        declaration: true
+      }
+    }
+
+    const config: TSRollupConfig[] = [
+      {
+        input: './src/index.ts',
+        output: [
+          {
+            format: 'es', 
+            sourcemap: true,
+            file: './dist/output.es.js'
+          },
+          {
+            format: 'cjs', 
+            sourcemap: true,
+            file: './dist/output.js'
+          }
+        ],
+        tsconfig
+      },
+      {
+        input: './plugins/index.ts',
+        output: {
+          format: 'es', 
+          file: './dist/plugins/plugin.js'
+        },
+        tsconfig
+      }
+    ]
+
+    await esbuild({ config, swc: true, write: true })
+
+    expect(existsSync('./dist/output.js')).toBeTrue()
+    expect(existsSync('./dist/output.js.map')).toBeTrue()
+    expect(existsSync('./dist/output.es.js')).toBeTrue()
+    expect(existsSync('./dist/output.js.map')).toBeTrue()
+    expect(existsSync('./dist/plugins/plugin.js')).toBeTrue()
   })
 
 })
