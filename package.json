@@ -7,7 +7,7 @@
     "aria-build": "./bin/aria-build.js"
   },
   "scripts": {
-    "build": "node ./bin/aria-build.js -d --swc",
+    "build": "node ./bin/aria-build.js -d",
     "bundle": "ts-node --project ./tools/tsconfig.json ./tools/bundle.ts",
     "test": "aria-mocha --check-coverage",
     "test.e2e": "aria-mocha -d ./e2e",

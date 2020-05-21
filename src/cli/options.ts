@@ -19,7 +19,7 @@ export const getCliOptions = () => ({
     { alias: '--target', description: 'Target framework or library to build (i.e react or vue)' },
     { alias: '--clean', description: 'Clean the dist folder default (dist)', defaultValue: 'dist' },
     { alias: '--write', description: 'Write the output to disk default to true', defaultValue: true },
-    { alias: '--esbuild', description: 'Enabled esbuild plugin to use transform ts,js,jsx,tsx', defaultValue: false },
+    { alias: '--esbuild', description: 'Enabled esbuild plugin to use transform ts,js,jsx,tsx', defaultValue: true },
     { alias: '--swc', description: 'Enabled swc plugin to transform ts,js,jsx,tsx', defaultValue: false }            
   ]
 })
