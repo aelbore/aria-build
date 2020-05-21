@@ -49,7 +49,6 @@ export interface RollupConfigBase {
 
 export interface TSRollupConfig extends RollupConfigBase  {
   tsconfig?: TSConfigOptions
-  ts?: boolean
 }
 
 export interface NodeResolveOptions {

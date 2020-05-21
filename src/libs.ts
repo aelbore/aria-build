@@ -8,13 +8,18 @@ import MagicString from 'magic-string'
 
 const commonjs = require('@rollup/plugin-commonjs')
 const nodeResolve = require('@rollup/plugin-node-resolve')
-const multiEntry = require('@rollup/plugin-multi-entry')
-const typescript2 = require('rollup-plugin-typescript2')
 const replacePlugin = require('@rollup/plugin-replace')
 
 export { rollup, watch, WatcherOptions, ModuleFormat } from 'rollup'
-export { terser } from 'rollup-plugin-terser'
-export { commonjs, replacePlugin, json, url, nodeResolve, typescript2, minifyHTML, multiEntry }
+export { commonjs, replacePlugin, json, url, nodeResolve, minifyHTML }
 export { MagicString, ts }
+
+export function terser(options?: import('rollup-plugin-terser').Options) {
+  const { terser } = require('rollup-plugin-terser')
+  return terser({ 
+    output: { comments: false },
+    ...(options ?? {})
+  })
+}
 
 export * from './plugins/rollup-plugin-esbuild'
