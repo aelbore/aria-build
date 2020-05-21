@@ -30,6 +30,10 @@ describe('esbuild [esbuild]', () => {
     const rollupWriteStub = sinon
       .stub(rollup, 'write')
       .returns(Promise.resolve({} as Promise<import('rollup').RollupOutput>))
+    
+  const rollupGenerateStub = sinon
+      .stub(rollup, 'generate')
+      .returns(Promise.resolve({} as Promise<import('rollup').RollupOutput>))
 
     const esBuildPluginStub = sinon
       .stub(libs, 'esBuildPlugin')
@@ -48,7 +52,7 @@ describe('esbuild [esbuild]', () => {
     mock('@rollup/plugin-multi-entry', multiEntry)
     const multiEntrySpy = sinon.spy(multiEntryCalled, 'called')
 
-    return { terserStub, swcPluginStub, rollupStub, rollupWriteStub, multiEntrySpy, esBuildPluginStub }
+    return { rollupGenerateStub, terserStub, swcPluginStub, rollupStub, rollupWriteStub, multiEntrySpy, esBuildPluginStub }
   }
 
   before(async () => {
@@ -72,6 +76,7 @@ describe('esbuild [esbuild]', () => {
           file: './dist/output.d.ts'
         }
       },
+      write: true,
       esbuild: true,
       name: 'aria-build'
     }
@@ -91,7 +96,7 @@ describe('esbuild [esbuild]', () => {
     expect(multiEntrySpy.called).toBeFalse()
   })
 
-  it('should build with swc option enabled', async () => {
+  it('should build with swc option enabled and disabled write', async () => {
     const options: CreateRollupConfigOptions = {
       config: {
         input: './src/input.ts',
@@ -108,14 +113,15 @@ describe('esbuild [esbuild]', () => {
       './src/input.ts': 'console.log(``)'
     })
 
-    const { rollupStub, swcPluginStub, rollupWriteStub, multiEntrySpy, esBuildPluginStub } = createStubs()
+    const { rollupStub, rollupGenerateStub, swcPluginStub, rollupWriteStub, multiEntrySpy, esBuildPluginStub } = createStubs()
 
     await esbuild(options)
 
     expect(rollupStub.called).toBeTrue()
     expect(esBuildPluginStub.called).toBeFalse()
     expect(swcPluginStub.called).toBeTrue()
-    expect(rollupWriteStub.called).toBeTrue()
+    expect(rollupWriteStub.called).toBeFalse()
+    expect(rollupGenerateStub.called).toBeTrue()
     expect(multiEntrySpy.called).toBeFalse()
   })
 
@@ -128,6 +134,7 @@ describe('esbuild [esbuild]', () => {
         },
         compress: true
       },
+      write: true,
       name: 'aria-build'
     }
 
@@ -155,6 +162,7 @@ describe('esbuild [esbuild]', () => {
           }
         }
       ],
+      write: true,
       esbuild: true,
       name: 'aria-build'
     }
@@ -191,6 +199,7 @@ describe('esbuild [esbuild]', () => {
           }
         ]
       },
+      write: true,
       esbuild: true,
       name: 'aria-build'
     }
@@ -221,6 +230,7 @@ describe('esbuild [esbuild]', () => {
           format: 'es'
         },
       },
+      write: true,
       esbuild: true,
       name: 'aria-build'
     }

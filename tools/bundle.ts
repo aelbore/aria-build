@@ -1,6 +1,5 @@
-import { clean, DEFAULT_VALUES, buildConfig, getPkgDependencies, BuildFormatOptions } from '../src'
+import { clean, DEFAULT_VALUES, getPkgDependencies, BuildFormatOptions, handler } from '../src'
 import { plugins } from './plugins'
-import { swcBundler } from '../src/builders/swc-bundler'
 
 (async function() {
   const pkg = require('../package.json')
@@ -17,9 +16,9 @@ import { swcBundler } from '../src/builders/swc-bundler'
     pkgName: 'aria-build',
     declaration: false,
     plugins,
-    swc: true
+    swc: true,
+    write: true
   }
 
-  await clean('dist')
-  await swcBundler(options)
+  await handler(options)
 })()
