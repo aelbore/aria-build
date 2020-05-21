@@ -1,5 +1,5 @@
-import { clean, DEFAULT_VALUES, getPkgDependencies, BuildFormatOptions, handler } from '../src'
-import { plugins } from './plugins'
+import { DEFAULT_VALUES, getPkgDependencies, BuildFormatOptions, handler, clean, PluginOptions, copy } from '../src'
+import { replace } from './plugins'
 
 (async function() {
   const pkg = require('../package.json')
@@ -9,16 +9,38 @@ import { plugins } from './plugins'
     ...DEFAULT_VALUES.ROLLUP_EXTERNALS 
   ]
 
+  const plugins: PluginOptions = [
+    copy({
+      targets: [
+        { src: 'bin/*', dest: 'dist/swc/bin', replace },
+        { src: 'bin/*', dest: 'dist/esbuild/bin', replace }
+      ]
+    })
+  ]
+
   const options: BuildFormatOptions = {
     format: 'es,cjs',
     dependencies: external,
     output: 'dist',
     pkgName: 'aria-build',
-    declaration: false,
+    declaration: true,
     plugins,
-    swc: true,
     write: true
   }
 
-  await handler(options)
+  await clean('dist')
+  await Promise.all([
+    handler({ 
+      ...options, 
+      output: './dist/swc', 
+      swc: true,
+      clean: './dist/swc' 
+    }),
+    handler({ 
+      ...options, 
+      output: './dist/esbuild', 
+      esbuild: true, 
+      clean: './dist/esbuild' 
+    })
+  ])
 })()
