@@ -30,6 +30,7 @@ export interface CreateRollupConfigOptions {
   name?: string
   esbuild?: boolean
   swc?: boolean
+  write?: boolean
 }
 
 export interface OutputOptions extends RollupConfigOutput {  }

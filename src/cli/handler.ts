@@ -5,10 +5,10 @@ import { BuildOptions } from './common'
 import { getAriaConfig } from './get-aria-config'
 import { parseConfig, getPkgDependencies, mergeGlobals, parsePlugins } from './utils'
 import { buildConfig } from './build-config'
-import { esbundle } from '../esbuild/esbuild'
+import { bundle } from '../esbuild/esbuild'
 
 export async function handler(options?: BuildOptions) { 
-  const { entry, output, config, format, swc } = options
+  const { entry, output, config, format, swc, esbuild, write } = options
 
   const [ ariaConfig, pkgJson ] = await Promise.all([
     getAriaConfig(parseConfig({ config, entry })),
@@ -25,9 +25,9 @@ export async function handler(options?: BuildOptions) {
   const args = { pkgName, dependencies, ...options, plugins, globals }
   const configOptions = buildConfig(args)
 
-  const buildArgs = { config: configOptions, name: pkgName, esbuild: options.esbuild, swc }
+  const buildArgs = { config: configOptions, name: pkgName, esbuild, swc, write }
 
   options.target
     ? await findTargetBuild(options.target, [ configOptions ])
-    : await esbundle({ ...buildArgs, pkg: { ...pkgJson, output, format, entry } })
+    : await bundle({ ...buildArgs, pkg: { ...pkgJson, output, format, entry } })
 }

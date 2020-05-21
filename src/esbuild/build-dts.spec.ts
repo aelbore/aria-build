@@ -31,6 +31,10 @@ describe('esbuild [build]', () => {
       .stub(rollup, 'write')
       .returns(Promise.resolve({} as Promise<import('rollup').RollupOutput>))
 
+    const rollupGeneratetub = sinon
+      .stub(rollup, 'generate')
+      .returns(Promise.resolve({} as Promise<import('rollup').RollupOutput>))
+
     const getPkgNameStub = sinon
       .stub(getPkgName, 'getPackageName')
       .returns(Promise.resolve({ name: 'aria-build' }))
@@ -40,7 +44,7 @@ describe('esbuild [build]', () => {
 
     const dtsSpy = sinon.spy(dts, 'default')
 
-    return { rollupStub, rollupWriteStub, getPkgNameStub, dtsSpy }
+    return { rollupGeneratetub, rollupStub, rollupWriteStub, getPkgNameStub, dtsSpy }
   }
 
   before(async () => {
@@ -69,6 +73,7 @@ describe('esbuild [build]', () => {
           }
         }
       },
+      write: true,
       esbuild: true,
       name: 'aria-build'
     }
@@ -88,7 +93,7 @@ describe('esbuild [build]', () => {
     expect(dtsSpy.called).toBeTrue()
   })
 
-  it('should create dts file when config is typeof array and output,external', async() => {
+  it('should create dts file when config is typeof array and output,external write option disabled', async() => {
     const options: CreateRollupConfigOptions = {
       config: [
         {
@@ -114,12 +119,13 @@ describe('esbuild [build]', () => {
       './src/input.ts': 'console.log(``)'
     })
 
-    const { rollupStub, rollupWriteStub, getPkgNameStub, dtsSpy } = createStubs()
+    const { rollupStub, rollupGeneratetub, rollupWriteStub, getPkgNameStub, dtsSpy } = createStubs()
 
     await esbuildDts(options)
 
     expect(rollupStub.called).toBeTrue()
-    expect(rollupWriteStub.called).toBeTrue()
+    expect(rollupWriteStub.called).toBeFalse()
+    expect(rollupGeneratetub.called).toBeTrue()
     expect(getPkgNameStub.called).toBeTrue()
     expect(dtsSpy.called).toBeTrue()
   })
@@ -132,6 +138,7 @@ describe('esbuild [build]', () => {
           file: './dist/output.d.ts'
         }
       },
+      write: true,
       esbuild: true,
       name: 'aria-build'
     }
