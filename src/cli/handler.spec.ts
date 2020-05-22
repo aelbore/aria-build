@@ -2,7 +2,7 @@ import * as mockfs from 'mock-fs'
 import * as sinon from 'sinon'
 import { expect } from 'aria-mocha'
 
-import { handler } from './handler'
+import { handler, bundlerOptions } from './handler'
 import { BuildOptions, AriaConfigOptions } from './common'
 import { PackageFile } from '../common/common'
 
@@ -162,6 +162,44 @@ describe('handler', () => {
     await handler(options)
 
     expect(findTargetBuildStub.called).toBeTrue()
+  })
+
+  it('should have swc,esbuild flag', () => {
+    ;(() => {
+      const { esbuild, swc } = bundlerOptions({})
+      expect(esbuild).toBeTrue()
+      expect(swc).toBeFalse()
+    })()
+
+    ;(() => {
+      const { esbuild, swc } = bundlerOptions({ esbuild: true })
+      expect(esbuild).toBeTrue()
+      expect(swc).toBeFalse()
+    })()
+
+    ;(() => {
+      const { esbuild, swc } = bundlerOptions({ esbuild: false })
+      expect(esbuild).toBeFalse()
+      expect(swc).toBeTrue()
+    })()
+
+    ;(() => {
+      const { esbuild, swc } = bundlerOptions({ swc: true })
+      expect(esbuild).toBeFalse()
+      expect(swc).toBeTrue()
+    })()
+
+    ;(() => {
+      const { esbuild, swc } = bundlerOptions({ swc: true, esbuild: true })
+      expect(esbuild).toBeTrue()
+      expect(swc).toBeFalse()
+    })()
+
+    ;(() => {
+      const { esbuild, swc } = bundlerOptions({ swc: false, esbuild: true })
+      expect(esbuild).toBeTrue()
+      expect(swc).toBeFalse()
+    })()
   })
 
 })

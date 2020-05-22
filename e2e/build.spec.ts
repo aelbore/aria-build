@@ -9,12 +9,14 @@ import { TSRollupConfig, esbuild } from '../src'
 describe('build', () => {
 
   before(async () => {
-    const [ swc, esbuild ] = await Promise.all([
+    const [ swc, esbuild, commonjs ] = await Promise.all([
       import('@swc/core'),
-      import('esbuild')
+      import('esbuild'),
+      import('@rollup/plugin-commonjs')
     ])
     mock('esbuild', esbuild)
     mock('@swc/core', swc)
+    mock('@rollup/plugin-commonjs', commonjs)
   })
 
   after(() => {
