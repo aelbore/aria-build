@@ -1,15 +1,28 @@
 /* istanbul ignore file */
 
 import * as fs from 'fs'
-import * as util from 'util'
 import * as childProcess from 'child_process'
+import * as ariaFs from 'aria-fs'
+
+import { promisify } from 'util'
 
 const nodeMajorVersion = parseInt(process.versions.node.split('.')[0])
 
-const exist = util.promisify(fs.exists)
-const exec = util.promisify(childProcess.exec)
+const exist = promisify(fs.exists)
+const exec = promisify(childProcess.exec)
 
 export { exist, exec, nodeMajorVersion }
-export { globFiles, mkdirp, clean, copyFiles, symlinkDir, symlinkFile, unlinkDir, unlinkFile } from 'aria-fs'
+
+/// typescript 3.9.2 issue 
+/// https://github.com/sinonjs/sinon/issues/2258
+/// stub if you export { globFiles } from 'aria-fs'
+/// rollup warning if you export * from 'aria-fs'
+export const globFiles = ariaFs.globFiles
+export const mkdirp = ariaFs.mkdirp
+export const clean = ariaFs.clean
+export const copyFiles = ariaFs.copyFiles
+export const symlinkDir = ariaFs.symlinkDir
+export const unlinkDir = ariaFs.unlinkDir
+export const unlinkFile = ariaFs.unlinkFile
 
 export * from './fs-promises'
