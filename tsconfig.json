@@ -5,6 +5,7 @@
     "outDir": "dist",
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "importHelpers": true,
     "lib" :[
       "dom",
       "es2015",
