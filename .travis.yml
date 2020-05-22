@@ -16,7 +16,7 @@ branches:
   - master
 before_install:
   - npm install -g yarn --cache-min 999999999
-  - yarn add aria-fs aria-mocha @swc/core typescript --dev
+  - yarn add aria-fs aria-mocha @swc/core typescript tslib@1.13.0 --dev
 install: 
   - yarn install
 script:
