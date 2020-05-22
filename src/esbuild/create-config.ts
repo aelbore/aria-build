@@ -1,5 +1,6 @@
-import { esBuildPlugin, commonjs, terser } from '../libs'
+import { commonjs, terser } from '../libs'
 import { swcPlugin } from '../plugins/rollup-plugin-swc'
+import { esBuildPlugin } from '../plugins/rollup-plugin-esbuild'
 import { resolvePathPlugin } from '../plugins/rollup-plugin-resolve-path'
 import { 
   CreateRollupConfigOptions, DEFAULT_VALUES, 
