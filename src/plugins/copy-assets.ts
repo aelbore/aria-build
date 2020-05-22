@@ -7,7 +7,6 @@ export function isGlob(file: string) {
   return /(\*.*)|(\*.[a-z]{2})/g.test(file) 
 }
 
- /* istanbul ignore next */
 export interface TargetCopyOptions {
   src: string, 
   dest: string,
@@ -15,7 +14,6 @@ export interface TargetCopyOptions {
   replace?: (filename: string) => Promise<void>
 }
 
- /* istanbul ignore next */
 export interface RollupPluginCopyOptions {
   hook?: string;
   targets?: TargetCopyOptions[],

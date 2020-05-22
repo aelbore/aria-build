@@ -7,7 +7,6 @@ import json from '@rollup/plugin-json'
 import MagicString from 'magic-string'
 import * as rollup$ from 'rollup'
 
-const commonjs = require('@rollup/plugin-commonjs')
 const nodeResolve = require('@rollup/plugin-node-resolve')
 const replacePlugin = require('@rollup/plugin-replace')
 
@@ -17,8 +16,13 @@ export type ModuleFormat = import('rollup').ModuleFormat
 export const rollup = rollup$.rollup
 export const watch = rollup$.watch
 
-export { commonjs, replacePlugin, json, url, nodeResolve, minifyHTML }
+export { replacePlugin, json, url, nodeResolve, minifyHTML }
 export { MagicString, ts }
+
+export function commonjs(options?: import('@rollup/plugin-commonjs').RollupCommonJSOptions) {
+  const common = require('@rollup/plugin-commonjs')
+  return common(options)
+}
 
 export function terser(options?: import('rollup-plugin-terser').Options) {
   const { terser } = require('rollup-plugin-terser')
@@ -27,5 +31,3 @@ export function terser(options?: import('rollup-plugin-terser').Options) {
     ...(options ?? {})
   })
 }
-
-export * from './plugins/rollup-plugin-esbuild'

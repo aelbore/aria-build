@@ -9,6 +9,7 @@ import { expect } from 'aria-mocha'
 describe('esbuild [esbuild]', () => {
   let libs: typeof import('../libs')
   let swc: typeof import('../plugins/rollup-plugin-swc')
+  let esbuildPlugin: typeof import('../plugins/rollup-plugin-esbuild')
 
   function createStubs() {
     const rollup = {
@@ -36,7 +37,7 @@ describe('esbuild [esbuild]', () => {
       .returns(Promise.resolve({} as Promise<import('rollup').RollupOutput>))
 
     const esBuildPluginStub = sinon
-      .stub(libs, 'esBuildPlugin')
+      .stub(esbuildPlugin, 'esBuildPlugin')
       .returns(void 0)
 
     const terserStub = sinon.stub(libs, 'terser').returns(void 0)
@@ -52,13 +53,16 @@ describe('esbuild [esbuild]', () => {
     mock('@rollup/plugin-multi-entry', multiEntry)
     const multiEntrySpy = sinon.spy(multiEntryCalled, 'called')
 
+    mock('@rollup/plugin-commonjs', () => { })
+
     return { rollupGenerateStub, terserStub, swcPluginStub, rollupStub, rollupWriteStub, multiEntrySpy, esBuildPluginStub }
   }
 
   before(async () => {
-    [ libs, swc ] = await Promise.all([ 
+    [ libs, swc, esbuildPlugin ] = await Promise.all([ 
       import('../libs'),
-      import('../plugins/rollup-plugin-swc')
+      import('../plugins/rollup-plugin-swc'),
+      import('../plugins/rollup-plugin-esbuild')
     ])
   })
 
