@@ -7,24 +7,13 @@ import { parseConfig, getPkgDependencies, mergeGlobals, parsePlugins } from './u
 import { buildConfig } from './build-config'
 import { bundle } from '../esbuild/esbuild'
 
-export function bundlerOptions(options: { swc?: boolean, esbuild?: boolean }) {  
+export function bundlerOptions(options: { swc?: boolean, esbuild?: boolean } = {}) {  
   let swc: boolean, esbuild: boolean
 
-  if (!options.swc) {
-    if (!options.esbuild) {
-      esbuild = true    
-    }
-    if (options.esbuild === false) {
-      esbuild = false
-    }
-    if (options.esbuild) {
-      esbuild = true
-    }
-  }
-
-  if (options.swc) {
-    esbuild = (options.esbuild ?? false)
-  }
+  esbuild = (!options.swc && typeof options.esbuild == 'boolean') 
+    ? options.esbuild
+    : (!options.swc) 
+        ? true: (options.esbuild ?? false) 
 
   swc = !esbuild
 
@@ -33,6 +22,8 @@ export function bundlerOptions(options: { swc?: boolean, esbuild?: boolean }) {
 
 export async function handler(options?: BuildOptions) { 
   const { entry, output, config, format, write } = options
+  
+  const { esbuild, swc } = bundlerOptions({ swc: options.swc, esbuild: options.esbuild })
   
   const [ ariaConfig, pkgJson ] = await Promise.all([
     getAriaConfig(parseConfig({ config, entry })),
@@ -49,7 +40,6 @@ export async function handler(options?: BuildOptions) {
   const args = { pkgName, dependencies, ...options, plugins, globals }
   const configOptions = buildConfig(args)
   
-  const { esbuild, swc } = bundlerOptions({ swc: options.swc, esbuild: options.esbuild })
   const buildArgs = { config: configOptions, name: pkgName, esbuild, swc, write }
 
   options.target
