@@ -166,7 +166,7 @@ describe('handler', () => {
 
   it('should have swc,esbuild flag', () => {
     ;(() => {
-      const { esbuild, swc } = bundlerOptions({})
+      const { esbuild, swc } = bundlerOptions()
       expect(esbuild).toBeTrue()
       expect(swc).toBeFalse()
     })()
