@@ -4,13 +4,18 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 # aria-build
-Build
+Zero configuration CLI bundler or packager for typescript and javascript
 
 Installation
 ------------
   ```
     npm install --save-dev aria-build aria-fs
   ```
+
+### Usage
+```
+aria-build -d -f es --compress
+```
 
 ### CLI Options
 ```
