@@ -9,7 +9,7 @@ Build
 Installation
 ------------
   ```
-    npm install --save-dev aria-build
+    npm install --save-dev aria-build aria-fs
   ```
 
 ### CLI Options
@@ -26,7 +26,10 @@ Installation
     -i, --entry          Entry module(s)
     -o, --output         Directory to place build files into  (default dist)
     -c, --config         config file of aria-build. i.e aria.config.ts
+    --swc                Enabled swc plugin to transform ts,js,jsx,tsx
+    --esbuild            Enabled esbuild plugin to use transform ts,js,jsx,tsx
     --external           Specify external dependencies
+    --resolve            Resolve dependencies
     --clean              Clean the dist folder default  (default dist)
     --globals            Specify globals dependencies
     --sourcemap          Generate source map  (default false)
@@ -47,13 +50,19 @@ import { bundle, TSRollupConfig, clean } from 'aria-build'
     ...Object.keys(pkg.dependencies)
   ]
 
-  const options: TSRollupConfig = {
+  const config: TSRollupConfig = {
     input: './src/index.ts',
     external,
-    output: {
-      file: './dist/aria-build.es.js',
-      format: 'es'
-    },
+    output: [
+      {
+        file: './dist/aria-build.es.js',
+        format: 'es'
+      },
+      {
+        file: './dist/aria-build.js',
+        format: 'cjs'
+      }
+    ],
     tsconfig: {
       compilerOptions: {
         declaration: true
@@ -62,6 +71,6 @@ import { bundle, TSRollupConfig, clean } from 'aria-build'
   }
   
   await clean('dist')
-  await bundle(options)
+  await bundle({ config, esbuild: true })
 })()
 ```
