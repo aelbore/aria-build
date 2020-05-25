@@ -6,8 +6,8 @@ import minifyHTML from 'rollup-plugin-minify-html-literals'
 import json from '@rollup/plugin-json'
 import MagicString from 'magic-string'
 import * as rollup$ from 'rollup'
+import nodeResolve from '@rollup/plugin-node-resolve'
 
-const nodeResolve = require('@rollup/plugin-node-resolve')
 const replacePlugin = require('@rollup/plugin-replace')
 
 export type WatcherOptions = import('rollup').WatcherOptions
