@@ -2,13 +2,7 @@ import { commonjs, terser, nodeResolve } from '../libs'
 import { swcPlugin } from '../plugins/rollup-plugin-swc'
 import { esBuildPlugin } from '../plugins/rollup-plugin-esbuild'
 import { resolvePathPlugin } from '../plugins/rollup-plugin-resolve-path'
-import { 
-  CreateRollupConfigOptions, DEFAULT_VALUES, 
-  PluginOptions, TSRollupConfig
-} from '../common/common'
-
-type RollupConfigBase = import('../common/common').RollupConfigBase
-type PluginBeforeAfter = import('../common/common').PluginBeforeAfter
+import { CreateRollupConfigOptions, DEFAULT_VALUES, PluginOptions, TSRollupConfig, RollupConfigBase, PluginBeforeAfter } from '../common/common'
 
 function buildPlugins({ swc, esbuild }) {
   return [
