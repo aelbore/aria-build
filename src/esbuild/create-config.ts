@@ -1,4 +1,4 @@
-import { commonjs, terser } from '../libs'
+import { commonjs, terser, nodeResolve } from '../libs'
 import { swcPlugin } from '../plugins/rollup-plugin-swc'
 import { esBuildPlugin } from '../plugins/rollup-plugin-esbuild'
 import { resolvePathPlugin } from '../plugins/rollup-plugin-resolve-path'
@@ -49,6 +49,7 @@ export function createConfig(options: CreateRollupConfigOptions) {
     ...flatPlugins(config.plugins),
     ...buildPlugins({ swc, esbuild }),
     commonjs(commonOpts),
+    nodeResolve(),
     ...(compress ? [ terser() ]: [])
   ]
 
