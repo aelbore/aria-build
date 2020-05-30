@@ -7,7 +7,7 @@ import { parseConfig, getPkgDependencies, mergeGlobals, parsePlugins } from './u
 import { buildConfig } from './build-config'
 import { bundle } from '../esbuild/esbuild'
 
-export function bundlerOptions(options: { swc?: boolean, esbuild?: boolean } = {}) {  
+export function bundlerOptions(options: Pick<BuildOptions, 'swc' | 'esbuild'> = {}) {  
   let swc: boolean, esbuild: boolean
 
   esbuild = (!options.swc && typeof options.esbuild == 'boolean') 
@@ -22,9 +22,8 @@ export function bundlerOptions(options: { swc?: boolean, esbuild?: boolean } = {
 
 export async function handler(options?: BuildOptions) { 
   const { entry, output, config, format, write } = options
-  
-  const { esbuild, swc } = bundlerOptions({ swc: options.swc, esbuild: options.esbuild })
-  
+  const { esbuild, swc } = bundlerOptions(options)
+
   const [ ariaConfig, pkgJson ] = await Promise.all([
     getAriaConfig(parseConfig({ config, entry })),
     getPackage(),
