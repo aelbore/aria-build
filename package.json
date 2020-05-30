@@ -1,6 +1,6 @@
 {
   "name": "aria-build",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Build any web components",
   "main": "aria-build.js",
   "bin": {
@@ -35,8 +35,8 @@
   },
   "homepage": "https://github.com/aelbore/aria-build#readme",
   "peerDependencies": {
-    "@swc/core": ">= ^1.1.50",
-    "aria-fs": ">= ^0.4.0",
+    "@swc/core": ">= ^1.1.51",
+    "aria-fs": ">= ^0.4.1",
     "typescript": ">= ^3.7.4 <= 3.9.3"
   },
   "devDependencies": {
