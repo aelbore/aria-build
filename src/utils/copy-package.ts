@@ -41,6 +41,7 @@ export async function copyPackageFile(options?: PackageFile) {
     ...{ module },
     ...(formats.length > 0 && (formats.includes('es') || formats.includes('cjs'))
          ? {
+            type: 'module',
             exports: {
               ...(formats.includes('cjs') ? { require: main }: {}),
               ...(formats.includes('es') ? { import: module }: {})
