@@ -91,7 +91,7 @@ describe('copy-package', () => {
     const json = JSON.parse(await fs.promises.readFile(outfilePath, 'utf-8'))
     expect(json.name).equal(pkg.name)
     expect(json.main).equal(`${pkg.name}.js`)
-    expect(json.typings).equal(`${pkg.name}.d.ts`)
+    expect(json.typings).equal(`./${pkg.name}.d.ts`)
   })
 
   it('should copy package.json to outDir, has entry,output,format(multiple) options', async () => {
