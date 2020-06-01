@@ -65,7 +65,7 @@ describe('buildConfig', () => {
         {
           sourcemap: false,
           format: 'cjs',
-          file: `dist/${options.pkgName}.js`
+          file: `dist/cjs/${options.pkgName}.js`
         }
       ],
       tsconfig: {
@@ -190,7 +190,7 @@ describe('buildConfig', () => {
         {
           sourcemap: true,
           format: 'cjs',
-          file: `dist/${options.pkgName}.js`
+          file: `dist/cjs/${options.pkgName}.js`
         },
         {
           sourcemap: true,
