@@ -16,13 +16,22 @@ function getModule(options: { format?: string, name: string }) {
     : `${options.name}.js`
 }
 
+// function createExports(formats: string[], main: string, module: string) {
+//   return {
+//     exports: {
+//       ...(formats.includes('cjs') ? { require: main }: {}),
+//       ...(formats.includes('es') ? { import: module }: {})
+//     }
+//   }
+// }
+
 async function deleteKeys(pkg: PackageFile) {
   const keys = ['scripts', 'devDependencies', 'entry', 'output', 'format', 'filePath']
   await Promise.all(keys.map(key => delete pkg[key]))
 }
 
 export async function copyPackageFile(options?: PackageFile) {
-  const { filePath, entry, main, typings, format } = (options ?? {})
+  const { filePath, entry, typings, format } = (options ?? {})
 
   const pkgTemp = options?.name ? options: await getPackage(filePath)
   const name = entry ? getInputEntryFile(options.entry): pkgTemp.name
@@ -30,13 +39,23 @@ export async function copyPackageFile(options?: PackageFile) {
 
   await deleteKeys(pkgTemp)
   
-  const module = options?.module ?? getModule({ format, name })
+  const formats = format?.split(',') ?? []
+  const module = options?.module ?? `./${getModule({ format, name })}`
+  const main =  options?.main ?? formats.includes('cjs') ? `./cjs/${name}.js`: `${name}.js` 
   
   const pkg = { 
     ...pkgTemp,  
-    ...{ main: main ?? `${name}.js`  },
-    ...{ typings: typings ?? `${name}.d.ts` },
-    ...{ module }
+    main,
+    ...{ typings: typings ?? `./${name}.d.ts` },
+    ...{ module },
+    ...(formats.length > 0 && (formats.includes('es') || formats.includes('cjs'))
+         ? {
+            exports: {
+              ...(formats.includes('cjs') ? { require: main }: {}),
+              ...(formats.includes('es') ? { import: module }: {})
+            }   
+          }
+         : {})
   }
 
   await writeFile(outfile, JSON.stringify(pkg, null, 2))

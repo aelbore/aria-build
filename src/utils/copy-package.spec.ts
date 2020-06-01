@@ -38,7 +38,7 @@ describe('copy-package', () => {
   it('should copy package.json to default outDir when have filePath and format', async () => {
     const pkg = {
       name: 'custom-package',
-      main: 'custom-package.js',
+      main: './cjs/custom-package.js',
       typings: 'custom-package.d.ts',
       module: 'custom-package.es.js'
     }
@@ -46,7 +46,7 @@ describe('copy-package', () => {
     const options = {
       ...pkg,
       filePath: './build/package.json',
-      format: 'es'
+      format: 'cjs'
     }
     
     mockfs({
