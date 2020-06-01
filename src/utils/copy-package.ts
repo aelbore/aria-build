@@ -16,15 +16,6 @@ function getModule(options: { format?: string, name: string }) {
     : `${options.name}.js`
 }
 
-// function createExports(formats: string[], main: string, module: string) {
-//   return {
-//     exports: {
-//       ...(formats.includes('cjs') ? { require: main }: {}),
-//       ...(formats.includes('es') ? { import: module }: {})
-//     }
-//   }
-// }
-
 async function deleteKeys(pkg: PackageFile) {
   const keys = ['scripts', 'devDependencies', 'entry', 'output', 'format', 'filePath']
   await Promise.all(keys.map(key => delete pkg[key]))
