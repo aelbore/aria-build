@@ -35,9 +35,9 @@
   },
   "homepage": "https://github.com/aelbore/aria-build#readme",
   "peerDependencies": {
-    "@swc/core": ">= ^1.1.51",
-    "aria-fs": ">= ^0.4.1",
-    "typescript": ">= ^3.7.4 <= 3.9.3"
+    "@swc/core": ">=^1.1.53",
+    "aria-fs": ">=^0.4.1",
+    "typescript": "<=^3.9.5"
   },
   "devDependencies": {
     "@types/mocha": "^7.0.2",
