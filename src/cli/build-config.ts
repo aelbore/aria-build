@@ -18,7 +18,7 @@ function createOutputFile(args: GetFileOptions) {
   const { outDir, name, formats, format } = args
   switch (format) {
     case 'cjs': 
-      return join(outDir, 'cjs', `${name}.js`)
+      return join(outDir, `${name}.js`)
     case 'es': 
       return getMain({ outDir, name, formats })
     case 'umd': 

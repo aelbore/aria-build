@@ -30,24 +30,13 @@ export async function copyPackageFile(options?: PackageFile) {
 
   await deleteKeys(pkgTemp)
   
-  const formats = format?.split(',') ?? []
-  const module = options?.module ?? `./${getModule({ format, name })}`
-  const main =  options?.main ?? formats.includes('cjs') ? `./cjs/${name}.js`: `${name}.js` 
+  const module = options?.module ?? getModule({ format, name })
   
   const pkg = { 
     ...pkgTemp,  
-    main,
-    ...{ typings: typings ?? `./${name}.d.ts` },
+    ...{ main: options?.main ??  `${name}.js`  },
     ...{ module },
-    ...(formats.length > 0 && (formats.includes('es') || formats.includes('cjs'))
-         ? {
-            type: 'module',
-            exports: {
-              ...(formats.includes('cjs') ? { require: main }: {}),
-              ...(formats.includes('es') ? { import: module }: {})
-            }   
-          }
-         : {})
+    ...{ typings: typings ?? `${name}.d.ts` },
   }
 
   await writeFile(outfile, JSON.stringify(pkg, null, 2))
