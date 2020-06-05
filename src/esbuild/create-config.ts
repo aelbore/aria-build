@@ -1,4 +1,4 @@
-import { commonjs, terser, nodeResolve, require } from '../libs'
+import { commonjs, terser, nodeResolve } from '../libs'
 import { swcPlugin } from '../plugins/rollup-plugin-swc'
 import { esBuildPlugin } from '../plugins/rollup-plugin-esbuild'
 import { resolvePathPlugin } from '../plugins/rollup-plugin-resolve-path'
