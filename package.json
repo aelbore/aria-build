@@ -2,7 +2,7 @@
   "name": "aria-build",
   "version": "0.4.1",
   "description": "Build any web components",
-  "main": "./cjs/aria-build.js",
+  "main": "aria-build.js",
   "bin": {
     "aria-build": "./bin/aria-build.js"
   },
