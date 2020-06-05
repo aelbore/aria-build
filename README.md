@@ -76,6 +76,6 @@ import { bundle, TSRollupConfig, clean } from 'aria-build'
   }
   
   await clean('dist')
-  await bundle({ config, esbuild: true })
+  await bundle({ config, esbuild: true, write: true })
 })()
 ```
