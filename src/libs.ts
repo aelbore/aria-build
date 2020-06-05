@@ -8,6 +8,14 @@ import MagicString from 'magic-string'
 import * as rollup$ from 'rollup'
 import nodeResolve from '@rollup/plugin-node-resolve'
 
+import { createRequire } from 'module'
+import { fileURLToPath } from 'url'
+import { resolve } from 'path'
+
+export const require = (path: string) => createRequire(
+  fileURLToPath(`file://${resolve('node_modules')}`)
+)(path)
+
 const replacePlugin = require('@rollup/plugin-replace')
 
 export type WatcherOptions = import('rollup').WatcherOptions

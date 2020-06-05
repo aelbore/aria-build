@@ -24,17 +24,18 @@ export interface RollupPluginCopyOptions {
 export async function replaceContent(options?: { 
   filename?: string, 
   strToFind?: string, 
-  strToReplace?: string 
+  strToReplace?: string,
+  extensions?: string[]
 }) {
+  const extensions = [ '.js', ...(options?.extensions ?? []) ]
   const { filename, strToFind, strToReplace } = options
-  if (extname(filename).includes('.js')) {
+  if (extensions.includes(extname(filename))) {
     let content = await readFile(filename, 'utf8')
     if (content.includes(strToFind)) {
       content = replace(content, strToFind, strToReplace)
       await writeFile(filename, content)
     }
   }
-  return Promise.resolve()
 }
 
 export function createOutfile(file: string, dest: string, recursive: boolean) {
