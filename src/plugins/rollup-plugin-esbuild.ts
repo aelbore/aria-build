@@ -11,6 +11,7 @@ export function transformCode(service: import('esbuild').Service, options?: impo
       loader: extname(id).slice(1) as import('esbuild').Loader,
       target: 'es2018',
       sourcemap: true,
+      sourcefile: id,
       ...(options ?? {})
     })
     return {
