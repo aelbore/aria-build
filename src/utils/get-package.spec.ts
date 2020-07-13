@@ -64,4 +64,15 @@ describe('get-package', () => {
     expect(name).equal('aria-test')
   })
 
+  it('should get the name when name has scope in package.json', async() => {
+    const pkg = {
+      name: '@aria/aria-test'
+    }
+  
+    mock(path.resolve('package.json'), pkg)
+    const name = await getPackageName()
+
+    expect(name).equal('aria-test')
+  })
+
 })

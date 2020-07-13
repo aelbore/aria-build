@@ -8,5 +8,6 @@ export async function getPackage(filePath?: string) {
 
 export async function getPackageName(filePath?: string) {
   const pkg = await getPackage(filePath)
-  return pkg.name
+  const names: string[] = pkg.name.split('/')
+  return (names.length > 1) ? names[1]: names.pop()
 }
