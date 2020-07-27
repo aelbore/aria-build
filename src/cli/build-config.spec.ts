@@ -209,4 +209,19 @@ describe('buildConfig', () => {
     assertOutput(config, expected)
   })
 
+  it('should have output.exports when format: cjs', () => {
+    const config = buildConfig({
+      entry: './esbuild-jest/src/index.ts',
+      external: 'esbuild,module',
+      declaration: true,
+      output: 'dist',
+      format: 'cjs'
+    })
+
+    const output = (config.output as RollupConfigOutput[]).pop()
+  
+    expect(output.hasOwnProperty('exports')).toBeTrue()
+    expect(output.exports).equal('auto')
+  })
+
 })
