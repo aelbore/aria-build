@@ -4,7 +4,7 @@ import { esBuildPlugin } from '../plugins/rollup-plugin-esbuild'
 import { resolvePathPlugin } from '../plugins/rollup-plugin-resolve-path'
 import { CreateRollupConfigOptions, DEFAULT_VALUES, PluginOptions, TSRollupConfig, RollupConfigBase, PluginBeforeAfter } from '../common/common'
 
-function buildPlugins({ swc, esbuild }) {
+const buildPlugins = ({ swc, esbuild }) => {
   return [
     ...((esbuild || swc ) ? [ resolvePathPlugin() ]: []),
     ...(esbuild 
@@ -19,7 +19,7 @@ function buildPlugins({ swc, esbuild }) {
   ]
 }
 
-function flatPlugins(plugins: PluginOptions) { 
+const flatPlugins = (plugins: PluginOptions) => { 
   return [
     ...(plugins?.hasOwnProperty('before') ? (plugins as PluginBeforeAfter).before: []),
     ...(Array.isArray(plugins) ? plugins: []),

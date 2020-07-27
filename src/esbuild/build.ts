@@ -2,7 +2,7 @@ import { CreateRollupConfigOptions, onwarn } from '../common/common'
 import { rollup } from '../libs'
 import { createConfig } from './create-config'
 
-function createConfigOptions(options: CreateRollupConfigOptions) {
+const createConfigOptions = (options: CreateRollupConfigOptions) => {
   const { esbuild, swc } = options
   const config = createConfig({ swc, esbuild, config: options.config })
 

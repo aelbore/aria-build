@@ -7,11 +7,7 @@ import { esbuild } from './build'
 import { esbuildDts } from './build-dts'
 import { mkdir } from '../fs/fs'
 
-export interface CreateRollupConfigBuilderOptions extends CreateRollupConfigOptions {
-  pkg?: PackageFile
-}
-
-async function buildConfigOptions(options: BuildFormatOptions) {
+const buildConfigOptions = async (options: BuildFormatOptions) => {
   const { pkgName, output, format, esbuild, swc, write } = options
   const pkgJson: Pick<PackageFile, 'main' | 'module' | 'name' | 'typings'> = await getPackage()
   const opts: CreateRollupConfigBuilderOptions = {
@@ -23,6 +19,10 @@ async function buildConfigOptions(options: BuildFormatOptions) {
     write
   }
   return opts
+}
+
+export interface CreateRollupConfigBuilderOptions extends CreateRollupConfigOptions {
+  pkg?: PackageFile
 }
 
 export async function createOptions(options: CreateRollupConfigBuilderOptions | BuildFormatOptions) {

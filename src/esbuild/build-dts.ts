@@ -4,16 +4,16 @@ import { rollup } from '../libs'
 import { getPackageName } from '../utils/get-package'
 import { DEFAULT_VALUES, TSRollupConfig, OutputOptions, CreateRollupConfigOptions } from '../common/common'
 
-async function getName(hasConfig: boolean, name: string) {
-  return hasConfig ? name ?? await getPackageName(): undefined
-}
-
-async function getDtsLib(hasConfig: boolean) {
-  return hasConfig ? await import('rollup-plugin-dts'): undefined
-}
-
 export async function esbuildDts(options: CreateRollupConfigOptions) {  
   const { config, write } = options
+
+  const getName = async(hasConfig: boolean, name: string) => {
+    return hasConfig ? name ?? await getPackageName(): undefined
+  }
+  
+  const getDtsLib = async (hasConfig: boolean) => {
+    return hasConfig ? await import('rollup-plugin-dts'): undefined
+  }  
 
   const opts = Array.isArray(config) ? config: [ config ]
   const configs = opts.filter((opt: TSRollupConfig) => 

@@ -7,10 +7,7 @@ export const DEFAULT_SOURCE = 'src'
 export const DEFAULT_VALUES = Object.freeze({
   DIST_FOLDER: join(baseDir(), DEFAULT_DEST),
   SOURCE_FOLDER: join(baseDir(), DEFAULT_SOURCE),
-  ROLLUP_EXTERNALS: [ 
-    'child_process', 'path', 'fs', 'stream', 'util', 'crypto', 'events', 'http', 'net', 'url',
-    ...builtinModules
-  ]
+  ROLLUP_EXTERNALS: [ ...builtinModules ]
 })
 
 export function baseDir() {
