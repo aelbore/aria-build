@@ -66,6 +66,7 @@ export function buildConfig(options: BuildFormatOptions) {
       format,
       plugins,
       file,
+      ...(format.includes('cjs') ? { exports: 'auto' }: {}),
       ...(format.includes('umd') 
           ? {
               name,
