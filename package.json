@@ -10,7 +10,7 @@
     "build": "node ./bin/aria-build.js -d",
     "bundle": "ts-node --project ./tools/tsconfig.json ./tools/bundle.ts",
     "test": "aria-mocha --check-coverage",
-    "test.e2e": "aria-mocha -d ./e2e --timeout 4000",
+    "test.e2e": "aria-mocha -d ./e2e --timeout 10000",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
