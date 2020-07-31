@@ -10,7 +10,7 @@ describe('handler', () => {
   it('should build with default options esbuild enabled', async () => {
     const options: BuildOptions = {
       format: 'es,cjs',
-      declaration: false,
+      declaration: true,
       output: tmpFolder,
       watch: false,
       clean: tmpFolder,
@@ -36,7 +36,7 @@ describe('handler', () => {
   it('should build with default options swc enabled', async () => {
     const options: BuildOptions = {
       format: 'es,cjs',
-      declaration: false,
+      declaration: true,
       output: swcTmpFolder,
       watch: false,
       clean: swcTmpFolder,
