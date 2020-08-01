@@ -25,6 +25,7 @@ describe('handler', () => {
     const buildConfigStub = sinon.stub(buildConfig, 'buildConfig').returns({})
 
     const parseConfigStub = sinon.spy(cliUtils, 'parseConfig')
+    const mergeExternalStub = sinon.spy(cliUtils, 'mergeExternal')
     const esbundleStub = sinon.stub(esbuild, 'bundle').returns(Promise.resolve(void 0))
 
     const pkg: PackageFile = {
@@ -45,7 +46,8 @@ describe('handler', () => {
       parseConfigStub,
       getPackage,
       findTargetBuildStub,
-      esbundleStub
+      esbundleStub,
+      mergeExternalStub
     }
   }
 
@@ -93,7 +95,8 @@ describe('handler', () => {
       parseConfigStub,
       getPackage,
       findTargetBuildStub,
-      esbundleStub
+      esbundleStub,
+      mergeExternalStub
      } = createStubs()
 
     await handler(options)
@@ -107,6 +110,7 @@ describe('handler', () => {
     expect(buildConfigStub.called).toBeTrue()
     expect(findTargetBuildStub.called).toBeFalse()
     expect(esbundleStub.called).toBeTrue()
+    expect(mergeExternalStub.called).toBeTrue()
   })
 
   it('should build with handler when aria.config is null enable swc', async () => {
@@ -129,7 +133,8 @@ describe('handler', () => {
       buildConfigStub,
       parseConfigStub,
       getPackage,
-      findTargetBuildStub
+      findTargetBuildStub,
+      mergeExternalStub
     } = createStubs()
 
     await handler(options)
@@ -142,6 +147,7 @@ describe('handler', () => {
     expect(fsCleanStub.called).toBeFalse()
     expect(buildConfigStub.called).toBeTrue()
     expect(findTargetBuildStub.called).toBeFalse()
+    expect(mergeExternalStub.called).toBeTrue()
   })
 
   it('should build with handler when options have target', async () => {

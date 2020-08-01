@@ -10,7 +10,7 @@ export const getCliOptions = () => ({
     { alias: '-o, --output', description: 'Directory to place build files into', defaultValue: 'dist' },
     { alias: '-c, --config', description: 'config file of aria-build. i.e aria.config.ts' },
     { alias: '-w, --watch', description: 'Rebuilds on any change  (default false)', defaultValue: false },
-    { alias: '--external', description: 'Specify external dependencies' },
+    { alias: '--external', description: 'Specify external dependencies', defaultValue: '' },
     { alias: '--name', description: 'Specify name exposed in UMD builds' },
     { alias: '--globals', description: 'Specify global dependencies' },
     { alias: '--compress', description: 'Compress or minify the output' },

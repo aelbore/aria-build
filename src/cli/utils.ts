@@ -75,6 +75,10 @@ export function mergeGlobals(globals?: KeyValue, optionGlobals?: string) {
   return [ ...new Set([ ...localConfigGlobals, ...localOptionGlobals ]) ].join(',') 
 }
 
+export function mergeExternal(externals: string, external: string[]) {
+  return ([ ...(externals?.split(',') ?? []), ...(external ?? []) ]).join(',')
+}
+
 export function parsePlugins(plugins?: PluginOptions) {
   return Array.isArray(plugins) 
     ? [ ...plugins ]

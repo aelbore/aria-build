@@ -1,6 +1,6 @@
 import * as mockfs from 'mock-fs'
 
-import { parseConfig, getPkgDependencies, mergeGlobals, parsePlugins, entryFile, getExternalDeps, updateExternalWithResolve } from './utils'
+import { parseConfig, getPkgDependencies, mergeGlobals, parsePlugins, entryFile, getExternalDeps, updateExternalWithResolve, mergeExternal } from './utils'
 import { PackageFile } from '../common/common'
 import { expect } from 'aria-mocha'
 import { AriaConfigOptions } from './common'
@@ -219,12 +219,21 @@ describe('cli-utils', () => {
     })
 
     it('should update external w/o resolve', () => {
-
       const external = updateExternalWithResolve()
 
       expect(external.length).equal(0)
     })
 
-  }) 
+  })
+
+  describe('mergeExternal', () => {
+    
+    it('should mergeExternal', () => {
+      const external = mergeExternal('react', [ 'vue' ])
+
+      expect(external).equal('react,vue')
+    })
+
+  })
 
 })
