@@ -1,6 +1,6 @@
 {
   "name": "aria-build",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Zero configuration CLI bundler or packager for typescript and javascript",
   "main": "aria-build.js",
   "bin": {
@@ -36,11 +36,11 @@
   "homepage": "https://github.com/aelbore/aria-build#readme",
   "peerDependencies": {
     "@swc/core": ">=1.2.10",
-    "aria-fs": ">=0.4.5",
+    "aria-fs": ">=0.5.0",
     "typescript": "<=3.9.7"
   },
   "devDependencies": {
-    "@types/mocha": "^8.0.0",
+    "@types/mocha": "^8.0.1",
     "@types/mock-fs": "^4.10.0",
     "@types/node": "^14.0.27",
     "coveralls": "^3.1.0",
@@ -55,7 +55,7 @@
     "@rollup/plugin-node-resolve": "^8.4.0",
     "@rollup/plugin-replace": "^2.3.3",
     "@rollup/plugin-url": "^5.0.1",
-    "esbuild": "^0.6.12",
+    "esbuild": "^0.6.14",
     "magic-string": "^0.25.7",
     "rollup": "^2.23.0",
     "rollup-plugin-dts": "^1.4.9",
