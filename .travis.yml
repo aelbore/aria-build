@@ -9,6 +9,7 @@ os:
   - windows
   - linux
   - osx
+osx_image: xcode12
 env:
   - YARN_GPG=no
 branches:
