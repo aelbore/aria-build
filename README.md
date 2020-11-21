@@ -34,6 +34,7 @@ aria-build -d -f es --compress
     --swc                Enabled swc plugin to transform ts,js,jsx,tsx
     --esbuild            Enabled esbuild plugin to use transform ts,js,jsx,tsx
     --external           Specify external dependencies
+    --dts-only           Generate Declation types only (default false)
     --resolve            Resolve dependencies
     --clean              Clean the dist folder default  (default dist)
     --globals            Specify globals dependencies

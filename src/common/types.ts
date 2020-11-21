@@ -80,7 +80,6 @@ export interface TSConfigOptions {
   include?: string[]
 }
 
-
 export interface CreateTSConfigOptions {
   input?: string | string[]
   file?: string

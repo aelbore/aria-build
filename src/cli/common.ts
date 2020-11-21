@@ -24,6 +24,7 @@ export interface BuildOptions {
 	esbuild?: boolean
 	swc?: boolean
 	write?: boolean
+	dtsOnly?: boolean
 }
 
 export interface TestAriaConfigOptions extends Omit<AriaConfigOptions, 'test'> {
@@ -40,7 +41,8 @@ export interface AriaConfigOptions {
 }
   
 export interface BuildFormatOptions extends BuildOptions {
-	pkgName?: string, 
-	plugins?: PluginOptions;
+	pkgName?: string
+	plugins?: PluginOptions
 	dependencies?: string[]
+	dtsOnly?: boolean
 }	

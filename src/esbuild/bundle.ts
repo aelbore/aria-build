@@ -8,7 +8,7 @@ import { esbuildDts } from './build-dts'
 import { mkdir } from '../fs/fs'
 
 const buildConfigOptions = async (options: BuildFormatOptions) => {
-  const { pkgName, output, format, esbuild, swc, write } = options
+  const { pkgName, output, format, esbuild, swc, write, dtsOnly } = options
   const pkgJson: Pick<PackageFile, 'main' | 'module' | 'name' | 'typings'> = await getPackage()
   const opts: CreateRollupConfigBuilderOptions = {
     name: pkgName,
@@ -16,13 +16,15 @@ const buildConfigOptions = async (options: BuildFormatOptions) => {
     esbuild: esbuild,
     swc,
     pkg: { ...pkgJson, output, format },
-    write
+    write,
+    dtsOnly
   }
   return opts
 }
 
 export interface CreateRollupConfigBuilderOptions extends CreateRollupConfigOptions {
   pkg?: PackageFile
+  dtsOnly?: boolean
 }
 
 export async function createOptions(options: CreateRollupConfigBuilderOptions | BuildFormatOptions) {
@@ -37,7 +39,7 @@ export async function bundle(options: CreateRollupConfigBuilderOptions | BuildFo
 
   await mkdir(opts.pkg?.output ?? DEFAULT_DEST, { recursive: true })
   await Promise.all([ 
-    esbuild(opts), 
+    (!opts.dtsOnly) && esbuild(opts), 
     esbuildDts(opts), 
     copyPackageFile({ ...args }), 
     copyReadMeFile({ ...args }) 

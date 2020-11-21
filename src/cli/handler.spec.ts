@@ -170,6 +170,27 @@ describe('handler', () => {
     expect(findTargetBuildStub.called).toBeTrue()
   })
 
+  it('should build dts only', async () => {
+    const options: BuildOptions = {
+      format: 'es,cjs,umd',
+      declaration: false,
+      output: 'dist',
+      watch: false,
+      /// @ts-ignore
+      'dts-only': true
+    }
+
+    const getAriaConfigStub = sinon
+      .stub(ariaConfig, 'getAriaConfig')
+      .returns(Promise.resolve(null))
+      
+    const { esbundleStub } = createStubs()
+
+    await handler(options)
+
+    expect(esbundleStub.called).toBeTrue()
+  })
+
   it('should have swc,esbuild flag', () => {
     ;(() => {
       const { esbuild, swc } = bundlerOptions()

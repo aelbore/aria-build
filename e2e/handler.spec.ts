@@ -6,6 +6,7 @@ import { BuildOptions, handler } from '../src'
 describe('handler', () => {
   const tmpFolder = './node_modules/.tmp/dist/esbuild'
   const swcTmpFolder = './node_modules/.tmp/dist/swc'
+  const dtsTmpFolder = './node_modules/.tmp/dist/dts'
 
   it('should build with default options esbuild enabled', async () => {
     const options: BuildOptions = {
@@ -57,6 +58,34 @@ describe('handler', () => {
     expect(pkg.name).equal('aria-build')
     expect(pkg.main).equal('aria-build.js')
     expect(pkg.module).equal('aria-build.es.js')
+  })
+
+  it('should build with dts-only', async () => {
+    const options: BuildOptions = {
+      format: 'es,cjs',
+      declaration: false,
+      output: dtsTmpFolder,
+      watch: false,
+      clean: dtsTmpFolder,
+      esbuild: true,
+      write: true,
+      dtsOnly: true
+    }
+
+    await handler(options)
+
+    expect(fs.existsSync(`./${dtsTmpFolder}/aria-build.js`)).toBeFalse()
+    expect(fs.existsSync(`./${dtsTmpFolder}/aria-build.es.js`)).toBeFalse()
+    expect(fs.existsSync(`./${dtsTmpFolder}/package.json`)).toBeTrue()
+    expect(fs.existsSync(`./${dtsTmpFolder}/README.md`)).toBeTrue()
+
+    expect(fs.existsSync(`./${dtsTmpFolder}/aria-build.d.ts`)).toBeTrue()
+
+    const pkgFile = `./${dtsTmpFolder}/package.json`
+    const pkg = JSON.parse((await fs.promises.readFile(pkgFile, 'utf-8')))
+
+    expect(pkg.name).equal('aria-build')
+    expect(pkg.main).equal('')
   })
 
 })

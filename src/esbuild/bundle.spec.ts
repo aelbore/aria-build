@@ -2,9 +2,9 @@ import * as sinon from 'sinon'
 import * as mock from 'mock-require'
 import * as mockfs from 'mock-fs'
 
-import { TSRollupConfig, CreateRollupConfigOptions } from '../common/common'
+import { TSRollupConfig } from '../common/common'
 import { expect } from 'aria-mocha'
-import { bundle } from './bundle'
+import { bundle, CreateRollupConfigBuilderOptions } from './bundle'
 import { BuildFormatOptions } from '../cli/cli'
 
 describe('esbuild [bundle]', () => {
@@ -75,7 +75,7 @@ describe('esbuild [bundle]', () => {
   })
 
   it('should bundle with rollup config options', async () => {
-    const options: CreateRollupConfigOptions = {
+    const options: CreateRollupConfigBuilderOptions = {
       config: {
         input: './src/input.ts',
         output: {
@@ -83,7 +83,8 @@ describe('esbuild [bundle]', () => {
         }
       },
       esbuild: true,
-      name: 'aria-build'
+      name: 'aria-build',
+      dtsOnly: false
     }
 
     const { 
@@ -131,4 +132,24 @@ describe('esbuild [bundle]', () => {
     expect(getPackageStub.called).toBeTrue()
   })
   
+  it('should bundle with rollup config options dtsOnly', async () => {
+    const options: CreateRollupConfigBuilderOptions = {
+      config: {
+        input: './src/input.ts',
+        output: {
+          file: './dist/output.d.ts'
+        }
+      },
+      esbuild: true,
+      name: 'aria-build',
+      dtsOnly: true
+    }
+
+    const { buildStub } = createStubs()
+
+    await bundle(options)
+    
+    expect(buildStub.called).toBeFalse()
+  })
+
 })
