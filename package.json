@@ -1,6 +1,6 @@
 {
   "name": "aria-build",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "Zero configuration CLI bundler or packager for typescript and javascript",
   "main": "aria-build.js",
   "bin": {
@@ -36,8 +36,8 @@
   "homepage": "https://github.com/aelbore/aria-build#readme",
   "peerDependencies": {
     "@swc/core": ">=1.2.38",
-    "aria-fs": ">=0.5.2",
-    "typescript": "^4.1.2"
+    "aria-fs": ">=0.6.0",
+    "typescript": ">=3.9.4"
   },
   "devDependencies": {
     "@types/mocha": "^8.0.4",
