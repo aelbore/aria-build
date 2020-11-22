@@ -69,7 +69,8 @@ describe('handler', () => {
       clean: dtsTmpFolder,
       esbuild: true,
       write: true,
-      dtsOnly: true
+      dtsOnly: true,
+      config: './e2e/aria.config.ts'
     }
 
     await handler(options)
@@ -78,6 +79,7 @@ describe('handler', () => {
     expect(fs.existsSync(`./${dtsTmpFolder}/aria-build.es.js`)).toBeFalse()
     expect(fs.existsSync(`./${dtsTmpFolder}/package.json`)).toBeTrue()
     expect(fs.existsSync(`./${dtsTmpFolder}/README.md`)).toBeTrue()
+    expect(fs.existsSync(`./${dtsTmpFolder}/yarn.lock`)).toBeTrue()
 
     expect(fs.existsSync(`./${dtsTmpFolder}/aria-build.d.ts`)).toBeTrue()
 

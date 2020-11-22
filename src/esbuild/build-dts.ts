@@ -2,10 +2,11 @@ import { dirname, join } from 'path'
 
 import { rollup } from '../libs'
 import { getPackageName } from '../utils/get-package'
-import { DEFAULT_VALUES, TSRollupConfig, OutputOptions, CreateRollupConfigOptions } from '../common/common'
+import { DEFAULT_VALUES, TSRollupConfig, OutputOptions } from '../common/common'
+import { CreateRollupConfigBuilderOptions } from './bundle'
 
-export async function esbuildDts(options: CreateRollupConfigOptions) {  
-  const { config, write } = options
+export async function esbuildDts(options: CreateRollupConfigBuilderOptions) {  
+  const { config, write, dtsOnly } = options
 
   const getName = async(hasConfig: boolean, name: string) => {
     return hasConfig ? name ?? await getPackageName(): undefined
@@ -16,8 +17,7 @@ export async function esbuildDts(options: CreateRollupConfigOptions) {
   }  
 
   const opts = Array.isArray(config) ? config: [ config ]
-  const configs = opts.filter((opt: TSRollupConfig) => 
-    opt.tsconfig?.compilerOptions?.declaration)
+  const configs = opts.filter((opt: TSRollupConfig) => opt.tsconfig?.compilerOptions?.declaration)
 
   const hasConfig = configs.length > 0
   const [ name, dts ] = await Promise.all([
@@ -26,7 +26,7 @@ export async function esbuildDts(options: CreateRollupConfigOptions) {
   ])
 
   return Promise.all(configs.map(async opt => { 
-    const { input, external, output } = opt as TSRollupConfig
+    const { input, external, output, plugins } = opt as TSRollupConfig
     const outputs: OutputOptions = Array.isArray(output) ? output[0]: output
 
     const bundle = await rollup({ 
@@ -35,7 +35,7 @@ export async function esbuildDts(options: CreateRollupConfigOptions) {
         ...(external ?? []),
         ...DEFAULT_VALUES.ROLLUP_EXTERNALS
       ], 
-      plugins: [ dts.default() ] 
+      plugins: [ dts.default(), ...(dtsOnly ? plugins as any[]: []) ] 
     })
 
     const file = join(dirname(outputs.file), `${name}.d.ts`)

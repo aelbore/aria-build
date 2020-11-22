@@ -5,6 +5,7 @@ import * as mockfs from 'mock-fs'
 import { esbuildDts } from './build-dts'
 import { CreateRollupConfigOptions } from '../common/common'
 import { expect } from 'aria-mocha'
+import { CreateRollupConfigBuilderOptions } from './bundle'
 
 describe('esbuild [build]', () => {
   let libs: typeof import('../libs')
@@ -37,14 +38,18 @@ describe('esbuild [build]', () => {
 
     const getPkgNameStub = sinon
       .stub(getPkgName, 'getPackageName')
-      .returns(Promise.resolve({ name: 'aria-build' }))
+      .returns(Promise.resolve('aria-build'))
 
     const dts = { default() { } }
     mock('rollup-plugin-dts', dts)
 
-    const dtsSpy = sinon.spy(dts, 'default')
+    const nodeResolve = { default() { } }
+    mock('@rollup/plugin-node-resolve', nodeResolve)
 
-    return { rollupGeneratetub, rollupStub, rollupWriteStub, getPkgNameStub, dtsSpy }
+    const dtsSpy = sinon.spy(dts, 'default')
+    const nodeResolveSpy = sinon.spy(nodeResolve, 'default')
+
+    return { rollupGeneratetub, nodeResolveSpy, rollupStub, rollupWriteStub, getPkgNameStub, dtsSpy }
   }
 
   before(async () => {
@@ -156,6 +161,45 @@ describe('esbuild [build]', () => {
     expect(rollupWriteStub.called).toBeFalse()
     expect(getPkgNameStub.called).toBeFalse()
     expect(dtsSpy.called).toBeFalse()
+  })
+
+  it('should execute additional plugins when it is dtsOnly', async () => {
+    const copy = () => ({
+      name: 'copy',
+      buildEnd() { }
+    })
+    
+    const options: CreateRollupConfigBuilderOptions = {
+      config: {
+        input: './src/input.ts',
+        plugins: [
+          copy()
+        ],
+        output: {
+          file: './dist/output.d.ts'
+        },
+        tsconfig: {
+          compilerOptions: {
+            declaration: true
+          }
+        }
+      },
+      write: true,
+      esbuild: true,
+      name: 'aria-build',
+      dtsOnly: true
+    }
+
+    mockfs({
+      'dist': {},
+      './src/input.ts': 'console.log(``)'
+    })
+
+    const { dtsSpy } = createStubs()
+
+    await esbuildDts(options)
+
+    expect(dtsSpy.called).toBeTrue()
   })
 
 })

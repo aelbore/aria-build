@@ -99,3 +99,5 @@ export interface TSRollupPluginResult {
   useTsconfigDeclarationDir?: boolean
   cacheRoot?: string
 }
+
+export const defineConfig = (config: Pick<TSRollupConfig, 'plugins' | 'external' | 'output'>) => config
