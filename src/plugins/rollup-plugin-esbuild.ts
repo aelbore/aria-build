@@ -15,8 +15,8 @@ export function transformCode(service: import('esbuild').Service, options?: impo
       ...(options ?? {})
     })
     return {
-      code: (result.js ?? '').replace(/\/\/# sourceMappingURL.*/, ''),
-      map: result.jsSourceMap
+      code: (result.code ?? '').replace(/\/\/# sourceMappingURL.*/, ''),
+      map: result.map
     }
   }
 }

@@ -42,8 +42,8 @@ describe('rollup-plugin-esbuild', () => {
 
   it('should transform code with options and js file', async () => {
     const result: TransformResult = {
-      js: null,
-      jsSourceMap: '',
+      code: null,
+      map: '',
       warnings: []
     }
 
