@@ -1,4 +1,4 @@
-import { getPackage, findTargetBuild } from '../utils/utils'
+import { getPackage, findTargetBuild, getPackageNameScope } from '../utils/utils'
 import { clean } from '../fs/fs'
 
 import { BuildFormatOptions, BuildOptions } from './common'
@@ -32,7 +32,7 @@ export async function handler(options: BuildOptions) {
     options.clean && clean(options.clean)
   ])
 
-  const pkgName = pkgJson.name
+  const pkgName = getPackageNameScope(pkgJson.name)
   const dependencies = getPkgDependencies(pkgJson)
 
   const globals = mergeGlobals(ariaConfig?.output?.globals, options.globals)

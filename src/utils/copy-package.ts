@@ -3,7 +3,7 @@ import { basename, parse, join } from 'path'
 import { writeFile } from '../fs/fs'
 
 import { PackageFile, DEFAULT_DEST } from '../common/common'
-import { getPackage } from './get-package'
+import { getPackage, getPackageNameScope } from './get-package'
 
 function getInputEntryFile(input: string) {
   return parse(basename(input)).name
@@ -25,7 +25,7 @@ export async function copyPackageFile(options?: PackageFile) {
   const { filePath, entry, typings, format } = (options ?? {})
 
   const pkgTemp = options?.name ? options: await getPackage(filePath)
-  const name = entry ? getInputEntryFile(options.entry): pkgTemp.name
+  const name = getPackageNameScope(entry ? getInputEntryFile(options.entry): pkgTemp.name)
   const outfile = join((options?.output ?? DEFAULT_DEST), 'package.json')
 
   await deleteKeys(pkgTemp)

@@ -116,5 +116,31 @@ describe('copy-package', () => {
     await copyPackageFile(options)
     expect(fs.existsSync('./dist/package.json')).toBeTrue()
   })
+
+  it('should remove the scope when appending to main,typings,module', async () => {
+    const pkg = {
+      name: '@scope/custom-package'
+    }
+
+    const options = {
+      output: 'dist',
+      format: 'es,umd',
+      ...pkg
+    }
+
+    mockfs({
+      'dist': {}
+    })
+    
+    await copyPackageFile(options)
+    expect(fs.existsSync('./dist/package.json')).toBeTrue()  
+    
+    const pkgFile = await fs.promises.readFile('./dist/package.json', 'utf-8')
+    const pkgObject = JSON.parse(pkgFile)
+
+    expect(pkgObject.main).equal('custom-package.js')
+    expect(pkgObject.module).equal('custom-package.es.js')
+    expect(pkgObject.typings).equal('custom-package.d.ts')
+  })
   
 })
