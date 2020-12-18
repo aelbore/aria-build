@@ -12,13 +12,14 @@ describe('esbuild [build]', () => {
   let getPkgName: typeof import('../utils/get-package')
 
   function createStubs() {
-    const rollup = {
-      generate(outputOptions: import('rollup').OutputOptions)
-        : Promise<import('rollup').RollupOutput> {
+    const rollup: import('rollup').RollupBuild = {
+      cache: null,
+      close: () => Promise.resolve(void 0),
+      closed: true,
+      generate(outputOptions: import('rollup').OutputOptions) {
         return Promise.resolve({} as import('rollup').RollupOutput)
       },
       watchFiles: [],
-      cache: null,
       write(options: import('rollup').OutputOptions) {
         return Promise.resolve({} as Promise<import('rollup').RollupOutput>)
       }

@@ -13,6 +13,8 @@ describe('esbuild [esbuild]', () => {
 
   function createStubs() {
     const rollup = {
+      close: () => Promise.resolve(void 0),
+      closed: true,
       generate(outputOptions: import('rollup').OutputOptions)
         : Promise<import('rollup').RollupOutput> {
         return Promise.resolve({} as import('rollup').RollupOutput)

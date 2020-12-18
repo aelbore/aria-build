@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-
 import * as fs from 'fs'
 import * as childProcess from 'child_process'
 import * as ariaFs from 'aria-fs'

@@ -1,29 +1,5 @@
-import * as fs from 'fs'
+import { promises } from 'fs'
 
-const copyFile = fs.promises.copyFile
-const writeFile = fs.promises.writeFile
-const rename = fs.promises.rename
-const readdir = fs.promises.readdir
-const readFile = fs.promises.readFile
-const stats = fs.promises.stat
-const unlink = fs.promises.unlink
-const symlink = fs.promises.symlink
-const fstat = fs.promises.fstat
-const readlink = fs.promises.readlink
-const mkdir = fs.promises.mkdir
-const lstat = fs.promises.lstat
+const { copyFile, writeFile, rename, readdir, readFile, stat, unlink, symlink, fstat, readlink, mkdir, lstat } = promises
 
-export { 
-  lstat,
-  copyFile, 
-  writeFile, 
-  rename, 
-  readdir, 
-  readFile, 
-  stats,
-  unlink,
-  symlink,
-  fstat,
-  readlink,
-  mkdir
-}
+export { copyFile, writeFile, rename, readdir, readFile, stat as stats, unlink, symlink, fstat, readlink, mkdir, lstat }
