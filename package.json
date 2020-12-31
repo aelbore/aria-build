@@ -7,6 +7,7 @@
     "aria-build": "./bin/aria-build.js"
   },
   "scripts": {
+    "dev.build": "ts-esm ./bin/exec.ts --commonjs",
     "build": "node ./bin/aria-build.js -d",
     "bundle": "ts-node --project ./tools/tsconfig.json ./tools/bundle.ts",
     "test": "aria-mocha --check-coverage",
@@ -40,6 +41,7 @@
     "typescript": ">=4.1.3"
   },
   "devDependencies": {
+    "@swc/core": "^1.2.43",
     "@types/mocha": "^8.2.0",
     "@types/mock-fs": "^4.13.0",
     "@types/node": "^14.14.16",
@@ -62,6 +64,6 @@
     "rollup-plugin-minify-html-literals": "^1.2.5",
     "rollup-plugin-terser": "^7.0.2",
     "sade": "^1.7.4",
-    "ts-node": "^9.1.1"
+    "ts-esm": "^0.0.3"
   }
 }
