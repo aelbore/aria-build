@@ -9,7 +9,7 @@ Zero configuration CLI bundler or packager for typescript and javascript
 Installation
 ------------
   ```
-    npm install --save-dev aria-build aria-fs
+    npm install --save-dev aria-build aria-fs typescript tslib@1.13.0
   ```
 
 ### Usage
