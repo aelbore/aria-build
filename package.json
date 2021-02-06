@@ -63,6 +63,6 @@
     "rollup-plugin-minify-html-literals": "^1.2.5",
     "rollup-plugin-terser": "^7.0.2",
     "sade": "^1.7.4",
-    "ts-esm": "^0.0.5"
+    "ts-esm": "^0.0.6"
   }
 }
