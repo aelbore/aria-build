@@ -6,6 +6,11 @@
   "bin": {
     "aria-build": "./bin/aria-build.js"
   },
+  "type": "module",
+  "exports": {
+    "import": "./aria-build.es.js",
+    "require": "./aria-build.js"
+  },
   "scripts": {
     "dev.build": "ts-esm ./bin/exec.ts --commonjs",
     "build": "node ./bin/aria-build.js -d",
