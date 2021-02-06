@@ -3,7 +3,7 @@
 require('child_process')
   .spawnSync('ts-esm', [ 
     '--no-warnings',
-    '--experimental-module',
+    '--experimental-​modules',
     '--experimental-json-modules',
     './bin/exec.mjs',
     ...process.argv.slice(2) 
