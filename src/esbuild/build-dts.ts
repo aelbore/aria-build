@@ -26,7 +26,7 @@ export async function esbuildDts(options: CreateRollupConfigBuilderOptions) {
   ])
 
   return Promise.all(configs.map(async opt => { 
-    const { input, external, output, plugins } = opt as TSRollupConfig
+    const { input, external, output } = opt as TSRollupConfig
     const outputs: OutputOptions = Array.isArray(output) ? output[0]: output
 
     const bundle = await rollup({ 
@@ -35,7 +35,7 @@ export async function esbuildDts(options: CreateRollupConfigBuilderOptions) {
         ...(external ?? []),
         ...DEFAULT_VALUES.ROLLUP_EXTERNALS
       ], 
-      plugins: [ dts.default(), ...(dtsOnly ? plugins as any[]: []) ] 
+      plugins: [ dts.default() ] 
     })
 
     const file = join(dirname(outputs.file), `${name}.d.ts`)

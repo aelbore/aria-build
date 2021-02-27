@@ -1,9 +1,7 @@
 /* istanbul ignore file */
 
-import * as url from '@rollup/plugin-url'
 import * as ts from 'typescript'
 import minifyHTML from 'rollup-plugin-minify-html-literals'
-import json from '@rollup/plugin-json'
 import MagicString from 'magic-string'
 import * as rollup$ from 'rollup'
 import nodeResolve from '@rollup/plugin-node-resolve'
@@ -16,7 +14,7 @@ export type ModuleFormat = import('rollup').ModuleFormat
 export const rollup = rollup$.rollup
 export const watch = rollup$.watch
 
-export { replacePlugin, json, url, nodeResolve, minifyHTML }
+export { replacePlugin, nodeResolve, minifyHTML }
 export { MagicString, ts }
 
 export function commonjs(options?: import('@rollup/plugin-commonjs').RollupCommonJSOptions) {

@@ -79,7 +79,6 @@ describe('handler', () => {
     expect(fs.existsSync(`./${dtsTmpFolder}/aria-build.es.js`)).toBeFalse()
     expect(fs.existsSync(`./${dtsTmpFolder}/package.json`)).toBeTrue()
     expect(fs.existsSync(`./${dtsTmpFolder}/README.md`)).toBeTrue()
-    expect(fs.existsSync(`./${dtsTmpFolder}/yarn.lock`)).toBeTrue()
 
     expect(fs.existsSync(`./${dtsTmpFolder}/aria-build.d.ts`)).toBeTrue()
 
