@@ -7,8 +7,14 @@ export function getEntryFile(pkgName: string) {
     'index.js',
     'main.ts',
     'main.js',
+    'main.jsx',
+    'main.tsx',
+    'index.jsx',
+    'index.tsx',
     `${pkgName}.ts`,
-    `${pkgName}.js`
+    `${pkgName}.js`,
+    `${pkgName}.tsx`,
+    `${pkgName}.jsx`
   ]
 
   for (const entry of entryFiles) {
